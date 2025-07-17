@@ -1,13 +1,14 @@
 package kr.hhplus.be.server.wallet.controller;
 
 import kr.hhplus.be.server.common.response.CommonResponse;
+import kr.hhplus.be.server.wallet.controller.docs.WalletApiSpec;
 import kr.hhplus.be.server.wallet.controller.dto.WalletChargeApi;
 import kr.hhplus.be.server.wallet.controller.dto.WalletViewApi;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/me/wallet")
 @RestController
-public class WalletController {
+public class WalletController implements WalletApiSpec {
 
     @GetMapping
     public CommonResponse<WalletViewApi.Response> walletView(WalletViewApi.Request request) {
