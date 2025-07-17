@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.order.controller;
 
 import kr.hhplus.be.server.common.response.CommonResponse;
+import kr.hhplus.be.server.order.controller.docs.OrderApiSpec;
 import kr.hhplus.be.server.order.controller.dto.OrderApi;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 
 @RequestMapping("/api/v1/orders")
 @RestController
-public class OrderController {
+public class OrderController implements OrderApiSpec {
 
     @PostMapping
     public CommonResponse<OrderApi.Response> placeOrder(@RequestBody OrderApi.Request request) {
