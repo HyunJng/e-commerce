@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static kr.hhplus.be.server.mock.ControllerTestFixtures.기본_성공_포맷_검증;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,9 +30,9 @@ class WalletControllerTest {
         String userId = "1";
 
         //when & then
-        mockMvc.perform(get("/api/v1/me/wallet")
+        기본_성공_포맷_검증(mockMvc.perform(get("/api/v1/me/wallet")
                         .param("userId", userId)
-                ).andExpect(jsonPath("$.resultCd").value("0000"))
+                ))
                 .andExpect(jsonPath("$.result.userId").value(userId))
                 .andExpect(jsonPath("$.result.balance").value(1000)); //TODO: 변경 필요
     }
@@ -43,10 +44,10 @@ class WalletControllerTest {
         String content = objectMapper.writeValueAsString(request);
 
         //when & then
-        mockMvc.perform(post("/api/v1/me/wallet/charge")
+        기본_성공_포맷_검증(mockMvc.perform(post("/api/v1/me/wallet/charge")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content)
-                ).andExpect(jsonPath("$.resultCd").value("0000"))
+                ))
                 .andExpect(jsonPath("$.result.userId").value(request.userId()))
                 .andExpect(jsonPath("$.result.balance").value(1000 + request.amount())); //TODO: 변경 필요
     }
