@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.product.controller;
 
 import kr.hhplus.be.server.common.response.CommonResponse;
+import kr.hhplus.be.server.product.controller.docs.ProductApiSpec;
 import kr.hhplus.be.server.product.controller.dto.ProductDetail;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/products")
 @RestController
-public class ProductController {
+public class ProductController implements ProductApiSpec {
 
     @GetMapping("/{id}")
     public CommonResponse<ProductDetail.Response> viewDetail(@PathVariable Long id) {
