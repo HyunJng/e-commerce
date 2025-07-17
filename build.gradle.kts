@@ -38,6 +38,9 @@ dependencies {
     // DB
 	runtimeOnly("com.mysql:mysql-connector-j")
 
+	// Docs
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
+
 	// Lombok
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
