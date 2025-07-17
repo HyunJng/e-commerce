@@ -8,7 +8,7 @@ erDiagram
     WALLET {
         BIGINT id PK
         BIGINT user_id FK "유저 식별자"
-        BIGINT amount "금액"
+        BIGINT balance "잔액"
         DATETIME created_at "생성일자"
         DATETIME updated_at "수정일시"
     }
