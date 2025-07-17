@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.order.controller;
 
-import kr.hhplus.be.server.common.response.CommonResponse;
+import kr.hhplus.be.server.common.response.DataResponse;
 import kr.hhplus.be.server.order.controller.docs.OrderApiSpec;
 import kr.hhplus.be.server.order.controller.dto.OrderApi;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 public class OrderController implements OrderApiSpec {
 
     @PostMapping
-    public CommonResponse<OrderApi.Response> placeOrder(@RequestBody OrderApi.Request request) {
+    public DataResponse<OrderApi.Response> placeOrder(@RequestBody OrderApi.Request request) {
         LocalDateTime localDateTime = LocalDateTime.of(2025, 7, 18, 2, 0, 0);
-        return CommonResponse.success(
+        return DataResponse.success(
                 new OrderApi.Response(
                         1L,
                         request.userId(),

@@ -11,21 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Schema(description = "공통 응답 포맷")
-public class CommonResponse<T> {
+public class CommonResponse {
     @Schema(description = "응답 코드", example = "0000")
     private String resultCd;
 
     @Schema(description = "응답 메시지", example = "SUCCESS")
     private String resultMsg;
-
-    @Schema(description = "응답 데이터")
-    private T result;
-
-    public static <T> CommonResponse<T> success(T result) {
-        return CommonResponse.<T>builder()
-                .resultCd("0000")
-                .resultMsg("SUCCESS")
-                .result(result)
-                .build();
-    }
 }

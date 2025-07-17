@@ -11,5 +11,6 @@ public interface OrderSchemaDescription {
     String discountAmount = "할인 금액";
     String paidAmount = "지불 금액";
     String createAt = "주문 생성일";
+    String orderProduct = "주문 상품";
 
 }

@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.wallet.controller;
 
-import kr.hhplus.be.server.common.response.CommonResponse;
+import kr.hhplus.be.server.common.response.DataResponse;
 import kr.hhplus.be.server.wallet.controller.docs.WalletApiSpec;
 import kr.hhplus.be.server.wallet.controller.dto.WalletChargeApi;
 import kr.hhplus.be.server.wallet.controller.dto.WalletViewApi;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 public class WalletController implements WalletApiSpec {
 
     @GetMapping
-    public CommonResponse<WalletViewApi.Response> walletView(WalletViewApi.Request request) {
-        return CommonResponse.success(
+    public DataResponse<WalletViewApi.Response> walletView(WalletViewApi.Request request) {
+        return DataResponse.success(
                 new WalletViewApi.Response(
                         request.userId(),
                         1000L
@@ -21,8 +21,8 @@ public class WalletController implements WalletApiSpec {
     }
 
     @PostMapping("/charge")
-    public CommonResponse<WalletChargeApi.Response> walletCharge(@RequestBody WalletChargeApi.Request request) {
-        return CommonResponse.success(
+    public DataResponse<WalletChargeApi.Response> walletCharge(@RequestBody WalletChargeApi.Request request) {
+        return DataResponse.success(
                 new WalletChargeApi.Response(
                         request.userId(),
                         1000 + request.amount()
