@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.coupon.controller;
 
 import kr.hhplus.be.server.common.response.CommonResponse;
+import kr.hhplus.be.server.coupon.controller.docs.CouponApiSpec;
 import kr.hhplus.be.server.coupon.controller.dto.CouponIssueApi;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 
 @RequestMapping("/api/v1/coupons")
 @RestController
-public class CouponController {
+public class CouponController implements CouponApiSpec {
 
     @PostMapping("/issue")
     public CommonResponse<CouponIssueApi.Response> issued(@RequestBody CouponIssueApi.Request request) {
