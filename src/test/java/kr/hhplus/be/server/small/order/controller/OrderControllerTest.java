@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static kr.hhplus.be.server.mock.ControllerTestFixtures.기본_성공_포맷_검증;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,7 +28,10 @@ class OrderControllerTest {
     @Test
     void 주문을_성공하면_주문정보와_사용금액을_응답한다() throws Exception {
         //given
-        OrderApi.Request request = new OrderApi.Request(1L, 2L, 1, 1L);
+        OrderApi.Request.OrderProduct orderProduct1 = new OrderApi.Request.OrderProduct(1L, 1);
+        OrderApi.Request.OrderProduct orderProduct2 = new OrderApi.Request.OrderProduct(2L, 1);
+        OrderApi.Request request = new OrderApi.Request(1L, 2L, List.of(orderProduct1, orderProduct2));
+
         String content = objectMapper.writeValueAsString(request);
 
         //when & then
