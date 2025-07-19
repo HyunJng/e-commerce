@@ -76,7 +76,7 @@ erDiagram
     }
 
 %% 관계 정의
-    USERS |o--o| WALLET : "보유한다"
+    USERS ||--|| WALLET : "보유한다"
     USERS ||--o{ ORDER : "주문한다"
     USERS ||--o{ USER_POINT_HISTORY : "충전/사용한다"
     WALLET ||--o{ USER_POINT_HISTORY : "충전/사용한다"
