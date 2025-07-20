@@ -32,7 +32,7 @@ erDiagram
     }
 
     ORDER {
-        STRING id PK
+        BIGINT id PK
         STRING nonce UK "주문키"
         BIGINT user_id FK "유저식별자"
         BIGINT total_amount "주문금액"
@@ -45,7 +45,7 @@ erDiagram
         BIGINT id PK
         BIGINT order_id FK "주문식별자"
         BIGINT product_id FK "상품식별자"
-        BIGINT unit_price FK "상품 가격"
+        BIGINT unit_price  "상품 가격"
         INT quantity "주문수량"
         BIGINT total_price "주문금액"
         DATETIME created_at "생성일시"
@@ -58,7 +58,6 @@ erDiagram
         STRING discount_type "PERCENT, AMOUNT"
         BIGINT days "발급후 사용 가능 일자"
         INT total_quantity "총 수량"
-        INT quantity "현재 수량"
         DATETIME created_at "생성일시"
     }
 
