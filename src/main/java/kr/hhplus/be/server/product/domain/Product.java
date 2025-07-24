@@ -41,4 +41,10 @@ public class Product {
         this.updateAt = updateAt;
     }
 
+    public void decreaseQuantity(Integer quantity) {
+        if (this.quantity < quantity) {
+            throw new CommonException(ResultCode.NOT_FOUND_RESOURCE, "상품 재고");
+        }
+        this.quantity -= quantity;
+    }
 }

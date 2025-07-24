@@ -46,4 +46,14 @@ public class Coupon {
 
     public Coupon() {}
 
+    public Long calculateDiscountAmount(Long totalAmount) {
+        switch (discountType) {
+            case PERCENT:
+                return totalAmount * discountAmount / 100;
+            case FIXED_AMOUNT:
+                return discountAmount;
+            default:
+                throw new CommonException(ResultCode.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

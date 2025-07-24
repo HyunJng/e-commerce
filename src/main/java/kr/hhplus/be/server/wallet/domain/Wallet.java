@@ -51,4 +51,11 @@ public class Wallet {
         // TODO: 이벤트발행하여 history 적재 구현하기
     }
 
+    public void pay(Long paidAmount, DateHolder dateHolder) {
+        if (this.balance < paidAmount) {
+            throw new CommonException(ResultCode.INVALID_REQUEST, "잔액 부족");
+        }
+        this.balance -= paidAmount;
+        this.updateAt = dateHolder.now();
+    }
 }
