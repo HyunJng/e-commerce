@@ -1,22 +1,30 @@
 package kr.hhplus.be.server.small.wallet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.hhplus.be.server.common.exception.CommonException;
+import kr.hhplus.be.server.common.exception.GeneralExceptionAdvice;
+import kr.hhplus.be.server.common.response.ResultCode;
 import kr.hhplus.be.server.wallet.controller.WalletController;
 import kr.hhplus.be.server.wallet.controller.dto.WalletChargeApi;
+import kr.hhplus.be.server.wallet.usecase.ChargeWalletBalanceService;
+import kr.hhplus.be.server.wallet.usecase.GetWalletBalanceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static kr.hhplus.be.server.mock.ControllerTestFixtures.기본_성공_포맷_검증;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@WebMvcTest(value = WalletController.class)
+@WebMvcTest(controllers = WalletController.class)
+@Import(value = {GeneralExceptionAdvice.class})
 class WalletControllerTest {
 
     @Autowired
@@ -24,31 +32,96 @@ class WalletControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
-    void 회원정보를_전달하면_지갑정보를_응답한다() throws Exception {
-        //given
-        String userId = "1";
+    @MockitoBean
+    private GetWalletBalanceService getWalletBalanceService;
+    @MockitoBean
+    private ChargeWalletBalanceService chargeWalletBalanceService;
 
-        //when & then
-        기본_성공_포맷_검증(mockMvc.perform(get("/api/v1/me/wallet")
-                        .param("userId", userId)
-                ))
+    @Test
+    void 잔액확인에_성공하면_200응답과_지갑정보를_반환한다() throws Exception {
+        // given
+        Long userId = 1L;
+        Long balance = 1000L;
+
+        given(getWalletBalanceService.execute(new GetWalletBalanceService.Input(userId)))
+                .willReturn(new GetWalletBalanceService.Output(userId, balance));
+
+        // when & then
+        mockMvc.perform(get("/api/v1/me/wallet")
+                        .param("userId", "1"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.userId").value(userId))
-                .andExpect(jsonPath("$.result.balance").value(1000)); //TODO: 변경 필요
+                .andExpect(jsonPath("$.result.balance").value(balance));
     }
 
     @Test
-    void 회원정보와_충전금액을_전달하여_충전할_수_있다() throws Exception {
-        //given
+    void 잔액확인요청이_존재하지않는_유저라면_400응답과_오류상세내역을_반환한다() throws Exception {
+        // given
+        given(getWalletBalanceService.execute(any()))
+                .willThrow(new CommonException(ResultCode.NOT_FOUND_RESOURCE, "지갑"));
+
+        // when & then
+        mockMvc.perform(get("/api/v1/me/wallet")
+                        .param("userId", "1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCd").value(ResultCode.NOT_FOUND_RESOURCE.getCode()))
+                .andExpect(jsonPath("$.resultMsg").value(ResultCode.NOT_FOUND_RESOURCE.getMessage("지갑")));
+    }
+
+    @Test
+    void 충전에_성공하면_200응답과_잔액정보를_반환한다() throws Exception {
+        // given
+        Long userId = 1L;
+        Long balance = 2000L;
+
+        WalletChargeApi.Request request = new WalletChargeApi.Request(userId, 1000L);
+        String content = objectMapper.writeValueAsString(request);
+
+        given(chargeWalletBalanceService.execute(new ChargeWalletBalanceService.Input(request.userId(), request.amount())))
+                .willReturn(new ChargeWalletBalanceService.Output(userId, balance));
+
+        // when & then
+        mockMvc.perform(post("/api/v1/me/wallet/charge")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.userId").value(userId))
+                .andExpect(jsonPath("$.result.balance").value(balance));
+    }
+
+    @Test
+    void 충전요청이_존재하지않는_유저라면_400응답과_오류상세내역을_반환한다() throws Exception {
+        // given
         WalletChargeApi.Request request = new WalletChargeApi.Request(1L, 1000L);
         String content = objectMapper.writeValueAsString(request);
 
-        //when & then
-        기본_성공_포맷_검증(mockMvc.perform(post("/api/v1/me/wallet/charge")
+        given(chargeWalletBalanceService.execute(any()))
+                .willThrow(new CommonException(ResultCode.NOT_FOUND_RESOURCE, "지갑"));
+
+        // when & then
+        mockMvc.perform(post("/api/v1/me/wallet/charge")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(content)
-                ))
-                .andExpect(jsonPath("$.result.userId").value(request.userId()))
-                .andExpect(jsonPath("$.result.balance").value(1000 + request.amount())); //TODO: 변경 필요
+                        .content(content))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCd").value(ResultCode.NOT_FOUND_RESOURCE.getCode()))
+                .andExpect(jsonPath("$.resultMsg").value(ResultCode.NOT_FOUND_RESOURCE.getMessage("지갑")));
+    }
+
+    @Test
+    void 충전_정책에_어긋난_요청이면_400응답과_오류상세내역을_반환한다() throws Exception {
+        // given
+        WalletChargeApi.Request request = new WalletChargeApi.Request(1L, 1000L);
+        String content = objectMapper.writeValueAsString(request);
+
+        given(chargeWalletBalanceService.execute(any()))
+                .willThrow(new CommonException(ResultCode.INVALID_POLICY));
+
+        // when & then
+        mockMvc.perform(post("/api/v1/me/wallet/charge")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCd").value(ResultCode.INVALID_POLICY.getCode()))
+                .andExpect(jsonPath("$.resultMsg").value(ResultCode.INVALID_POLICY.getMessage()));
     }
 }
