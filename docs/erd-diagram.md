@@ -61,16 +61,14 @@ erDiagram
         DATETIME created_at "생성일시"
     }
 
-    COUPON_OWNED {
+    ISSUED_COUPON {
         BIGINT id PK
         BIGINT user_id FK "유저식별자"
         BIGINT coupon_id FK "쿠폰식별자"
-        BIGINT discount_amount "할인금액"
-        STRING discount_type "PERCENT, AMOUNT"
         DATETIME issued_at "발급일"
         DATETIME started_at "사용시작"
         DATETIME end_at "사용마감"
-        STRING state "ISSUED, USED"
+        STRING state "ACTIVE, USED"
         BIGINT order_id FK "사용한 주문식별자"
     }
 
@@ -79,11 +77,11 @@ erDiagram
     USERS ||--o{ ORDER : "주문한다"
     USERS ||--o{ USER_POINT_HISTORY : "충전/사용한다"
     WALLET ||--o{ USER_POINT_HISTORY : "충전/사용한다"
-    USERS ||--o{ COUPON_OWNED : "쿠폰보유"
+    USERS ||--o{ ISSUED_COUPON : "쿠폰보유"
 
     ORDER ||--o{ ORDER_ITEM : "포함한다"
     PRODUCT ||--o{ ORDER_ITEM : "구성된다"
 
-    COUPON ||--o{ COUPON_OWNED : "발급된다"
-    COUPON_OWNED ||--|| ORDER : "적용된다"
+    COUPON ||--o{ ISSUED_COUPON : "발급된다"
+    ISSUED_COUPON ||--|| ORDER : "적용된다"
 ```
