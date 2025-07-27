@@ -50,6 +50,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
+	testImplementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
