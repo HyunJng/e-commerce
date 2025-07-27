@@ -2,7 +2,7 @@ package kr.hhplus.be.server.wallet.usecase;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.wallet.domain.Wallet;
 import kr.hhplus.be.server.wallet.domain.WalletChargePolicy;
 import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
@@ -33,7 +33,7 @@ public class ChargeWalletBalanceService {
         Long userId = input.userId;
 
         Wallet wallet = walletJpaRepository.findByUserId(userId).orElseThrow(
-                () -> new CommonException(ResultCode.NOT_FOUND_RESOURCE, "지갑")
+                () -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "지갑")
         );
 
         wallet.charge(input.amount, walletChargePolicy);

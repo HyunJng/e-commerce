@@ -2,7 +2,7 @@ package kr.hhplus.be.server.coupon.domain;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
 import lombok.Getter;
 
@@ -58,7 +58,7 @@ public class IssuedCoupon {
                         || endAt.isEqual(dateHolder.today())
                 ))
         )) {
-            throw new CommonException(ResultCode.INVALID_REQUEST, "유효하지 않은 쿠폰");
+            throw new CommonException(ErrorCode.INVALID_REQUEST, "유효하지 않은 쿠폰");
         }
     }
 

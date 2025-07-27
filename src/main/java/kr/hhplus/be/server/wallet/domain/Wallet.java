@@ -2,7 +2,7 @@ package kr.hhplus.be.server.wallet.domain;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,7 +53,7 @@ public class Wallet {
 
     public void pay(Long paidAmount, DateHolder dateHolder) {
         if (this.balance < paidAmount) {
-            throw new CommonException(ResultCode.INVALID_REQUEST, "잔액 부족");
+            throw new CommonException(ErrorCode.INVALID_REQUEST, "잔액 부족");
         }
         this.balance -= paidAmount;
         this.updateAt = dateHolder.now();

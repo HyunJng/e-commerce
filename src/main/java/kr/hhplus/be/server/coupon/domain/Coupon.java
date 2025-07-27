@@ -2,7 +2,7 @@ package kr.hhplus.be.server.coupon.domain;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
@@ -53,7 +53,7 @@ public class Coupon {
             case FIXED_AMOUNT:
                 return discountAmount;
             default:
-                throw new CommonException(ResultCode.INTERNAL_SERVER_ERROR);
+                throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 }

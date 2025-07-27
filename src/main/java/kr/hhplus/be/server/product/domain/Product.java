@@ -2,7 +2,7 @@ package kr.hhplus.be.server.product.domain;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -43,7 +43,7 @@ public class Product {
 
     public void decreaseQuantity(Integer quantity) {
         if (this.quantity < quantity) {
-            throw new CommonException(ResultCode.NOT_FOUND_RESOURCE, "상품 재고");
+            throw new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "상품 재고");
         }
         this.quantity -= quantity;
     }

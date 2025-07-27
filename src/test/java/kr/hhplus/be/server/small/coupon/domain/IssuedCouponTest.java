@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.small.coupon.domain;
 
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.coupon.domain.Coupon;
 import kr.hhplus.be.server.coupon.domain.IssuedCoupon;
 import kr.hhplus.be.server.mock.MockDateHolderImpl;
@@ -85,6 +85,6 @@ class IssuedCouponTest {
         // then
         Assertions.assertThatThrownBy(() -> issuedCoupon.validate(todayDateHolder))
                 .isInstanceOf(CommonException.class)
-                .hasMessageContaining(ResultCode.INVALID_REQUEST.getMessage("유효하지 않은 쿠폰"));
+                .hasMessageContaining(ErrorCode.INVALID_REQUEST.getMessage("유효하지 않은 쿠폰"));
     }
 }

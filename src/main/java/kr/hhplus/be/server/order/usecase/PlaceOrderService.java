@@ -2,7 +2,7 @@ package kr.hhplus.be.server.order.usecase;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.coupon.domain.Coupon;
 import kr.hhplus.be.server.coupon.domain.CouponJpaRepository;
@@ -77,16 +77,16 @@ public class PlaceOrderService {
         Long discountAmount = 0L;
         if (input.couponId != null) {
             coupon = couponJpaRepository.findById(input.couponId)
-                    .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND_RESOURCE, "쿠폰"));
+                    .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "쿠폰"));
             issuedCoupon = issuedCouponJpaRepository.findByUserIdAndCouponId(input.userId, input.couponId)
-                    .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND_RESOURCE, "발급된 쿠폰"));
+                    .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "발급된 쿠폰"));
             issuedCoupon.validate(dateHolder);
             discountAmount = coupon.calculateDiscountAmount(totalAmount);
         }
 
         Long paidAmount = totalAmount - discountAmount;
         Wallet wallet = walletJpaRepository.findByUserId(input.userId)
-                .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND_RESOURCE, "지갑"));
+                .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "지갑"));
         wallet.pay(paidAmount, dateHolder);
         walletJpaRepository.save(wallet);
 
@@ -104,7 +104,7 @@ public class PlaceOrderService {
 
     private void validateProducts(List<Product> products, List<Input.OrderProduct> orderProducts) {
         if (products.size() != orderProducts.size()) {
-            throw new CommonException(ResultCode.INVALID_REQUEST, "주문한 상품 중 일부가 존재하지 않습니다.");
+            throw new CommonException(ErrorCode.INVALID_REQUEST, "주문한 상품 중 일부가 존재하지 않습니다.");
         }
     }
 
@@ -114,7 +114,7 @@ public class PlaceOrderService {
             Product product = products.stream()
                     .filter(p -> p.getId().equals(orderProduct.productId()))
                     .findFirst()
-                    .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND_RESOURCE, "상품"));
+                    .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "상품"));
             product.decreaseQuantity(orderProduct.quantity());
             productJpaRepository.save(product);
             total += product.getPrice() * orderProduct.quantity();
