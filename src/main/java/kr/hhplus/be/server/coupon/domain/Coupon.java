@@ -5,6 +5,8 @@ import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @Table(name = "coupons")
@@ -31,17 +33,17 @@ public class Coupon {
     @Column(name = "total_quantity")
     private Integer totalQuantity;
 
-    @Column(name = "created_at")
-    private Long createdAt;
+    @Column(name = "create_at", insertable = false, updatable = false)
+    private LocalDateTime createAt;
 
-    public Coupon(Long id, String name, Long discountAmount, DiscountType discountType, Integer dates, Integer totalQuantity, Long createdAt) {
+    public Coupon(Long id, String name, Long discountAmount, DiscountType discountType, Integer dates, Integer totalQuantity, LocalDateTime createAt) {
         this.id = id;
         this.name = name;
         this.discountAmount = discountAmount;
         this.discountType = discountType;
         this.dates = dates;
         this.totalQuantity = totalQuantity;
-        this.createdAt = createdAt;
+        this.createAt = createAt;
     }
 
     public Coupon() {}

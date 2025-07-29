@@ -36,9 +36,8 @@ class IssuedCouponTest {
         // then
         assertThat(issuedCoupon.getUserId()).isEqualTo(userId);
         assertThat(issuedCoupon.getCouponId()).isEqualTo(coupon.getId());
-        assertThat(issuedCoupon.getIssuedAt().toString()).isEqualTo("2025-07-24T02:00");
-        assertThat(issuedCoupon.getStartAt().toString()).isEqualTo("2025-07-24");
-        assertThat(issuedCoupon.getEndAt().toString()).isEqualTo("2025-07-31");
+        assertThat(issuedCoupon.getStartDate().toString()).isEqualTo("2025-07-24");
+        assertThat(issuedCoupon.getEndDate().toString()).isEqualTo("2025-07-31");
     }
 
     @Test

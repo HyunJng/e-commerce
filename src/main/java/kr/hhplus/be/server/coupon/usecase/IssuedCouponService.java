@@ -35,8 +35,8 @@ public class IssuedCouponService {
                 coupon.getName(),
                 coupon.getDiscountAmount(),
                 coupon.getDiscountType().name(),
-                issuedCoupon.getStartAt(),
-                issuedCoupon.getEndAt()
+                issuedCoupon.getStartDate(),
+                issuedCoupon.getEndDate()
             );
         }
     }
