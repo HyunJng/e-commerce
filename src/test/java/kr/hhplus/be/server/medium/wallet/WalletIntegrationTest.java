@@ -64,8 +64,9 @@ public class WalletIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         // then
-        Wallet afterWallet = walletJpaRepository.findById(userId).get();
+        Wallet afterWallet = walletJpaRepository.findById(userId).orElse(null);
 
+        assertThat(afterWallet).isNotNull();
         assertThat(afterWallet.getBalance()).isEqualTo(beforeWallet.getBalance() + request.amount());
         assertThat(afterWallet.getUserId()).isEqualTo(beforeWallet.getUserId());
         assertThat(afterWallet.getId()).isEqualTo(beforeWallet.getId());
@@ -90,8 +91,9 @@ public class WalletIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isBadRequest());
 
         // then
-        Wallet afterWallet = walletJpaRepository.findByUserId(userId).get();
+        Wallet afterWallet = walletJpaRepository.findByUserId(userId).orElse(null);
 
+        assertThat(afterWallet).isNotNull();
         assertThat(afterWallet.getBalance()).isEqualTo(beforeWallet.getBalance());
         assertThat(afterWallet.getUserId()).isEqualTo(beforeWallet.getUserId());
         assertThat(afterWallet.getId()).isEqualTo(beforeWallet.getId());
