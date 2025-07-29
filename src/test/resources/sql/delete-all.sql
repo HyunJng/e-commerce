@@ -1,0 +1,2 @@
+DELETE FROM wallets;
+DELETE FROM users;

@@ -24,10 +24,10 @@ public class Wallet {
     @Column(name = "balance")
     private Long balance;
 
-    @Column(name = "create_at")
+    @Column(name = "create_at", insertable = false, updatable = false)
     private LocalDateTime createAt;
 
-    @Column(name = "update_at")
+    @Column(name = "update_at", insertable = false, updatable = false)
     private LocalDateTime updateAt;
 
     @Builder
@@ -46,8 +46,6 @@ public class Wallet {
         walletChargePolicy.validate(amount);
 
         this.balance += amount;
-        this.updateAt = LocalDateTime.now();
-
         // TODO: 이벤트발행하여 history 적재 구현하기
     }
 
