@@ -24,10 +24,10 @@ public class Product {
     @Column(name = "stock_quantity")
     private Integer quantity;
 
-    @Column(name = "create_at")
+    @Column(name = "create_at", insertable = false, updatable = false)
     private LocalDateTime createAt;
 
-    @Column(name = "update_at")
+    @Column(name = "update_at", insertable = false, updatable = false)
     private LocalDateTime updateAt;
 
     public Product() {}
