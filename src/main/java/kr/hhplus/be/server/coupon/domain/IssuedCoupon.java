@@ -44,8 +44,8 @@ public class IssuedCoupon {
 
     public void validate(DateHolder dateHolder) {
         if (!(status == Status.ACTIVE &&
-                ((startDate.isAfter(dateHolder.today()) &&
-                endDate.isBefore(dateHolder.today())) ||
+                ((startDate.isBefore(dateHolder.today()) &&
+                endDate.isAfter(dateHolder.today())) ||
                 (startDate.isEqual(dateHolder.today())
                         || endDate.isEqual(dateHolder.today())
                 ))
