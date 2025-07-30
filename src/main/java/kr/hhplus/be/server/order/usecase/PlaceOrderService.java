@@ -107,7 +107,7 @@ public class PlaceOrderService {
         walletJpaRepository.save(wallet);
 
         // 주문 생성 및 저장
-        Order order = Order.create(input.userId, totalAmount, discountAmount, paidAmount, issuedCouponId, dateHolder.now());
+        Order order = Order.create(input.userId, totalAmount, discountAmount, paidAmount, issuedCouponId);
         Order savedOrder = orderJpaRepository.save(order);
 
         for(Input.OrderProduct orderProduct : input.orderProduct) {

@@ -52,15 +52,13 @@ public class Order extends AbstractAggregateRoot<Order> {
                                Long totalAmount,
                                Long discountAmount,
                                Long paidAmount,
-                               Long issuedCouponId,
-                               LocalDateTime now) {
+                               Long issuedCouponId) {
         return Order.builder()
                 .userId(userId)
                 .totalAmount(totalAmount)
                 .discountAmount(discountAmount)
                 .paidAmount(paidAmount)
                 .issuedCouponId(issuedCouponId)
-                .createdAt(now)
                 .build();
     }
 }
