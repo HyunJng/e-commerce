@@ -25,33 +25,41 @@ public class Order extends AbstractAggregateRoot<Order> {
     @Column(name = "discount_amount")
     private Long discountAmount;
 
+    @Column(name = "issued_coupon_id")
+    private Long issuedCouponId;
+
     @Column(name = "paid_amount")
     private Long paidAmount;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    // TODO: 멱등키 추가하기
+    @Column(name = "create_at")
+    private LocalDateTime createAt;
 
     public Order() {
     }
 
     @Builder
-    public Order(Long id, Long userId, Long totalAmount, Long discountAmount, Long paidAmount, LocalDateTime createdAt) {
+    public Order(Long id, Long userId, Long totalAmount, Long discountAmount, Long issuedCouponId, Long paidAmount, LocalDateTime createdAt) {
         this.id = id;
         this.userId = userId;
         this.totalAmount = totalAmount;
         this.discountAmount = discountAmount;
+        this.issuedCouponId = issuedCouponId;
         this.paidAmount = paidAmount;
-        this.createdAt = createdAt;
+        this.createAt = createdAt;
     }
 
-    public static Order create(Long userId, Long totalAmount, Long discountAmount, Long paidAmount, LocalDateTime now) {
+    public static Order create(Long userId,
+                               Long totalAmount,
+                               Long discountAmount,
+                               Long paidAmount,
+                               Long issuedCouponId,
+                               LocalDateTime now) {
         return Order.builder()
                 .userId(userId)
                 .totalAmount(totalAmount)
                 .discountAmount(discountAmount)
                 .paidAmount(paidAmount)
+                .issuedCouponId(issuedCouponId)
                 .createdAt(now)
                 .build();
     }

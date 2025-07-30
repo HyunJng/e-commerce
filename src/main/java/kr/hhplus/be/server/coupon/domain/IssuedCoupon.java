@@ -32,9 +32,6 @@ public class IssuedCoupon {
     @Column(name = "status")
     private Status status;
 
-    @Column(name = "order_id")
-    private Long orderId;
-
     public IssuedCoupon(Coupon coupon, Long userId, DateHolder dateHolder) {
         this.userId = userId;
         this.couponId = coupon.getId();
@@ -57,8 +54,7 @@ public class IssuedCoupon {
         }
     }
 
-    public void use(Long orderId) {
+    public void use() {
         this.status = Status.USED;
-        this.orderId = orderId;
     }
 }

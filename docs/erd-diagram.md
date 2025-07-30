@@ -1,3 +1,6 @@
+## ERD 다이어그램
+이해를 위해 FK에 대한 표기를 하였으나 실제로 FK는 사용하지 않습니다.
+
 ```mermaid
 erDiagram
     USERS {
@@ -5,7 +8,7 @@ erDiagram
         DATETIME created_at "생성일자"
     }
 
-    WALLET {
+    WALLETS {
         BIGINT id PK
         BIGINT user_id FK "유저 식별자"
         BIGINT balance "잔액"
@@ -22,7 +25,7 @@ erDiagram
         DATETIME created_at "생성일자"
     }
 
-    PRODUCT {
+    PRODUCTS {
         BIGINT id PK
         STRING name "상품이름"
         BIGINT price "금액"
@@ -31,17 +34,17 @@ erDiagram
         DATETIME update_at "수정일시"
     }
 
-    ORDER {
+    ORDERS {
         BIGINT id PK
-        STRING nonce UK "주문키"
         BIGINT user_id FK "유저식별자"
         BIGINT total_amount "주문금액"
         BIGINT discount_amount "할인 금액"
         BIGINT paid_amount "지불 금액"
+        BIGINT issued_coupon_id FK "발급된 쿠폰 식별자"
         DATETIME created_at "생성일시"
     }
 
-    ORDER_ITEM {
+    ORDER_ITEMS {
         BIGINT id PK
         BIGINT order_id FK "주문식별자"
         BIGINT product_id FK "상품식별자"
@@ -51,7 +54,7 @@ erDiagram
         DATETIME created_at "생성일시"
     }
 
-    COUPON {
+    COUPONS {
         BIGINT id PK
         STRING name "쿠폰이름"
         BIGINT discount_amount "할인금액"
@@ -61,7 +64,7 @@ erDiagram
         DATETIME created_at "생성일시"
     }
 
-    ISSUED_COUPON {
+    ISSUED_COUPONS {
         BIGINT id PK
         BIGINT user_id FK "유저식별자"
         BIGINT coupon_id FK "쿠폰식별자"
@@ -69,19 +72,18 @@ erDiagram
         DATETIME started_at "사용시작"
         DATETIME end_at "사용마감"
         STRING state "ACTIVE, USED"
-        BIGINT order_id FK "사용한 주문식별자"
     }
 
 %% 관계 정의
-    USERS ||--|| WALLET : "보유한다"
-    USERS ||--o{ ORDER : "주문한다"
+    USERS ||--|| WALLETS : "보유한다"
+    USERS ||--o{ ORDERS : "주문한다"
     USERS ||--o{ USER_POINT_HISTORY : "충전/사용한다"
-    WALLET ||--o{ USER_POINT_HISTORY : "충전/사용한다"
-    USERS ||--o{ ISSUED_COUPON : "쿠폰보유"
+    WALLETS ||--o{ USER_POINT_HISTORY : "충전/사용한다"
+    USERS ||--o{ ISSUED_COUPONS : "쿠폰보유"
 
-    ORDER ||--o{ ORDER_ITEM : "포함한다"
-    PRODUCT ||--o{ ORDER_ITEM : "구성된다"
+    ORDERS ||--o{ ORDER_ITEMS : "포함한다"
+    PRODUCTS ||--o{ ORDER_ITEMS : "구성된다"
 
-    COUPON ||--o{ ISSUED_COUPON : "발급된다"
-    ISSUED_COUPON ||--|| ORDER : "적용된다"
+    COUPONS ||--o{ ISSUED_COUPONS : "발급된다"
+    ISSUED_COUPONS ||--|| ORDERS : "적용된다"
 ```

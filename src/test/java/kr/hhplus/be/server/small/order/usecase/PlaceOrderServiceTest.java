@@ -7,7 +7,9 @@ import kr.hhplus.be.server.coupon.domain.Coupon;
 import kr.hhplus.be.server.coupon.domain.CouponJpaRepository;
 import kr.hhplus.be.server.coupon.domain.IssuedCoupon;
 import kr.hhplus.be.server.coupon.domain.IssuedCouponJpaRepository;
+import kr.hhplus.be.server.mock.MockDateHolderImpl;
 import kr.hhplus.be.server.order.domain.Order;
+import kr.hhplus.be.server.order.domain.OrderItemsJpaRepository;
 import kr.hhplus.be.server.order.domain.OrderJpaRepository;
 import kr.hhplus.be.server.order.usecase.PlaceOrderService;
 import kr.hhplus.be.server.product.domain.Product;
@@ -20,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +40,8 @@ class PlaceOrderServiceTest {
 
     @Mock
     private OrderJpaRepository orderJpaRepository;
+    @Mock
+    private OrderItemsJpaRepository orderItemsJpaRepository;
     @Mock
     private ProductJpaRepository productJpaRepository;
     @Mock
@@ -80,6 +85,7 @@ class PlaceOrderServiceTest {
         given(issuedCouponJpaRepository.findByUserIdAndCouponId(userId, couponId)).willReturn(Optional.of(issuedCoupon));
         given(walletJpaRepository.findByUserId(userId)).willReturn(Optional.of(wallet));
         given(orderJpaRepository.save(any(Order.class))).willAnswer(invocation -> invocation.getArgument(0));
+        given(orderItemsJpaRepository.save(any())).willAnswer(invocation -> invocation.getArgument(0));
 
         // when
         PlaceOrderService.Output output = placeOrderService.execute(input);
@@ -93,7 +99,7 @@ class PlaceOrderServiceTest {
 
         verify(product).decreaseQuantity(2);
         verify(wallet).pay(150L, dateHolder);
-        verify(issuedCoupon).use(any());
+        verify(issuedCoupon).use();
     }
 
     @Test
@@ -155,5 +161,31 @@ class PlaceOrderServiceTest {
                 .hasMessage(ErrorCode.NOT_FOUND_RESOURCE.getMessage("지갑"));
     }
 
+    @Test
+    void 사용하려는_쿠폰이_이미_사용_상태라면_오류를_반환한다() throws Exception {
+        // given
+        Long userId = 1L;
+        Long couponId = 2L;
+
+        Product product = new Product(1L, "Test Product", 100L, 10, null, null);
+        Coupon coupon = new Coupon(couponId, "Test Coupon", 50L, Coupon.DiscountType.FIXED_AMOUNT, 10, null, null);
+        IssuedCoupon issuedCoupon = new IssuedCoupon(coupon, userId, new MockDateHolderImpl(2025, Month.JULY, 1, 1, 10));
+
+        List<PlaceOrderService.Input.OrderProduct> orderProducts = List.of(
+                new PlaceOrderService.Input.OrderProduct(1L, 2)
+        );
+
+        PlaceOrderService.Input input = new PlaceOrderService.Input(userId, couponId, orderProducts);
+
+        issuedCoupon.use();
+        given(productJpaRepository.findAllById(anyList())).willReturn(List.of(product));
+        given(couponJpaRepository.findById(couponId)).willReturn(Optional.of(coupon));
+        given(issuedCouponJpaRepository.findByUserIdAndCouponId(userId, couponId)).willReturn(Optional.of(issuedCoupon));
+
+        // when & then
+        Assertions.assertThatThrownBy(() -> placeOrderService.execute(input))
+                .isInstanceOf(CommonException.class)
+                .hasMessage(ErrorCode.INVALID_REQUEST.getMessage("유효하지 않은 쿠폰"));
+    }
 
 }
