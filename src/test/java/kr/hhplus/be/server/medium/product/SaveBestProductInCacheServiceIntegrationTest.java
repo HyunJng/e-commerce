@@ -3,6 +3,7 @@ package kr.hhplus.be.server.medium.product;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
 import kr.hhplus.be.server.mock.MockDateHolderImpl;
+import kr.hhplus.be.server.product.domain.BestProduct;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductJpaRepository;
 import kr.hhplus.be.server.product.usecase.SaveBestProductInCacheService;
@@ -16,6 +17,7 @@ import org.springframework.test.context.jdbc.SqlGroup;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,7 +69,10 @@ public class SaveBestProductInCacheServiceIntegrationTest extends AbstractIntegr
         Pageable pageable = Pageable.ofSize(5);
 
         // when
-        List<Product> bestProducts = productJpaRepository.findBestProductsBetweenDays(searchStartDay, searchEndDay, pageable);
+        List<Product> bestProducts = productJpaRepository.findBestProductsBetweenDays(searchStartDay, searchEndDay, pageable).stream()
+                .sorted(Comparator.comparing(BestProduct::count).reversed())
+                .map(BestProduct::product)
+                .toList();
 
         // then
         assertThat(bestProducts).hasSize(5);
