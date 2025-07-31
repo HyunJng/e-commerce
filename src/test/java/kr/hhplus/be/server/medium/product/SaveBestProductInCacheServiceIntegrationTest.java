@@ -1,18 +1,15 @@
 package kr.hhplus.be.server.medium.product;
 
-import kr.hhplus.be.server.common.cache.CacheKey;
-import kr.hhplus.be.server.common.cache.spring.SpringCacheName;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
 import kr.hhplus.be.server.mock.MockDateHolderImpl;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductJpaRepository;
-import kr.hhplus.be.server.product.usecase.SaveBestProductInCacheScheduler;
+import kr.hhplus.be.server.product.usecase.SaveBestProductInCacheService;
+import kr.hhplus.be.server.product.usecase.port.BestProductCacheManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -41,23 +38,23 @@ import static org.assertj.core.api.Assertions.assertThat;
         @Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/best-product-in-cache-integration-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 })
-public class SaveBestProductInCacheSchedulerIntegrationTest extends AbstractIntegrationTest {
+public class SaveBestProductInCacheServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private ProductJpaRepository productJpaRepository;
     @Autowired
-    private CacheManager cacheManager;
+    private BestProductCacheManager bestProductCacheManager;
 
-    private SaveBestProductInCacheScheduler saveBestProductInCacheScheduler;
+    private SaveBestProductInCacheService saveBestProductInCacheService;
 
     private DateHolder dateHolder;
 
     @BeforeEach
     void init() {
         dateHolder = new MockDateHolderImpl(2025, Month.JULY, 31, 0, 0);
-        saveBestProductInCacheScheduler = new SaveBestProductInCacheScheduler(
+        saveBestProductInCacheService = new SaveBestProductInCacheService(
                 productJpaRepository,
-                cacheManager,
+                bestProductCacheManager,
                 dateHolder
         );
     }
@@ -84,13 +81,10 @@ public class SaveBestProductInCacheSchedulerIntegrationTest extends AbstractInte
     @Test
     void 조회된_인기상품이_캐시에_저장된다() throws Exception {
         // when
-        saveBestProductInCacheScheduler.execute();
+        saveBestProductInCacheService.execute();
 
         // then
-        Cache cache = cacheManager.getCache(SpringCacheName.BEST_PRODUCTS);
-        assertThat(cache).isNotNull();
-
-        List<Product> cachedBestProducts = cache.get(CacheKey.bestProductsKey(), List.class);
+        List<Product> cachedBestProducts = bestProductCacheManager.get();
         assertThat(cachedBestProducts).hasSize(5);
     }
 }
