@@ -1,18 +1,22 @@
 package kr.hhplus.be.server.small.product.usecase;
 
+import kr.hhplus.be.server.common.cache.CacheKey;
 import kr.hhplus.be.server.product.domain.Product;
-import kr.hhplus.be.server.product.domain.ProductJpaRepository;
 import kr.hhplus.be.server.product.usecase.GetBestProductsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 class GetBestProductsServiceTest {
 
@@ -20,7 +24,7 @@ class GetBestProductsServiceTest {
     private GetBestProductsService getBestProductsService;
 
     @Mock
-    private ProductJpaRepository productJpaRepository;
+    private CacheManager cacheManager;
 
     @BeforeEach
     void init() {
@@ -30,7 +34,10 @@ class GetBestProductsServiceTest {
     @Test
     void 가장_인기있는_상품목록을_응답한다() throws Exception {
         // given
-        given(productJpaRepository.findBestProducts())
+        Cache cache = mock(Cache.class);
+
+        given(cacheManager.getCache(any())).willReturn(cache);
+        given(cache.get(CacheKey.bestProductsKey(), List.class))
                 .willReturn(List.of(
                         new Product(1L, "상품1", 1000L, 10, null, null),
                         new Product(2L, "상품2", 2000L, 20, null, null),
