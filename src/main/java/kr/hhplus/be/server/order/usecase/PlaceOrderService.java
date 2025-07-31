@@ -115,7 +115,8 @@ public class PlaceOrderService {
                     order,
                     orderProduct.productId,
                     orderProduct.quantity,
-                    orderProducts.get(orderProduct.productId).getPrice()
+                    orderProducts.get(orderProduct.productId).getPrice(),
+                    dateHolder
             );
             orderItemsJpaRepository.save(orderItems);
         }

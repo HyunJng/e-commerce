@@ -1,8 +1,11 @@
 package kr.hhplus.be.server.order.domain;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.time.DateHolder;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDate;
 
 @Getter
 @Entity
@@ -29,20 +32,28 @@ public class OrderItems {
     @Column(name = "total_price")
     private Long totalPrice;
 
+    @Column(name = "reg_date")
+    private LocalDate regDate;
+
     public OrderItems() {
     }
 
     @Builder
-    public OrderItems(Long id, Order order, Long productId, Integer quantity, Long unitPrice, Long totalPrice) {
+    public OrderItems(Long id, Order order, Long productId, Integer quantity, Long unitPrice, Long totalPrice, LocalDate regDate) {
         this.id = id;
         this.order = order;
         this.productId = productId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.totalPrice = totalPrice;
+        this.regDate = regDate;
     }
 
-    public static OrderItems create(Order order, Long productId, Integer quantity, Long unitPrice) {
+    public static OrderItems create(Order order,
+                                    Long productId,
+                                    Integer quantity,
+                                    Long unitPrice,
+                                    DateHolder dateHolder) {
         Long totalPrice = unitPrice * quantity;
         return OrderItems.builder()
                 .order(order)
@@ -50,6 +61,7 @@ public class OrderItems {
                 .quantity(quantity)
                 .unitPrice(unitPrice)
                 .totalPrice(totalPrice)
+                .regDate(dateHolder.today())
                 .build();
     }
 
