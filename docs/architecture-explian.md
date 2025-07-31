@@ -14,7 +14,7 @@
 - **의존성 역전 원칙 (Dependency Inversion Principle)**  
  현재 외부연동이라고 할 것이 없어 infrastructure이 존재하지 않지만 
  상위 계층(도메인, 유스케이스)이 하위 계층(외부 시스템)에 의존하지 않도록 port&adapter 인터페이스를 통한 추상화 구조를 사용합니다.
-![architecture-explain-img-1.png](architecture-explain-img-1.png)
+![architecture-explain-img-1.png](img/architecture-explain-img-1.png)
 
 ## 패키지 구조
 ```

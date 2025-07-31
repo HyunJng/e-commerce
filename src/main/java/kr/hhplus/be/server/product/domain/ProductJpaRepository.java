@@ -10,14 +10,13 @@ import java.util.List;
 public interface ProductJpaRepository extends JpaRepository<Product, Long> {
 
     @Query("""
-            SELECT b
+            SELECT new kr.hhplus.be.server.product.domain.BestProduct(b, count(b))
             FROM OrderItems a
             JOIN Product b ON a.productId = b.id
             WHERE a.regDate BETWEEN :startDate AND :endDate
             GROUP BY b.id
-            ORDER BY COUNT(a) DESC
             """)
-    List<Product> findBestProductsBetweenDays(
+    List<BestProduct> findBestProductsBetweenDays(
             LocalDate startDate,
             LocalDate endDate,
             Pageable pageable);
