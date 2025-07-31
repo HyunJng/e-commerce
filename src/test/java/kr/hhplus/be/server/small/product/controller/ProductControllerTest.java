@@ -2,7 +2,7 @@ package kr.hhplus.be.server.small.product.controller;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.GeneralExceptionAdvice;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.product.controller.ProductController;
 import kr.hhplus.be.server.product.usecase.GetBestProductsService;
 import kr.hhplus.be.server.product.usecase.GetProductDetailService;
@@ -44,23 +44,23 @@ class ProductControllerTest {
         // when & then
         mockMvc.perform(get("/api/v1/products/{id}", productId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.id").value(productId))
-                .andExpect(jsonPath("$.result.name").value(output.name()))
-                .andExpect(jsonPath("$.result.price").value(output.price()))
-                .andExpect(jsonPath("$.result.quantity").value(output.quantity()));
+                .andExpect(jsonPath("$.id").value(productId))
+                .andExpect(jsonPath("$.name").value(output.name()))
+                .andExpect(jsonPath("$.price").value(output.price()))
+                .andExpect(jsonPath("$.quantity").value(output.quantity()));
     }
 
     @Test
     void 존재하지않는_상품을_조회하면_400응답과_오류상세내역을_반환한다() throws Exception {
         // given
         given(getProductDetailService.execute(any()))
-                .willThrow(new CommonException(ResultCode.NOT_FOUND_RESOURCE, "상품"));
+                .willThrow(new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "상품"));
 
         // when & then
         mockMvc.perform(get("/api/v1/products/{id}", 1L))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.resultCd").value(ResultCode.NOT_FOUND_RESOURCE.getCode()))
-                .andExpect(jsonPath("$.resultMsg").value(ResultCode.NOT_FOUND_RESOURCE.getMessage("상품")));
+                .andExpect(jsonPath("$.resultCd").value(ErrorCode.NOT_FOUND_RESOURCE.getCode()))
+                .andExpect(jsonPath("$.resultMsg").value(ErrorCode.NOT_FOUND_RESOURCE.getMessage("상품")));
     }
 
     @Test
@@ -80,12 +80,12 @@ class ProductControllerTest {
         // when & then
         mockMvc.perform(get("/api/v1/products/best"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result").isArray())
-                .andExpect(jsonPath("$.result[0].id").value(1L))
-                .andExpect(jsonPath("$.result[0].name").value("상품1"))
-                .andExpect(jsonPath("$.result[0].price").value(1000L))
-                .andExpect(jsonPath("$.result[1].id").value(2L))
-                .andExpect(jsonPath("$.result[1].name").value("상품2"))
-                .andExpect(jsonPath("$.result[1].price").value(2000L));
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.[0].id").value(1L))
+                .andExpect(jsonPath("$.[0].name").value("상품1"))
+                .andExpect(jsonPath("$.[0].price").value(1000L))
+                .andExpect(jsonPath("$.[1].id").value(2L))
+                .andExpect(jsonPath("$.[1].name").value("상품2"))
+                .andExpect(jsonPath("$.[1].price").value(2000L));
     }
 }

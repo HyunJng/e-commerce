@@ -1,11 +1,10 @@
-package kr.hhplus.be.server.common.response;
+package kr.hhplus.be.server.common.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public enum ResultCode {
-    SUCCESS(HttpStatus.OK, "0000", "SUCCESS"),
+public enum ErrorCode {
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "E001", "유효하지 않은 요청(%1)"),
     NOT_FOUND_RESOURCE(HttpStatus.BAD_REQUEST, "E404", "존재하지 않는 %1"),
     INVALID_POLICY(HttpStatus.BAD_REQUEST, "E405", "정책 위반(%1)"),
@@ -15,7 +14,7 @@ public enum ResultCode {
     private final String code;
     private final String message;
 
-    ResultCode(HttpStatus status, String code, String message) {
+    ErrorCode(HttpStatus status, String code, String message) {
         this.status = status;
         this.code = code;
         this.message = message;

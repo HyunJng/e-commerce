@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.small.coupon.domain;
 
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.coupon.domain.Coupon;
 import kr.hhplus.be.server.coupon.domain.IssuedCoupon;
 import kr.hhplus.be.server.mock.MockDateHolderImpl;
@@ -36,9 +36,8 @@ class IssuedCouponTest {
         // then
         assertThat(issuedCoupon.getUserId()).isEqualTo(userId);
         assertThat(issuedCoupon.getCouponId()).isEqualTo(coupon.getId());
-        assertThat(issuedCoupon.getIssuedAt().toString()).isEqualTo("2025-07-24T02:00");
-        assertThat(issuedCoupon.getStartAt().toString()).isEqualTo("2025-07-24");
-        assertThat(issuedCoupon.getEndAt().toString()).isEqualTo("2025-07-31");
+        assertThat(issuedCoupon.getStartDate().toString()).isEqualTo("2025-07-24");
+        assertThat(issuedCoupon.getEndDate().toString()).isEqualTo("2025-07-31");
     }
 
     @Test
@@ -85,6 +84,6 @@ class IssuedCouponTest {
         // then
         Assertions.assertThatThrownBy(() -> issuedCoupon.validate(todayDateHolder))
                 .isInstanceOf(CommonException.class)
-                .hasMessageContaining(ResultCode.INVALID_REQUEST.getMessage("유효하지 않은 쿠폰"));
+                .hasMessageContaining(ErrorCode.INVALID_REQUEST.getMessage("유효하지 않은 쿠폰"));
     }
 }

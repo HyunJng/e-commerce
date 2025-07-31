@@ -1,10 +1,10 @@
 package kr.hhplus.be.server.coupon.controller;
 
-import kr.hhplus.be.server.common.response.DataResponse;
 import kr.hhplus.be.server.coupon.controller.docs.CouponApiSpec;
 import kr.hhplus.be.server.coupon.controller.dto.CouponIssueApi;
 import kr.hhplus.be.server.coupon.usecase.IssuedCouponService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +18,9 @@ public class CouponController implements CouponApiSpec {
     private final IssuedCouponService issuedCouponService;
 
     @PostMapping("/issue")
-    public DataResponse<CouponIssueApi.Response> issued(@RequestBody CouponIssueApi.Request request) {
+    public ResponseEntity<CouponIssueApi.Response> issued(@RequestBody CouponIssueApi.Request request) {
         IssuedCouponService.Output output = issuedCouponService.execute(request.to());
 
-        return DataResponse.success(CouponIssueApi.Response.from(output));
+        return ResponseEntity.ok(CouponIssueApi.Response.from(output));
     }
 }

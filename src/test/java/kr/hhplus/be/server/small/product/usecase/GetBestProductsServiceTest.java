@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.small.product.usecase;
 
 import kr.hhplus.be.server.product.domain.Product;
-import kr.hhplus.be.server.product.domain.ProductJpaRepository;
 import kr.hhplus.be.server.product.usecase.GetBestProductsService;
+import kr.hhplus.be.server.product.usecase.port.BestProductCacheManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ class GetBestProductsServiceTest {
     private GetBestProductsService getBestProductsService;
 
     @Mock
-    private ProductJpaRepository productJpaRepository;
+    private BestProductCacheManager bestProductCacheManager;
 
     @BeforeEach
     void init() {
@@ -30,7 +30,7 @@ class GetBestProductsServiceTest {
     @Test
     void 가장_인기있는_상품목록을_응답한다() throws Exception {
         // given
-        given(productJpaRepository.findBestProducts())
+        given(bestProductCacheManager.get())
                 .willReturn(List.of(
                         new Product(1L, "상품1", 1000L, 10, null, null),
                         new Product(2L, "상품2", 2000L, 20, null, null),

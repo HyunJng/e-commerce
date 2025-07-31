@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.small.wallet.usecase;
 
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.wallet.domain.Wallet;
 import kr.hhplus.be.server.wallet.domain.WalletChargePolicy;
 import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
@@ -80,7 +80,7 @@ class ChargeWalletBalanceServiceTest {
         // when & then
         assertThatThrownBy(() -> chargeWalletBalanceService.execute(input))
                 .isInstanceOf(CommonException.class)
-                .hasMessage(ResultCode.NOT_FOUND_RESOURCE.getMessage("지갑"));
+                .hasMessage(ErrorCode.NOT_FOUND_RESOURCE.getMessage("지갑"));
     }
 
     @Test

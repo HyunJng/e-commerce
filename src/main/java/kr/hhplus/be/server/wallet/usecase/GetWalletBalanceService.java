@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.wallet.usecase;
 
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.wallet.domain.Wallet;
 import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class GetWalletBalanceService {
         Long userId = input.userId();
 
         Wallet wallet = walletJpaRepository.findByUserId(userId).orElseThrow(
-                () -> new CommonException(ResultCode.NOT_FOUND_RESOURCE, "지갑")
+                () -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "지갑")
         );
 
         return new Output(userId, wallet.getBalance());

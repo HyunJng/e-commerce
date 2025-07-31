@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.small.wallet.domain;
 
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.wallet.domain.DefaultWalletChargePolicy;
 import kr.hhplus.be.server.wallet.domain.WalletChargePolicy;
 import org.assertj.core.api.Assertions;
@@ -20,7 +20,7 @@ class DefaultWalletChargePolicyTest {
         // when & then
         assertThatThrownBy(() -> walletChargePolicy.validate(amount))
                 .isInstanceOf(CommonException.class)
-                .hasMessage(ResultCode.INVALID_POLICY.getMessage("충전 금액은 1000원 이상이어야 합니다."));
+                .hasMessage(ErrorCode.INVALID_POLICY.getMessage("충전 금액은 1000원 이상이어야 합니다."));
     }
 
     @ParameterizedTest

@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.small.wallet.domain;
 
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.wallet.domain.Wallet;
 import org.assertj.core.api.Assertions;
@@ -49,7 +49,7 @@ class WalletTest {
         // when & then
         Assertions.assertThatThrownBy(() -> wallet.pay(paidAmount, dateHolder))
                 .isInstanceOf(CommonException.class)
-                .hasMessage(ResultCode.INVALID_REQUEST.getMessage("잔액 부족"));
+                .hasMessage(ErrorCode.INVALID_REQUEST.getMessage("잔액 부족"));
     }
 
 }

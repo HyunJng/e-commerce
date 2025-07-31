@@ -55,11 +55,11 @@ class CouponControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.id").value(1L))
-                .andExpect(jsonPath("$.result.couponId").value(couponId))
-                .andExpect(jsonPath("$.result.couponName").value("테스트 쿠폰"))
-                .andExpect(jsonPath("$.result.discountAmount").value(1000L))
-                .andExpect(jsonPath("$.result.discountType").value("FIXED"));
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.couponId").value(couponId))
+                .andExpect(jsonPath("$.couponName").value("테스트 쿠폰"))
+                .andExpect(jsonPath("$.discountAmount").value(1000L))
+                .andExpect(jsonPath("$.discountType").value("FIXED"));
     }
 
 }

@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.coupon.usecase;
 
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.coupon.domain.Coupon;
 import kr.hhplus.be.server.coupon.domain.CouponJpaRepository;
@@ -35,8 +35,8 @@ public class IssuedCouponService {
                 coupon.getName(),
                 coupon.getDiscountAmount(),
                 coupon.getDiscountType().name(),
-                issuedCoupon.getStartAt(),
-                issuedCoupon.getEndAt()
+                issuedCoupon.getStartDate(),
+                issuedCoupon.getEndDate()
             );
         }
     }
@@ -48,7 +48,7 @@ public class IssuedCouponService {
     public Output execute(Input input) {
         // 유저정보의 유효성은 인증/인가 과정에서 처리되었을 것이라 가정하였음
         Coupon coupon = couponJpaRepository.findById(input.couponId)
-            .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND_RESOURCE, "쿠폰"));
+            .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "쿠폰"));
 
         IssuedCoupon issuedCoupon = new IssuedCoupon(coupon, input.userId, dateHolder);
 

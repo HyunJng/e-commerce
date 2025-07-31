@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.product.usecase;
 
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class GetProductDetailService {
 
     public Output execute(Input input) {
         Product product = productJpaRepository.findById(input.productId)
-                .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND_RESOURCE, "상품"));
+                .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "상품"));
 
         return new Output(product);
     }

@@ -2,12 +2,11 @@ package kr.hhplus.be.server.coupon.domain;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -23,47 +22,39 @@ public class IssuedCoupon {
 
     private Long couponId;
 
-    @Column(name = "issued_at")
-    private LocalDateTime issuedAt;
+    @Column(name = "start_date")
+    private LocalDate startDate;
 
-    @Column(name = "start_at")
-    private LocalDate startAt;
-
-    @Column(name = "end_at")
-    private LocalDate endAt;
+    @Column(name = "end_date")
+    private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "state")
-    private Status state;
-
-    @Column(name = "order_id")
-    private Long orderId;
+    @Column(name = "status")
+    private Status status;
 
     public IssuedCoupon(Coupon coupon, Long userId, DateHolder dateHolder) {
         this.userId = userId;
         this.couponId = coupon.getId();
-        this.issuedAt = dateHolder.now();
-        this.startAt = dateHolder.today();
-        this.endAt = startAt.plusDays(coupon.getDates());
-        this.state = Status.ACTIVE;
+        this.startDate = dateHolder.today();
+        this.endDate = startDate.plusDays(coupon.getDates());
+        this.status = Status.ACTIVE;
     }
 
     public IssuedCoupon() {}
 
     public void validate(DateHolder dateHolder) {
-        if (!(state == Status.ACTIVE &&
-                ((startAt.isAfter(dateHolder.today()) &&
-                endAt.isBefore(dateHolder.today())) ||
-                (startAt.isEqual(dateHolder.today())
-                        || endAt.isEqual(dateHolder.today())
+        if (!(status == Status.ACTIVE &&
+                ((startDate.isBefore(dateHolder.today()) &&
+                endDate.isAfter(dateHolder.today())) ||
+                (startDate.isEqual(dateHolder.today())
+                        || endDate.isEqual(dateHolder.today())
                 ))
         )) {
-            throw new CommonException(ResultCode.INVALID_REQUEST, "유효하지 않은 쿠폰");
+            throw new CommonException(ErrorCode.INVALID_REQUEST, "유효하지 않은 쿠폰");
         }
     }
 
-    public void use(Long orderId) {
-        this.state = Status.USED;
-        this.orderId = orderId;
+    public void use() {
+        this.status = Status.USED;
     }
 }
