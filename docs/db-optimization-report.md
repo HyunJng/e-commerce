@@ -1,7 +1,6 @@
 # 데이터 베이스 최적화 보고서
-
-## 잔액 조회 API & 잔액 충전 API
-### Before Optimization
+## 📌 잔액 조회 API & 잔액 충전 API
+### Before 
 ```sql
     SELECT
         ID,
@@ -16,21 +15,20 @@
 ```
 - PK가 아닌 USER_ID로 조회하고 있어 인덱스가 없으면 전체 스캔이 발생한다.
     ![wallet-view-query-before.png](img/wallet-view-query-before.png)
-### After Optimization
+### After 
 ```sql
 CREATE INDEX IDX_WALLETS_USER_ID ON WALLETS (USER_ID);
 ```
 - 인덱스를 통해 조회가 되는 것을 확인할 수 있다.
   ![wallet-view-query-after.png](img/wallet-view-query-after.png)
 
-## 상품조회 API
-### Before Optimization
+## 📌 상품조회 API
 - 이미 PK로 조회하고 있어서 대상에서 제외하였다.
 - 상품 조회 API는 자주 호출되는 API이므로,
   인기상품을 위주로 일부 캐싱하는 방식을 통해 성능을 개선할 수 있을 것으로 보인다.
 
-## 주문/결제 API
-### Before Optimization
+## 📌 주문/결제 API
+### Before 
 ```sql
     SELECT
         O1_0.ID,
@@ -46,6 +44,7 @@ CREATE INDEX IDX_WALLETS_USER_ID ON WALLETS (USER_ID);
         O1_0.USER_ID=1
 ```
 - 주문/결제 로직 중 인덱스를 타지 않는 쿼리는 ORDERS 관련 쿼리만 존재한다.
+### After 
 ```sql
 CREATE INDEX IDX_ORDERS_USER_ID ON ORDERS (USER_ID);
 ```
@@ -53,11 +52,11 @@ CREATE INDEX IDX_ORDERS_USER_ID ON ORDERS (USER_ID);
   ![order-query-after.png](img/order-query-after.png)
 
 
-## 선착순 쿠폰 발급 API
+## 📌 선착순 쿠폰 발급 API
 - 쿠폰 발급 로직 중 인덱스 타지 않는 것이 없어 대상에서 제외하였다.
 
-## 인기 판매 상품 조회 API
-### Before Optimization
+## 📌 인기 판매 상품 조회 API
+### Before 
 ```sql
     SELECT
         P1_0.ID,
@@ -84,7 +83,7 @@ CREATE INDEX IDX_ORDERS_USER_ID ON ORDERS (USER_ID);
 - PRODUCTS 테이블은 PK로 조회하고 있어 빠르게 처리된 것을 확인해볼 수 있다.
   ![order-items-query-before.png](img/best-product-query-before.png)
 
-### After Optimization
+### After 
 1. 쿼리 생성 시점에 일자에 대한 조건 조회가 필요하므로 성능을 위해 reg_date를 추가한 반정규화를 시행하였다.
 2. ``WHERE`` → ``JOIN`` → ``GROUP BY`` 순서로 쿼리가 진행되므로 
     단일 인덱스보다 복합 인덱스를 추가하는 것이 성능을 개선할 수 있다.
@@ -103,7 +102,7 @@ CREATE INDEX IDX_ORDERS_USER_ID ON ORDERS (USER_ID);
     - 하지만 여전히 임시 테이블과 정렬이 발생 중이다.
       - using file sort는 order by에서 발생 중인 것으로 추측하였고,
       - 실행 순서와 상관 없이 범위 인덱스가 먼저 오기에 발생한 문제라고 판단하였다.
-4. 인덱스의 순서를 변경하였고 정렬을 application 에서 수행하도록 하였다.
+5. 인덱스의 순서를 변경하였고 정렬을 application 에서 수행하도록 하였다.
     ```sql
     SELECT
         P1_0.ID,
