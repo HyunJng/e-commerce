@@ -1,13 +1,23 @@
 package kr.hhplus.be.server.product.domain;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ProductJpaRepository extends JpaRepository<Product, Long> {
 
-    // TODO: best 상품 조회 쿼리 작성하기
-    @Query("SELECT p FROM Product p")
-    List<Product> findBestProducts();
+    @Query("""
+            SELECT new kr.hhplus.be.server.product.domain.BestProduct(b, count(b))
+            FROM OrderItems a
+            JOIN Product b ON a.productId = b.id
+            WHERE a.regDate BETWEEN :startDate AND :endDate
+            GROUP BY b.id
+            """)
+    List<BestProduct> findBestProductsBetweenDays(
+            LocalDate startDate,
+            LocalDate endDate,
+            Pageable pageable);
 }

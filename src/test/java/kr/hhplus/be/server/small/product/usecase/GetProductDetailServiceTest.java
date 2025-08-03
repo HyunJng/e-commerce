@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.small.product.usecase;
 
 import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.response.ResultCode;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductJpaRepository;
 import kr.hhplus.be.server.product.usecase.GetProductDetailService;
@@ -62,6 +62,6 @@ class GetProductDetailServiceTest {
         // when & then
         assertThatThrownBy(() -> getProductDetailService.execute(input))
                 .isInstanceOf(CommonException.class)
-                .hasMessage(ResultCode.NOT_FOUND_RESOURCE.getMessage("상품"));
+                .hasMessage(ErrorCode.NOT_FOUND_RESOURCE.getMessage("상품"));
     }
 }
