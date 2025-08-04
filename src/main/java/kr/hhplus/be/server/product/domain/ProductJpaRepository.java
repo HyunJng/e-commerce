@@ -14,7 +14,7 @@ public interface ProductJpaRepository extends JpaRepository<Product, Long> {
             FROM OrderItems a
             JOIN Product b ON a.productId = b.id
             WHERE a.regDate BETWEEN :startDate AND :endDate
-            GROUP BY b.id
+            GROUP BY a.productId
             """)
     List<BestProduct> findBestProductsBetweenDays(
             LocalDate startDate,
