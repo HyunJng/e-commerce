@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.small.product.usecase;
 
 import kr.hhplus.be.server.product.domain.Product;
-import kr.hhplus.be.server.product.usecase.GetBestProductsService;
-import kr.hhplus.be.server.product.usecase.port.BestProductCacheManager;
+import kr.hhplus.be.server.product.application.usecase.FindBestProductsUseCase;
+import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,13 +14,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-class GetBestProductsServiceTest {
+class FindBestProductsUseCaseTest {
 
     @InjectMocks
-    private GetBestProductsService getBestProductsService;
+    private FindBestProductsUseCase findBestProductsUsecase;
 
     @Mock
-    private BestProductCacheManager bestProductCacheManager;
+    private BestProductCacheReader bestProductCacheReader;
 
     @BeforeEach
     void init() {
@@ -30,7 +30,7 @@ class GetBestProductsServiceTest {
     @Test
     void 가장_인기있는_상품목록을_응답한다() throws Exception {
         // given
-        given(bestProductCacheManager.get())
+        given(bestProductCacheReader.get())
                 .willReturn(List.of(
                         new Product(1L, "상품1", 1000L, 10, null, null),
                         new Product(2L, "상품2", 2000L, 20, null, null),
@@ -40,7 +40,7 @@ class GetBestProductsServiceTest {
                 ));
 
         // when
-        GetBestProductsService.Output output = getBestProductsService.execute();
+        FindBestProductsUseCase.Output output = findBestProductsUsecase.execute();
 
         // then
         assertThat(output.products()).hasSize(5);

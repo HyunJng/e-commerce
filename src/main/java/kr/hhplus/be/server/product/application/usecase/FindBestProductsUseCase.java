@@ -1,16 +1,16 @@
-package kr.hhplus.be.server.product.usecase;
+package kr.hhplus.be.server.product.application.usecase;
 
+import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
 import kr.hhplus.be.server.product.domain.Product;
-import kr.hhplus.be.server.product.usecase.port.BestProductCacheManager;
+import kr.hhplus.be.server.product.application.port.BestProductCacheWriter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class GetBestProductsService {
+public class FindBestProductsUseCase {
 
     public record Output(
             List<ProductInfo> products
@@ -23,15 +23,14 @@ public class GetBestProductsService {
         }
     }
 
-    private final BestProductCacheManager bestProductCacheManager;
-    private final SaveBestProductInCacheService saveBestProductInCacheService;
+    private final BestProductCacheReader bestProductCacheReader;
+    private final BestProductCacheWriter bestProductCacheWriter;
 
     public Output execute() {
-        List<Product> bestProducts = Optional.ofNullable(bestProductCacheManager.get()).orElse(List.of());
+        List<Product> bestProducts = bestProductCacheReader.get();
 
         if (bestProducts.isEmpty()) {
-            saveBestProductInCacheService.execute();
-            bestProducts = bestProductCacheManager.get();
+            bestProducts = bestProductCacheWriter.update();
         }
 
         List<Output.ProductInfo> productInfos = bestProducts.stream()

@@ -4,8 +4,8 @@ import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.GeneralExceptionAdvice;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.product.controller.ProductController;
-import kr.hhplus.be.server.product.usecase.GetBestProductsService;
-import kr.hhplus.be.server.product.usecase.GetProductDetailService;
+import kr.hhplus.be.server.product.application.usecase.FindBestProductsUseCase;
+import kr.hhplus.be.server.product.application.usecase.GetProductDetailUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -28,17 +28,17 @@ class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
-    private GetProductDetailService getProductDetailService;
+    private GetProductDetailUseCase getProductDetailUseCase;
     @MockitoBean
-    private GetBestProductsService getBestProductsService;
+    private FindBestProductsUseCase findBestProductsUsecase;
 
     @Test
     void 상품을_성공적으로_조회하면_200응답과_상품_세부사항을_반환한다() throws Exception {
         // given
         Long productId = 1L;
-        GetProductDetailService.Output output = new GetProductDetailService.Output(productId, "테스트상품", 100L, 1000);
+        GetProductDetailUseCase.Output output = new GetProductDetailUseCase.Output(productId, "테스트상품", 100L, 1000);
 
-        given(getProductDetailService.execute(new GetProductDetailService.Input(productId)))
+        given(getProductDetailUseCase.execute(new GetProductDetailUseCase.Input(productId)))
                 .willReturn(output);
 
         // when & then
@@ -53,7 +53,7 @@ class ProductControllerTest {
     @Test
     void 존재하지않는_상품을_조회하면_400응답과_오류상세내역을_반환한다() throws Exception {
         // given
-        given(getProductDetailService.execute(any()))
+        given(getProductDetailUseCase.execute(any()))
                 .willThrow(new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "상품"));
 
         // when & then
@@ -66,14 +66,14 @@ class ProductControllerTest {
     @Test
     void 인기상품을_성공적으로_조회하면_200응답과_상품목록을_반환한다() throws Exception {
         // given
-        given(getBestProductsService.execute())
-                .willReturn(new GetBestProductsService.Output(
+        given(findBestProductsUsecase.execute())
+                .willReturn(new FindBestProductsUseCase.Output(
                         List.of(
-                                new GetBestProductsService.Output.ProductInfo(1L, "상품1", 1000L),
-                                new GetBestProductsService.Output.ProductInfo(2L, "상품2", 2000L),
-                                new GetBestProductsService.Output.ProductInfo(3L, "상품3", 3000L),
-                                new GetBestProductsService.Output.ProductInfo(4L, "상품4", 4000L),
-                                new GetBestProductsService.Output.ProductInfo(5L, "상품5", 5000L)
+                                new FindBestProductsUseCase.Output.ProductInfo(1L, "상품1", 1000L),
+                                new FindBestProductsUseCase.Output.ProductInfo(2L, "상품2", 2000L),
+                                new FindBestProductsUseCase.Output.ProductInfo(3L, "상품3", 3000L),
+                                new FindBestProductsUseCase.Output.ProductInfo(4L, "상품4", 4000L),
+                                new FindBestProductsUseCase.Output.ProductInfo(5L, "상품5", 5000L)
                         ))
                 );
 

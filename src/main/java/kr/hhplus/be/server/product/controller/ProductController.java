@@ -3,8 +3,8 @@ package kr.hhplus.be.server.product.controller;
 import kr.hhplus.be.server.product.controller.docs.ProductApiSpec;
 import kr.hhplus.be.server.product.controller.dto.BestProductApi;
 import kr.hhplus.be.server.product.controller.dto.ProductDetailApi;
-import kr.hhplus.be.server.product.usecase.GetBestProductsService;
-import kr.hhplus.be.server.product.usecase.GetProductDetailService;
+import kr.hhplus.be.server.product.application.usecase.FindBestProductsUseCase;
+import kr.hhplus.be.server.product.application.usecase.GetProductDetailUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,19 +19,19 @@ import java.util.List;
 @RequestMapping("/api/v1/products")
 public class ProductController implements ProductApiSpec {
 
-    private final GetProductDetailService getProductDetailService;
-    private final GetBestProductsService getBestProductsService;
+    private final GetProductDetailUseCase getProductDetailUseCase;
+    private final FindBestProductsUseCase findBestProductsUsecase;
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDetailApi.Response> viewDetail(@PathVariable Long id) {
-        GetProductDetailService.Output output = getProductDetailService.execute(new GetProductDetailService.Input(id));
+        GetProductDetailUseCase.Output output = getProductDetailUseCase.execute(new GetProductDetailUseCase.Input(id));
 
         return ResponseEntity.ok(ProductDetailApi.Response.from(output));
     }
 
     @GetMapping("/best")
     public ResponseEntity<List<BestProductApi.Response>> viewBest() {
-        GetBestProductsService.Output output = getBestProductsService.execute();
+        FindBestProductsUseCase.Output output = findBestProductsUsecase.execute();
         return ResponseEntity.ok(output.products().stream()
                 .map(BestProductApi.Response::from)
                 .toList());

@@ -2,7 +2,7 @@ package kr.hhplus.be.server.product.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.hhplus.be.server.product.controller.docs.ProductSchemaDescription;
-import kr.hhplus.be.server.product.usecase.GetBestProductsService;
+import kr.hhplus.be.server.product.application.usecase.FindBestProductsUseCase;
 
 public class BestProductApi {
 
@@ -12,7 +12,7 @@ public class BestProductApi {
             @Schema(description = ProductSchemaDescription.price) Long price
     ) {
 
-        public static Response from(GetBestProductsService.Output.ProductInfo productInfo) {
+        public static Response from(FindBestProductsUseCase.Output.ProductInfo productInfo) {
             return new Response(
                     productInfo.id(),
                     productInfo.name(),
