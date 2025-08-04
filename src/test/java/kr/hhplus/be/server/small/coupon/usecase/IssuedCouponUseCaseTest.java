@@ -4,7 +4,7 @@ import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.coupon.domain.Coupon;
 import kr.hhplus.be.server.coupon.domain.CouponJpaRepository;
 import kr.hhplus.be.server.coupon.domain.IssuedCouponJpaRepository;
-import kr.hhplus.be.server.coupon.usecase.IssuedCouponService;
+import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
 import kr.hhplus.be.server.mock.MockDateHolderImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-class IssuedCouponServiceTest {
+class IssuedCouponUseCaseTest {
 
-    private IssuedCouponService issuedCouponService;
+    private IssuedCouponUseCase issuedCouponUseCase;
 
     @Mock
     private IssuedCouponJpaRepository issuedCouponJpaRepository;
@@ -32,7 +32,7 @@ class IssuedCouponServiceTest {
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
-        issuedCouponService = new IssuedCouponService(
+        issuedCouponUseCase = new IssuedCouponUseCase(
                 couponJpaRepository,
                 issuedCouponJpaRepository,
                 dateHolder
@@ -53,14 +53,14 @@ class IssuedCouponServiceTest {
                 10,
                 null
         );
-        IssuedCouponService.Input input = new IssuedCouponService.Input(couponId, userId);
+        IssuedCouponUseCase.Input input = new IssuedCouponUseCase.Input(couponId, userId);
 
         given(couponJpaRepository.findById(couponId))
                 .willReturn(Optional.of(coupon));
         given(issuedCouponJpaRepository.save(any())).willAnswer(invocation -> invocation.getArgument(0));
 
         // when
-        IssuedCouponService.Output output = issuedCouponService.execute(input);
+        IssuedCouponUseCase.Output output = issuedCouponUseCase.execute(input);
 
         // then
         assertThat(output.couponId()).isEqualTo(couponId);

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.coupon.usecase;
+package kr.hhplus.be.server.coupon.application.usecase;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
-public class IssuedCouponService {
+public class IssuedCouponUseCase {
 
     public record Input(Long couponId, Long userId) {
     }

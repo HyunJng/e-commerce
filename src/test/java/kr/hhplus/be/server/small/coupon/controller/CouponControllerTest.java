@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.common.exception.GeneralExceptionAdvice;
 import kr.hhplus.be.server.coupon.controller.CouponController;
 import kr.hhplus.be.server.coupon.controller.dto.CouponIssueApi;
-import kr.hhplus.be.server.coupon.usecase.IssuedCouponService;
+import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class CouponControllerTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
-    private IssuedCouponService issuedCouponService;
+    private IssuedCouponUseCase issuedCouponUseCase;
 
     @Test
     void 쿠폰_발급에_성공하면_200응답과_발급된_쿠폰정보를_반환한다() throws Exception {
@@ -38,10 +38,10 @@ class CouponControllerTest {
         CouponIssueApi.Request request = new CouponIssueApi.Request(userId, couponId);
         String content = objectMapper.writeValueAsString(request);
 
-        IssuedCouponService.Input input = new IssuedCouponService.Input(couponId, userId);
+        IssuedCouponUseCase.Input input = new IssuedCouponUseCase.Input(couponId, userId);
 
-        BDDMockito.given(issuedCouponService.execute(input))
-                .willReturn(new IssuedCouponService.Output(
+        BDDMockito.given(issuedCouponUseCase.execute(input))
+                .willReturn(new IssuedCouponUseCase.Output(
                         1L,
                         couponId,
                         "테스트 쿠폰",

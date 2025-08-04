@@ -11,7 +11,7 @@ import kr.hhplus.be.server.mock.MockDateHolderImpl;
 import kr.hhplus.be.server.order.domain.Order;
 import kr.hhplus.be.server.order.domain.OrderItemsJpaRepository;
 import kr.hhplus.be.server.order.domain.OrderJpaRepository;
-import kr.hhplus.be.server.order.usecase.PlaceOrderService;
+import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductJpaRepository;
 import kr.hhplus.be.server.wallet.domain.Wallet;
@@ -33,10 +33,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-class PlaceOrderServiceTest {
+class PlaceOrderUseCaseTest {
 
     @InjectMocks
-    private PlaceOrderService placeOrderService;
+    private PlaceOrderUseCase placeOrderUseCase;
 
     @Mock
     private OrderJpaRepository orderJpaRepository;
@@ -54,7 +54,7 @@ class PlaceOrderServiceTest {
     private DateHolder dateHolder;
 
 
-    public PlaceOrderServiceTest() {
+    public PlaceOrderUseCaseTest() {
         MockitoAnnotations.openMocks(this);
     }
 
@@ -64,10 +64,10 @@ class PlaceOrderServiceTest {
         Long userId = 1L;
         Long couponId = 2L;
 
-        List<PlaceOrderService.Input.OrderProduct> orderProducts = List.of(
-                new PlaceOrderService.Input.OrderProduct(1L, 2)
+        List<PlaceOrderUseCase.Input.OrderProduct> orderProducts = List.of(
+                new PlaceOrderUseCase.Input.OrderProduct(1L, 2)
         );
-        PlaceOrderService.Input input = new PlaceOrderService.Input(userId, couponId, orderProducts);
+        PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(userId, couponId, orderProducts);
 
         Product product = mock(Product.class);
         given(product.getId()).willReturn(1L);
@@ -88,7 +88,7 @@ class PlaceOrderServiceTest {
         given(orderItemsJpaRepository.save(any())).willAnswer(invocation -> invocation.getArgument(0));
 
         // when
-        PlaceOrderService.Output output = placeOrderService.execute(input);
+        PlaceOrderUseCase.Output output = placeOrderUseCase.execute(input);
 
         // then
         assertThat(output).isNotNull();
@@ -106,16 +106,16 @@ class PlaceOrderServiceTest {
     void 상품주문시_일부상품이_조회되지_않으면_오류를_반환한다() {
         // given
         Long userId = 1L;
-        List<PlaceOrderService.Input.OrderProduct> orderProducts = List.of(
-                new PlaceOrderService.Input.OrderProduct(1L, 2)
+        List<PlaceOrderUseCase.Input.OrderProduct> orderProducts = List.of(
+                new PlaceOrderUseCase.Input.OrderProduct(1L, 2)
         );
 
-        PlaceOrderService.Input input = new PlaceOrderService.Input(userId, null, orderProducts);
+        PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(userId, null, orderProducts);
 
         given(productJpaRepository.findAllById(anyList())).willReturn(List.of());
 
         // when & then
-        Assertions.assertThatThrownBy(() -> placeOrderService.execute(input))
+        Assertions.assertThatThrownBy(() -> placeOrderUseCase.execute(input))
                 .isInstanceOf(CommonException.class)
                 .hasMessage(ErrorCode.INVALID_REQUEST.getMessage("주문한 상품 중 일부가 존재하지 않습니다."));
     }
@@ -126,17 +126,17 @@ class PlaceOrderServiceTest {
         Long userId = 1L;
         Long couponId = 2L;
         Product product = new Product(1L, "Test Product", 100L, 10, null, null);
-        List<PlaceOrderService.Input.OrderProduct> orderProducts = List.of(
-                new PlaceOrderService.Input.OrderProduct(1L, 2)
+        List<PlaceOrderUseCase.Input.OrderProduct> orderProducts = List.of(
+                new PlaceOrderUseCase.Input.OrderProduct(1L, 2)
         );
 
-        PlaceOrderService.Input input = new PlaceOrderService.Input(userId, couponId, orderProducts);
+        PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(userId, couponId, orderProducts);
 
         given(productJpaRepository.findAllById(anyList())).willReturn(List.of(product));
         given(couponJpaRepository.findById(couponId)).willReturn(Optional.empty());
 
         // when & then
-        Assertions.assertThatThrownBy(() -> placeOrderService.execute(input))
+        Assertions.assertThatThrownBy(() -> placeOrderUseCase.execute(input))
                 .isInstanceOf(CommonException.class)
                 .hasMessage(ErrorCode.NOT_FOUND_RESOURCE.getMessage("쿠폰"));
     }
@@ -145,18 +145,18 @@ class PlaceOrderServiceTest {
     void 지갑이_존재하지_않으면_오류를_반환한다() {
         // given
         Long userId = 1L;
-        List<PlaceOrderService.Input.OrderProduct> orderProducts = List.of(
-                new PlaceOrderService.Input.OrderProduct(1L, 2)
+        List<PlaceOrderUseCase.Input.OrderProduct> orderProducts = List.of(
+                new PlaceOrderUseCase.Input.OrderProduct(1L, 2)
         );
         Product product = new Product(1L, "Test Product", 100L, 10, null, null);
 
-        PlaceOrderService.Input input = new PlaceOrderService.Input(userId, null, orderProducts);
+        PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(userId, null, orderProducts);
 
         given(productJpaRepository.findAllById(anyList())).willReturn(List.of(product));
         given(walletJpaRepository.findByUserId(userId)).willReturn(Optional.empty());
 
         // when & then
-        Assertions.assertThatThrownBy(() -> placeOrderService.execute(input))
+        Assertions.assertThatThrownBy(() -> placeOrderUseCase.execute(input))
                 .isInstanceOf(CommonException.class)
                 .hasMessage(ErrorCode.NOT_FOUND_RESOURCE.getMessage("지갑"));
     }
@@ -171,11 +171,11 @@ class PlaceOrderServiceTest {
         Coupon coupon = new Coupon(couponId, "Test Coupon", 50L, Coupon.DiscountType.FIXED_AMOUNT, 10, null, null);
         IssuedCoupon issuedCoupon = new IssuedCoupon(coupon, userId, new MockDateHolderImpl(2025, Month.JULY, 1, 1, 10));
 
-        List<PlaceOrderService.Input.OrderProduct> orderProducts = List.of(
-                new PlaceOrderService.Input.OrderProduct(1L, 2)
+        List<PlaceOrderUseCase.Input.OrderProduct> orderProducts = List.of(
+                new PlaceOrderUseCase.Input.OrderProduct(1L, 2)
         );
 
-        PlaceOrderService.Input input = new PlaceOrderService.Input(userId, couponId, orderProducts);
+        PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(userId, couponId, orderProducts);
 
         issuedCoupon.use();
         given(productJpaRepository.findAllById(anyList())).willReturn(List.of(product));
@@ -183,7 +183,7 @@ class PlaceOrderServiceTest {
         given(issuedCouponJpaRepository.findByUserIdAndCouponId(userId, couponId)).willReturn(Optional.of(issuedCoupon));
 
         // when & then
-        Assertions.assertThatThrownBy(() -> placeOrderService.execute(input))
+        Assertions.assertThatThrownBy(() -> placeOrderUseCase.execute(input))
                 .isInstanceOf(CommonException.class)
                 .hasMessage(ErrorCode.INVALID_REQUEST.getMessage("유효하지 않은 쿠폰"));
     }

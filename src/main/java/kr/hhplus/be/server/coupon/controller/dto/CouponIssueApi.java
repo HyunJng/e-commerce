@@ -2,7 +2,7 @@ package kr.hhplus.be.server.coupon.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.hhplus.be.server.coupon.controller.docs.CouponSchemaDescription;
-import kr.hhplus.be.server.coupon.usecase.IssuedCouponService;
+import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
 
 import java.time.LocalDate;
 
@@ -12,8 +12,8 @@ public class CouponIssueApi {
             @Schema(description = CouponSchemaDescription.userId) Long userId,
             @Schema(description = CouponSchemaDescription.couponId) Long couponId
     ) {
-        public IssuedCouponService.Input to() {
-            return new IssuedCouponService.Input(couponId, userId);
+        public IssuedCouponUseCase.Input to() {
+            return new IssuedCouponUseCase.Input(couponId, userId);
         }
     }
 
@@ -26,7 +26,7 @@ public class CouponIssueApi {
             @Schema(description = CouponSchemaDescription.startedAt) LocalDate startedAt,
             @Schema(description = CouponSchemaDescription.endAt) LocalDate endAt
     ) {
-        public static Response from(IssuedCouponService.Output output) {
+        public static Response from(IssuedCouponUseCase.Output output) {
             return new Response(
                     output.id(),
                     output.couponId(),

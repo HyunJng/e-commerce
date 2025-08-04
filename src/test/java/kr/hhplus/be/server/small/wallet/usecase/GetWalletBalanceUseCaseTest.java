@@ -2,7 +2,7 @@ package kr.hhplus.be.server.small.wallet.usecase;
 
 import kr.hhplus.be.server.wallet.domain.Wallet;
 import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
-import kr.hhplus.be.server.wallet.usecase.GetWalletBalanceService;
+import kr.hhplus.be.server.wallet.application.usecase.GetWalletBalanceUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.given;
 
-class GetWalletBalanceServiceTest {
+class GetWalletBalanceUseCaseTest {
 
     @InjectMocks
-    private GetWalletBalanceService getWalletBalanceService;
+    private GetWalletBalanceUseCase getWalletBalanceUseCase;
 
     @Mock
     private WalletJpaRepository walletJpaRepository;
@@ -35,11 +35,11 @@ class GetWalletBalanceServiceTest {
         Long balance = 1000L;
         Wallet wallet = new Wallet(1L, userId, balance, null, null);
 
-        GetWalletBalanceService.Input input = new GetWalletBalanceService.Input(userId);
+        GetWalletBalanceUseCase.Input input = new GetWalletBalanceUseCase.Input(userId);
         given(walletJpaRepository.findByUserId(userId)).willReturn(Optional.of(wallet));
 
         // when
-        GetWalletBalanceService.Output output = getWalletBalanceService.execute(input);
+        GetWalletBalanceUseCase.Output output = getWalletBalanceUseCase.execute(input);
 
         // then
         assertNotNull(output);

@@ -2,7 +2,7 @@ package kr.hhplus.be.server.wallet.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.hhplus.be.server.wallet.controller.docs.WalletSchemaDescription;
-import kr.hhplus.be.server.wallet.usecase.ChargeWalletBalanceService;
+import kr.hhplus.be.server.wallet.application.usecase.ChargeWalletBalanceUseCase;
 
 public class WalletChargeApi {
 
@@ -10,8 +10,8 @@ public class WalletChargeApi {
             @Schema(description = WalletSchemaDescription.userId) Long userId,
             @Schema(description = WalletSchemaDescription.amount) Long amount
     ) {
-        public ChargeWalletBalanceService.Input to() {
-            return new ChargeWalletBalanceService.Input(userId, amount);
+        public ChargeWalletBalanceUseCase.Input to() {
+            return new ChargeWalletBalanceUseCase.Input(userId, amount);
         }
     }
 
@@ -20,7 +20,7 @@ public class WalletChargeApi {
             @Schema(description = WalletSchemaDescription.userId) Long userId,
             @Schema(description = WalletSchemaDescription.balance) Long balance
     ) {
-        public static Response from(ChargeWalletBalanceService.Output result) {
+        public static Response from(ChargeWalletBalanceUseCase.Output result) {
             return new Response(
                     result.userId(),
                     result.balance()

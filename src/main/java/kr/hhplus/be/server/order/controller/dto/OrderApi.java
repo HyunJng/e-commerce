@@ -2,7 +2,7 @@ package kr.hhplus.be.server.order.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.hhplus.be.server.order.controller.docs.OrderSchemaDescription;
-import kr.hhplus.be.server.order.usecase.PlaceOrderService;
+import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,12 +22,12 @@ public class OrderApi {
 
         }
 
-        public PlaceOrderService.Input to() {
-            return new PlaceOrderService.Input(
+        public PlaceOrderUseCase.Input to() {
+            return new PlaceOrderUseCase.Input(
                     userId,
                     couponId,
                     orderProduct.stream()
-                            .map(product -> new PlaceOrderService.Input.OrderProduct(product.productId, product.quantity))
+                            .map(product -> new PlaceOrderUseCase.Input.OrderProduct(product.productId, product.quantity))
                             .toList()
             );
         }
@@ -41,7 +41,7 @@ public class OrderApi {
             @Schema(description = OrderSchemaDescription.paidAmount) Long paidAmount,
             @Schema(description = OrderSchemaDescription.createAt) LocalDateTime createAt
     ) {
-        public static Response from(PlaceOrderService.Output output) {
+        public static Response from(PlaceOrderUseCase.Output output) {
             return new Response(
                     output.orderId(),
                     output.userId(),

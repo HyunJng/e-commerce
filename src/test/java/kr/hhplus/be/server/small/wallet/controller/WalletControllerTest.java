@@ -6,8 +6,8 @@ import kr.hhplus.be.server.common.exception.GeneralExceptionAdvice;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.wallet.controller.WalletController;
 import kr.hhplus.be.server.wallet.controller.dto.WalletChargeApi;
-import kr.hhplus.be.server.wallet.usecase.ChargeWalletBalanceService;
-import kr.hhplus.be.server.wallet.usecase.GetWalletBalanceService;
+import kr.hhplus.be.server.wallet.application.usecase.ChargeWalletBalanceUseCase;
+import kr.hhplus.be.server.wallet.application.usecase.GetWalletBalanceUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,9 +33,9 @@ class WalletControllerTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
-    private GetWalletBalanceService getWalletBalanceService;
+    private GetWalletBalanceUseCase getWalletBalanceUseCase;
     @MockitoBean
-    private ChargeWalletBalanceService chargeWalletBalanceService;
+    private ChargeWalletBalanceUseCase chargeWalletBalanceUseCase;
 
     @Test
     void 잔액확인에_성공하면_200응답과_지갑정보를_반환한다() throws Exception {
@@ -43,8 +43,8 @@ class WalletControllerTest {
         Long userId = 1L;
         Long balance = 1000L;
 
-        given(getWalletBalanceService.execute(new GetWalletBalanceService.Input(userId)))
-                .willReturn(new GetWalletBalanceService.Output(userId, balance));
+        given(getWalletBalanceUseCase.execute(new GetWalletBalanceUseCase.Input(userId)))
+                .willReturn(new GetWalletBalanceUseCase.Output(userId, balance));
 
         // when & then
         mockMvc.perform(get("/api/v1/me/wallet")
@@ -57,7 +57,7 @@ class WalletControllerTest {
     @Test
     void 잔액확인요청이_존재하지않는_유저라면_400응답과_오류상세내역을_반환한다() throws Exception {
         // given
-        given(getWalletBalanceService.execute(any()))
+        given(getWalletBalanceUseCase.execute(any()))
                 .willThrow(new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "지갑"));
 
         // when & then
@@ -77,8 +77,8 @@ class WalletControllerTest {
         WalletChargeApi.Request request = new WalletChargeApi.Request(userId, 1000L);
         String content = objectMapper.writeValueAsString(request);
 
-        given(chargeWalletBalanceService.execute(new ChargeWalletBalanceService.Input(request.userId(), request.amount())))
-                .willReturn(new ChargeWalletBalanceService.Output(userId, balance));
+        given(chargeWalletBalanceUseCase.execute(new ChargeWalletBalanceUseCase.Input(request.userId(), request.amount())))
+                .willReturn(new ChargeWalletBalanceUseCase.Output(userId, balance));
 
         // when & then
         mockMvc.perform(post("/api/v1/me/wallet/charge")
@@ -95,7 +95,7 @@ class WalletControllerTest {
         WalletChargeApi.Request request = new WalletChargeApi.Request(1L, 1000L);
         String content = objectMapper.writeValueAsString(request);
 
-        given(chargeWalletBalanceService.execute(any()))
+        given(chargeWalletBalanceUseCase.execute(any()))
                 .willThrow(new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "지갑"));
 
         // when & then
@@ -113,7 +113,7 @@ class WalletControllerTest {
         WalletChargeApi.Request request = new WalletChargeApi.Request(1L, 1000L);
         String content = objectMapper.writeValueAsString(request);
 
-        given(chargeWalletBalanceService.execute(any()))
+        given(chargeWalletBalanceUseCase.execute(any()))
                 .willThrow(new CommonException(ErrorCode.INVALID_POLICY));
 
         // when & then

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.order.usecase;
+package kr.hhplus.be.server.order.application.usecase;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.exception.CommonException;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PlaceOrderService {
+public class PlaceOrderUseCase {
 
     public record Input(
             Long userId,

@@ -5,7 +5,7 @@ import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.wallet.domain.Wallet;
 import kr.hhplus.be.server.wallet.domain.WalletChargePolicy;
 import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
-import kr.hhplus.be.server.wallet.usecase.ChargeWalletBalanceService;
+import kr.hhplus.be.server.wallet.application.usecase.ChargeWalletBalanceUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,10 +20,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-class ChargeWalletBalanceServiceTest {
+class ChargeWalletBalanceUseCaseTest {
 
     @InjectMocks
-    private ChargeWalletBalanceService chargeWalletBalanceService;
+    private ChargeWalletBalanceUseCase chargeWalletBalanceUseCase;
 
     @Mock
     private WalletJpaRepository walletJpaRepository;
@@ -42,7 +42,7 @@ class ChargeWalletBalanceServiceTest {
         Long amount = 2000L;
 
         Wallet wallet = new Wallet(1L, userId, 1000L, null, null);
-        ChargeWalletBalanceService.Input input = new ChargeWalletBalanceService.Input(
+        ChargeWalletBalanceUseCase.Input input = new ChargeWalletBalanceUseCase.Input(
                 userId,
                 amount
         );
@@ -55,7 +55,7 @@ class ChargeWalletBalanceServiceTest {
         );
 
         // when
-        ChargeWalletBalanceService.Output output = chargeWalletBalanceService.execute(input);
+        ChargeWalletBalanceUseCase.Output output = chargeWalletBalanceUseCase.execute(input);
 
         // then
         assertThat(output).isNotNull();
@@ -68,7 +68,7 @@ class ChargeWalletBalanceServiceTest {
         // given
         Long userId = 1000L;
 
-        ChargeWalletBalanceService.Input input = new ChargeWalletBalanceService.Input(
+        ChargeWalletBalanceUseCase.Input input = new ChargeWalletBalanceUseCase.Input(
                 userId,
                 1000L
         );
@@ -78,7 +78,7 @@ class ChargeWalletBalanceServiceTest {
         );
 
         // when & then
-        assertThatThrownBy(() -> chargeWalletBalanceService.execute(input))
+        assertThatThrownBy(() -> chargeWalletBalanceUseCase.execute(input))
                 .isInstanceOf(CommonException.class)
                 .hasMessage(ErrorCode.NOT_FOUND_RESOURCE.getMessage("지갑"));
     }
@@ -90,7 +90,7 @@ class ChargeWalletBalanceServiceTest {
         Long amount = 2000L;
 
         Wallet wallet = new Wallet(1L, userId, 1000L, null, null);
-        ChargeWalletBalanceService.Input input = new ChargeWalletBalanceService.Input(
+        ChargeWalletBalanceUseCase.Input input = new ChargeWalletBalanceUseCase.Input(
                 userId,
                 amount
         );
@@ -103,7 +103,7 @@ class ChargeWalletBalanceServiceTest {
         );
 
         // when
-        chargeWalletBalanceService.execute(input);
+        chargeWalletBalanceUseCase.execute(input);
 
         // then
         verify(walletChargePolicy).validate(amount);

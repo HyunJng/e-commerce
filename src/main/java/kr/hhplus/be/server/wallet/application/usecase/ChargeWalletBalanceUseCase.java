@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.wallet.usecase;
+package kr.hhplus.be.server.wallet.application.usecase;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.exception.CommonException;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ChargeWalletBalanceService {
+public class ChargeWalletBalanceUseCase {
 
     public record Input(
             Long userId,

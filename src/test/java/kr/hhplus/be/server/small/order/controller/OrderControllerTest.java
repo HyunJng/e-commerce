@@ -6,7 +6,7 @@ import kr.hhplus.be.server.common.exception.GeneralExceptionAdvice;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.order.controller.OrderController;
 import kr.hhplus.be.server.order.controller.dto.OrderApi;
-import kr.hhplus.be.server.order.usecase.PlaceOrderService;
+import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -32,7 +32,7 @@ class OrderControllerTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
-    private PlaceOrderService placeOrderService;
+    private PlaceOrderUseCase placeOrderUseCase;
 
     @Test
     void 주문에_성공하면_200응답과_주문정보를_반환한다() throws Exception {
@@ -47,7 +47,7 @@ class OrderControllerTest {
 
         String content = objectMapper.writeValueAsString(request);
 
-        PlaceOrderService.Output output = new PlaceOrderService.Output(
+        PlaceOrderUseCase.Output output = new PlaceOrderUseCase.Output(
                 1L,
                 userId,
                 2000L,
@@ -55,7 +55,7 @@ class OrderControllerTest {
                 1500L,
                 null
         );
-        given(placeOrderService.execute(request.to())).willReturn(output);
+        given(placeOrderUseCase.execute(request.to())).willReturn(output);
 
         // when & then
         mockMvc.perform(post("/api/v1/orders")
@@ -80,7 +80,7 @@ class OrderControllerTest {
         );
         String content = objectMapper.writeValueAsString(request);
 
-        given(placeOrderService.execute(request.to()))
+        given(placeOrderUseCase.execute(request.to()))
                 .willThrow(new CommonException(ErrorCode.INVALID_REQUEST, "주문한 상품 중 일부가 존재하지 않습니다."));
 
         // when & then
@@ -103,7 +103,7 @@ class OrderControllerTest {
         );
         String content = objectMapper.writeValueAsString(request);
 
-        given(placeOrderService.execute(request.to()))
+        given(placeOrderUseCase.execute(request.to()))
                 .willThrow(new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "쿠폰"));
 
         // when & then
