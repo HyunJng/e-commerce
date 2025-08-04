@@ -1,8 +1,7 @@
 package kr.hhplus.be.server.small.product.usecase;
 
-import kr.hhplus.be.server.product.domain.Product;
-import kr.hhplus.be.server.product.application.usecase.FindBestProductsUseCase;
 import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
+import kr.hhplus.be.server.product.application.usecase.FindBestProductsUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
+import static kr.hhplus.be.server.mock.DomainTestFixtures.포맷상품;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
@@ -32,11 +32,11 @@ class FindBestProductsUseCaseTest {
         // given
         given(bestProductCacheReader.get())
                 .willReturn(List.of(
-                        new Product(1L, "상품1", 1000L, 10, null, null),
-                        new Product(2L, "상품2", 2000L, 20, null, null),
-                        new Product(3L, "상품3", 3000L, 30, null, null),
-                        new Product(4L, "상품4", 4000L, 40, null, null),
-                        new Product(5L, "상품5", 5000L, 50, null, null)
+                        포맷상품(1L),
+                        포맷상품(2L),
+                        포맷상품(3L),
+                        포맷상품(4L),
+                        포맷상품(5L)
                 ));
 
         // when

@@ -2,9 +2,9 @@ package kr.hhplus.be.server.small.product.usecase;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
+import kr.hhplus.be.server.product.application.usecase.GetProductDetailUseCase;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductJpaRepository;
-import kr.hhplus.be.server.product.application.usecase.GetProductDetailUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
+import static kr.hhplus.be.server.mock.DomainTestFixtures.기본상품;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +36,7 @@ class GetProductDetailUseCaseTest {
     void 상품ID로_요청하면_상품상세정보를_응답한다() throws Exception {
         // given
         Long productId = 1L;
-        Product product = new Product(productId, "테스트상품", 100L, 1000, null, null);
+        Product product = 기본상품();
 
         GetProductDetailUseCase.Input input = new GetProductDetailUseCase.Input(productId);
 

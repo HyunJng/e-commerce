@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
+import static kr.hhplus.be.server.mock.DomainTestFixtures.기본지갑;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,10 +39,11 @@ class ChargeWalletBalanceUseCaseTest {
     @Test
     void 사용자ID와_충전금액을_요청하면_충전된_잔액을_반환한다() throws Exception {
         // given
-        Long userId = 1L;
+        Wallet wallet = 기본지갑();
+
+        Long userId = wallet.getUserId();
         Long amount = 2000L;
 
-        Wallet wallet = new Wallet(1L, userId, 1000L, null, null);
         ChargeWalletBalanceUseCase.Input input = new ChargeWalletBalanceUseCase.Input(
                 userId,
                 amount
@@ -86,10 +88,11 @@ class ChargeWalletBalanceUseCaseTest {
     @Test
     void 충전_요청_중_충전요청_정책이_호출된다() throws Exception {
         // given
-        Long userId = 1L;
+        Wallet wallet = 기본지갑();
+
+        Long userId = wallet.getUserId();
         Long amount = 2000L;
 
-        Wallet wallet = new Wallet(1L, userId, 1000L, null, null);
         ChargeWalletBalanceUseCase.Input input = new ChargeWalletBalanceUseCase.Input(
                 userId,
                 amount

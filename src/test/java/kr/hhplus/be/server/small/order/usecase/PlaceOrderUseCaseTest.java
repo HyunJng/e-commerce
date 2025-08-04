@@ -26,6 +26,8 @@ import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
+import static kr.hhplus.be.server.mock.DomainTestFixtures.기본상품;
+import static kr.hhplus.be.server.mock.DomainTestFixtures.기본쿠폰;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -125,7 +127,7 @@ class PlaceOrderUseCaseTest {
         // given
         Long userId = 1L;
         Long couponId = 2L;
-        Product product = new Product(1L, "Test Product", 100L, 10, null, null);
+        Product product = 기본상품();
         List<PlaceOrderUseCase.Input.OrderProduct> orderProducts = List.of(
                 new PlaceOrderUseCase.Input.OrderProduct(1L, 2)
         );
@@ -148,7 +150,7 @@ class PlaceOrderUseCaseTest {
         List<PlaceOrderUseCase.Input.OrderProduct> orderProducts = List.of(
                 new PlaceOrderUseCase.Input.OrderProduct(1L, 2)
         );
-        Product product = new Product(1L, "Test Product", 100L, 10, null, null);
+        Product product = 기본상품();
 
         PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(userId, null, orderProducts);
 
@@ -167,8 +169,8 @@ class PlaceOrderUseCaseTest {
         Long userId = 1L;
         Long couponId = 2L;
 
-        Product product = new Product(1L, "Test Product", 100L, 10, null, null);
-        Coupon coupon = new Coupon(couponId, "Test Coupon", 50L, Coupon.DiscountType.FIXED_AMOUNT, 10, null, null);
+        Product product = 기본상품();
+        Coupon coupon = 기본쿠폰();
         IssuedCoupon issuedCoupon = new IssuedCoupon(coupon, userId, new MockDateHolderImpl(2025, Month.JULY, 1, 1, 10));
 
         List<PlaceOrderUseCase.Input.OrderProduct> orderProducts = List.of(

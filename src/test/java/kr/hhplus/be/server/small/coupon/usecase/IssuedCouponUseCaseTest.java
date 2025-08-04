@@ -1,10 +1,10 @@
 package kr.hhplus.be.server.small.coupon.usecase;
 
 import kr.hhplus.be.server.common.time.DateHolder;
+import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
 import kr.hhplus.be.server.coupon.domain.Coupon;
 import kr.hhplus.be.server.coupon.domain.CouponJpaRepository;
 import kr.hhplus.be.server.coupon.domain.IssuedCouponJpaRepository;
-import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
 import kr.hhplus.be.server.mock.MockDateHolderImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import java.time.Month;
 import java.util.Optional;
 
+import static kr.hhplus.be.server.mock.DomainTestFixtures.기본쿠폰;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -44,15 +45,7 @@ class IssuedCouponUseCaseTest {
         // given
         Long couponId = 1L;
         Long userId = 1L;
-        Coupon coupon = new Coupon(
-                couponId,
-                "회원가입쿠폰",
-                10L,
-                Coupon.DiscountType.PERCENT,
-                7,
-                10,
-                null
-        );
+        Coupon coupon = 기본쿠폰();
         IssuedCouponUseCase.Input input = new IssuedCouponUseCase.Input(couponId, userId);
 
         given(couponJpaRepository.findById(couponId))
