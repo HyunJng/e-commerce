@@ -30,19 +30,15 @@ public class Coupon {
     @Column(name = "dates")
     private Integer dates;
 
-    @Column(name = "total_quantity")
-    private Integer totalQuantity;
-
     @Column(name = "create_at", insertable = false, updatable = false)
     private LocalDateTime createAt;
 
-    public Coupon(Long id, String name, Long discountAmount, DiscountType discountType, Integer dates, Integer totalQuantity, LocalDateTime createAt) {
+    public Coupon(Long id, String name, Long discountAmount, DiscountType discountType, Integer dates, LocalDateTime createAt) {
         this.id = id;
         this.name = name;
         this.discountAmount = discountAmount;
         this.discountType = discountType;
         this.dates = dates;
-        this.totalQuantity = totalQuantity;
         this.createAt = createAt;
     }
 

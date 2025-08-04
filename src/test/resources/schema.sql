@@ -39,7 +39,6 @@ CREATE TABLE coupons
     discount_amount BIGINT       NOT NULL,
     discount_type   VARCHAR(50)  NOT NULL,
     dates           INTEGER      NOT NULL,
-    total_quantity  INTEGER      NOT NULL,
     create_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -58,6 +57,19 @@ CREATE TABLE issued_coupons
     create_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE (user_id, coupon_id)
+);
+
+DROP TABLE IF EXISTS coupons_quantity;
+
+CREATE TABLE coupons_quantity
+(
+    id             BIGINT PRIMARY KEY AUTO_INCREMENT,
+    coupon_id      BIGINT  NOT NULL,
+    total_quantity INTEGER NOT NULL,
+    quantity       INTEGER NOT NULL,
+    create_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE (coupon_id)
 );
 
 DROP TABLE IF EXISTS orders;

@@ -62,9 +62,17 @@ erDiagram
         BIGINT discount_amount "할인금액"
         STRING discount_type "PERCENT, AMOUNT"
         BIGINT dates "발급후 사용 가능 일자"
-        INT total_quantity "총 수량"
         DATETIME create_at "생성일시"
         DATETIME update_at "수정일시"    }
+
+    COUPONS_QUANTITY {
+        BIGINT id PK
+        BIGINT coupon_id FK "쿠폰식별자"
+        INT total_quantity "총 수량"
+        INT quantity "현재 수량"
+        DATETIME create_at "생성일시"
+        DATETIME update_at "수정일시"    }
+
 
     ISSUED_COUPONS {
         BIGINT id PK
@@ -79,13 +87,16 @@ erDiagram
     }
 
 %% 관계 정의
-    USERS ||--|| WALLETS: "보유한다"
-    USERS ||--o{ ORDERS: "주문한다"
     USERS ||--o{ USER_POINT_HISTORY: "충전/사용한다"
     WALLETS ||--o{ USER_POINT_HISTORY: "충전/사용한다"
+
+    USERS ||--|| WALLETS: "보유한다"
+    USERS ||--o{ ORDERS: "주문한다"
+    
     USERS ||--o{ ISSUED_COUPONS: "쿠폰보유"
     ORDERS ||--o{ ORDER_ITEMS: "포함한다"
     PRODUCTS ||--o{ ORDER_ITEMS: "구성된다"
     COUPONS ||--o{ ISSUED_COUPONS: "발급된다"
+    COUPONS ||--|| COUPONS_QUANTITY: "보유하다"
     ISSUED_COUPONS ||--|| ORDERS: "적용된다"
 ```
