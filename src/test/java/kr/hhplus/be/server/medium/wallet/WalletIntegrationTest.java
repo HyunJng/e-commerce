@@ -2,7 +2,7 @@ package kr.hhplus.be.server.medium.wallet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
-import kr.hhplus.be.server.wallet.controller.dto.WalletChargeApi;
+import kr.hhplus.be.server.wallet.presentation.dto.WalletChargeApi;
 import kr.hhplus.be.server.wallet.domain.Wallet;
 import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
 import org.junit.jupiter.api.Test;

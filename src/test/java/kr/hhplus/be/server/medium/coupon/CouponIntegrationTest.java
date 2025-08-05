@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.medium.coupon;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.hhplus.be.server.coupon.controller.dto.CouponIssueApi;
+import kr.hhplus.be.server.coupon.presentation.dto.CouponIssueApi;
 import kr.hhplus.be.server.coupon.domain.Coupon;
 import kr.hhplus.be.server.coupon.domain.CouponJpaRepository;
 import kr.hhplus.be.server.coupon.domain.IssuedCoupon;

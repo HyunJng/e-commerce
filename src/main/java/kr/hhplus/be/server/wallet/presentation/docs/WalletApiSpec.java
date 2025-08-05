@@ -1,0 +1,18 @@
+package kr.hhplus.be.server.wallet.presentation.docs;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.hhplus.be.server.wallet.presentation.dto.WalletChargeApi;
+import kr.hhplus.be.server.wallet.presentation.dto.WalletViewApi;
+import org.springframework.http.ResponseEntity;
+
+@Tag(name = "Wallet", description = "유저 지갑 관련 API")
+public interface WalletApiSpec {
+
+    @Operation(summary = "포인트 조회", description = "사용자의 포인트 정보를 조회합니다.")
+    ResponseEntity<WalletViewApi.Response> walletView(@Parameter(description = "포인트 조회 요청") WalletViewApi.Request request);
+
+    @Operation(summary = "포인트 충전", description = "지정한 금액만큼 포인트를 충전합니다.")
+    ResponseEntity<WalletChargeApi.Response> walletCharge(WalletChargeApi.Request request);
+}

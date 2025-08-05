@@ -5,7 +5,7 @@ import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.coupon.domain.IssuedCoupon;
 import kr.hhplus.be.server.coupon.domain.IssuedCouponJpaRepository;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
-import kr.hhplus.be.server.order.controller.dto.OrderApi;
+import kr.hhplus.be.server.order.presentation.dto.OrderApi;
 import kr.hhplus.be.server.order.domain.Order;
 import kr.hhplus.be.server.order.domain.OrderItem;
 import kr.hhplus.be.server.order.domain.OrderItemJpaRepository;
