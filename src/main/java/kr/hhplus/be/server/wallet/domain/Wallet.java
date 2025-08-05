@@ -3,7 +3,6 @@ package kr.hhplus.be.server.wallet.domain;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.common.time.DateHolder;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -31,12 +30,9 @@ public class Wallet {
     private LocalDateTime updateAt;
 
     @Builder
-    public Wallet(Long id, Long userId, Long balance, LocalDateTime createAt, LocalDateTime updateAt) {
-        this.id = id;
+    public Wallet(Long userId, Long balance) {
         this.userId = userId;
         this.balance = balance;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
     }
 
     public Wallet() {
@@ -49,11 +45,10 @@ public class Wallet {
         // TODO: 이벤트발행하여 history 적재 구현하기
     }
 
-    public void pay(Long paidAmount, DateHolder dateHolder) {
+    public void pay(Long paidAmount) {
         if (this.balance < paidAmount) {
             throw new CommonException(ErrorCode.INVALID_REQUEST, "잔액 부족");
         }
         this.balance -= paidAmount;
-        this.updateAt = dateHolder.now();
     }
 }

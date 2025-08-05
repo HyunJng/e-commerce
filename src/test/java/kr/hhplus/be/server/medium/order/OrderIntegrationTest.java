@@ -7,8 +7,8 @@ import kr.hhplus.be.server.coupon.domain.IssuedCouponJpaRepository;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
 import kr.hhplus.be.server.order.controller.dto.OrderApi;
 import kr.hhplus.be.server.order.domain.Order;
-import kr.hhplus.be.server.order.domain.OrderItems;
-import kr.hhplus.be.server.order.domain.OrderItemsJpaRepository;
+import kr.hhplus.be.server.order.domain.OrderItem;
+import kr.hhplus.be.server.order.domain.OrderItemJpaRepository;
 import kr.hhplus.be.server.order.domain.OrderJpaRepository;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductJpaRepository;
@@ -43,7 +43,7 @@ public class OrderIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private OrderJpaRepository orderJpaRepository;
     @Autowired
-    private OrderItemsJpaRepository orderItemsJpaRepository;
+    private OrderItemJpaRepository orderItemJpaRepository;
     @Autowired
     private ProductJpaRepository productJpaRepository;
     @Autowired
@@ -74,13 +74,7 @@ public class OrderIntegrationTest extends AbstractIntegrationTest {
 
         // then
         Order order = orderJpaRepository.findByUserId(userId).get(0);
-        List<OrderItems> orderItems = orderItemsJpaRepository.findByOrderId(order.getId());
-        Map<Long, Product> products = productJpaRepository.findAllById(List.of(1L, 2L)).stream().collect(
-                Collectors.toMap(
-                        product -> product.getId(),
-                        product -> product
-                )
-        );
+        List<OrderItem> orderItems = orderItemJpaRepository.findByOrderId(order.getId());
 
         assertThat(order).isNotNull();
         assertThat(orderItems).isNotEmpty();
@@ -90,15 +84,11 @@ public class OrderIntegrationTest extends AbstractIntegrationTest {
         assertThat(orderItems).hasSize(2);
         assertThat(orderItems.get(0).getProductId()).isEqualTo(1L);
         assertThat(orderItems.get(0).getQuantity()).isEqualTo(10);
-        assertThat(orderItems.get(0).getUnitPrice()).isEqualTo(products.get(1L).getPrice());
-        assertThat(orderItems.get(0).getTotalPrice()).isEqualTo(products.get(1L).getPrice() * 10);
+        assertThat(orderItems.get(0).getUnitPrice()).isEqualTo(1000);
         assertThat(orderItems.get(1).getProductId()).isEqualTo(2L);
         assertThat(orderItems.get(1).getQuantity()).isEqualTo(5);
-        assertThat(orderItems.get(1).getUnitPrice()).isEqualTo(products.get(2L).getPrice());
-        assertThat(orderItems.get(1).getTotalPrice()).isEqualTo(products.get(2L).getPrice() * 5);
-        assertThat(order.getTotalAmount()).isEqualTo(
-                orderItems.get(0).getTotalPrice() + orderItems.get(1).getTotalPrice()
-        );
+        assertThat(orderItems.get(1).getUnitPrice()).isEqualTo(2000);
+        assertThat(order.getTotalAmount()).isEqualTo(20000); // 1000 * 10 + 2000 * 5
     }
 
     @Test

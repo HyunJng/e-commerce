@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.small.wallet.usecase;
+package kr.hhplus.be.server.small.wallet.application.usecase;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;

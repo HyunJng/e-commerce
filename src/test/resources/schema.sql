@@ -95,7 +95,6 @@ CREATE TABLE order_items
     product_id  BIGINT  NOT NULL,
     unit_price  BIGINT  NOT NULL,
     quantity    INTEGER NOT NULL,
-    total_price BIGINT  NOT NULL,
     reg_date    DATE    NOT NULL,
     create_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

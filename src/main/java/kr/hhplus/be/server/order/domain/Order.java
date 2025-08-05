@@ -6,6 +6,8 @@ import lombok.Getter;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -34,31 +36,39 @@ public class Order extends AbstractAggregateRoot<Order> {
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems = new ArrayList<>();
+
     public Order() {
     }
 
     @Builder
-    public Order(Long id, Long userId, Long totalAmount, Long discountAmount, Long issuedCouponId, Long paidAmount, LocalDateTime createdAt) {
-        this.id = id;
+    private Order(Long userId, Long totalAmount, Long discountAmount, Long paidAmount, Long issuedCouponId) {
         this.userId = userId;
         this.totalAmount = totalAmount;
         this.discountAmount = discountAmount;
-        this.issuedCouponId = issuedCouponId;
         this.paidAmount = paidAmount;
-        this.createAt = createdAt;
+        this.issuedCouponId = issuedCouponId;
     }
 
     public static Order create(Long userId,
-                               Long totalAmount,
+                               List<OrderItem> items,
                                Long discountAmount,
-                               Long paidAmount,
                                Long issuedCouponId) {
-        return Order.builder()
-                .userId(userId)
-                .totalAmount(totalAmount)
-                .discountAmount(discountAmount)
-                .paidAmount(paidAmount)
-                .issuedCouponId(issuedCouponId)
-                .build();
+        Long totalAmount = items.stream()
+                .mapToLong(item -> item.getUnitPrice() * item.getQuantity())
+                .sum();
+
+        Long paidAmount = totalAmount - discountAmount;
+
+        Order order = new Order(userId, totalAmount, discountAmount, paidAmount, issuedCouponId);
+        items.forEach(order::addItem);
+
+        return order;
+    }
+
+    public void addItem(OrderItem item) {
+        orderItems.add(item);
+        item.assignTo(this);
     }
 }

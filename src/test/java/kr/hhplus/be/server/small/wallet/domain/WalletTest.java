@@ -19,10 +19,9 @@ class WalletTest {
     void 요청금액이_잔액보다_많으면_잔액을_감소시킨다(long paidAmount) throws Exception {
         // given
         Wallet wallet = 기본지갑();
-        DateHolder dateHolder = Mockito.mock(DateHolder.class);
 
         // when
-        wallet.pay(paidAmount, dateHolder);
+        wallet.pay(paidAmount);
 
         // then
         assertThat(wallet.getBalance()).isEqualTo(1000L - paidAmount);
@@ -36,7 +35,7 @@ class WalletTest {
         DateHolder dateHolder = Mockito.mock(DateHolder.class);
 
         // when & then
-        Assertions.assertThatThrownBy(() -> wallet.pay(paidAmount, dateHolder))
+        Assertions.assertThatThrownBy(() -> wallet.pay(paidAmount))
                 .isInstanceOf(CommonException.class)
                 .hasMessage(ErrorCode.INVALID_REQUEST.getMessage("잔액 부족"));
     }

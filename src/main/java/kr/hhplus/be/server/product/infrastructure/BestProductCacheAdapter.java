@@ -2,7 +2,7 @@ package kr.hhplus.be.server.product.infrastructure;
 
 import kr.hhplus.be.server.common.cache.spring.SpringCacheName;
 import kr.hhplus.be.server.product.domain.Product;
-import kr.hhplus.be.server.product.application.service.BestProductQueryService;
+import kr.hhplus.be.server.product.application.service.ProductQueryService;
 import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
 import kr.hhplus.be.server.product.application.port.BestProductCacheWriter;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BestProductCacheAdapter implements BestProductCacheReader, BestProductCacheWriter {
 
-    private final BestProductQueryService bestProductQueryService;
+    private final ProductQueryService productQueryService;
 
     @Override
     @CachePut(value = SpringCacheName.BEST_PRODUCTS)
     public List<Product> update() {
-        return bestProductQueryService.findBestProducts();
+        return productQueryService.findBestProducts();
     }
 
     @Override

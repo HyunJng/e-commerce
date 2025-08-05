@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.small.wallet.usecase;
+package kr.hhplus.be.server.small.wallet.application.usecase;
 
 import kr.hhplus.be.server.wallet.application.usecase.GetWalletBalanceUseCase;
 import kr.hhplus.be.server.wallet.domain.Wallet;

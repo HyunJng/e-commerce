@@ -11,13 +11,20 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class BestProductQueryService {
+public class ProductQueryService {
 
     private final ProductJpaRepository productJpaRepository;
     private final DateHolder dateHolder;
+
+    public Map<Long, Product> findProducts(List<Long> productIds) {
+        return productJpaRepository.findAllById(productIds).stream()
+                .collect(Collectors.toMap(Product::getId, product -> product));
+    }
 
     public List<Product> findBestProducts() {
         LocalDate searchEndDay = dateHolder.today();

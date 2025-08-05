@@ -43,15 +43,8 @@ public class IssuedCoupon {
     public IssuedCoupon() {}
 
     public void validate(DateHolder dateHolder) {
-        if (!(status == Status.ACTIVE &&
-                ((startDate.isBefore(dateHolder.today()) &&
-                endDate.isAfter(dateHolder.today())) ||
-                (startDate.isEqual(dateHolder.today())
-                        || endDate.isEqual(dateHolder.today())
-                ))
-        )) {
+        if (status == Status.USED || startDate.isAfter(dateHolder.today()) ||endDate.isBefore(dateHolder.today()))
             throw new CommonException(ErrorCode.INVALID_REQUEST, "유효하지 않은 쿠폰");
-        }
     }
 
     public void use() {

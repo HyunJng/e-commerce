@@ -28,10 +28,7 @@ public class DomainTestFixtures {
     public static Wallet 기본지갑() {
         return new Wallet(
                 1L,
-                1L,
-                1000L,
-                null,
-                null
+                1000L
         );
     }
 }

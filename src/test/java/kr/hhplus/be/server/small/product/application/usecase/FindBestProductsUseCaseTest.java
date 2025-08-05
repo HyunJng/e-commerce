@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.small.product.usecase;
+package kr.hhplus.be.server.small.product.application.usecase;
 
 import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
 import kr.hhplus.be.server.product.application.usecase.FindBestProductsUseCase;

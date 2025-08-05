@@ -3,7 +3,7 @@ package kr.hhplus.be.server.medium.product;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
 import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
 import kr.hhplus.be.server.product.application.port.BestProductCacheWriter;
-import kr.hhplus.be.server.product.application.service.BestProductQueryService;
+import kr.hhplus.be.server.product.application.service.ProductQueryService;
 import kr.hhplus.be.server.product.domain.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +39,12 @@ public class BestProductIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private BestProductCacheReader bestProductCacheReader;
     @Autowired
-    private BestProductQueryService bestProductQueryService;
+    private ProductQueryService productQueryService;
 
     @Test
     void 인기상품이_정상적으로_조회된다() throws Exception {
         // when
-        List<Product> bestProducts = bestProductQueryService.findBestProducts();
+        List<Product> bestProducts = productQueryService.findBestProducts();
 
         // then
         assertThat(bestProducts).hasSize(5);

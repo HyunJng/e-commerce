@@ -11,7 +11,7 @@ public interface ProductJpaRepository extends JpaRepository<Product, Long> {
 
     @Query("""
             SELECT new kr.hhplus.be.server.product.domain.BestProduct(b, count(b))
-            FROM OrderItems a
+            FROM OrderItem a
             JOIN Product b ON a.productId = b.id
             WHERE a.regDate BETWEEN :startDate AND :endDate
             GROUP BY a.productId
