@@ -2,8 +2,8 @@ package kr.hhplus.be.server.small.coupon.domain;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.coupon.domain.Coupon;
-import kr.hhplus.be.server.coupon.domain.IssuedCoupon;
+import kr.hhplus.be.server.coupon.domain.entity.Coupon;
+import kr.hhplus.be.server.coupon.domain.entity.IssuedCoupon;
 import kr.hhplus.be.server.mock.MockDateHolderImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

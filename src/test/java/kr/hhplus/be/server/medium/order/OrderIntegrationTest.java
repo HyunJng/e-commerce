@@ -2,14 +2,14 @@ package kr.hhplus.be.server.medium.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.coupon.domain.IssuedCoupon;
-import kr.hhplus.be.server.coupon.domain.IssuedCouponJpaRepository;
+import kr.hhplus.be.server.coupon.domain.entity.IssuedCoupon;
+import kr.hhplus.be.server.coupon.domain.repository.IssuedCouponJpaRepository;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
-import kr.hhplus.be.server.order.presentation.dto.OrderApi;
 import kr.hhplus.be.server.order.domain.Order;
 import kr.hhplus.be.server.order.domain.OrderItem;
 import kr.hhplus.be.server.order.domain.OrderItemJpaRepository;
 import kr.hhplus.be.server.order.domain.OrderJpaRepository;
+import kr.hhplus.be.server.order.presentation.dto.OrderApi;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductJpaRepository;
 import kr.hhplus.be.server.wallet.domain.Wallet;

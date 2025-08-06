@@ -1,7 +1,9 @@
-package kr.hhplus.be.server.coupon.domain;
+package kr.hhplus.be.server.coupon.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "coupons_quantity")
 public class CouponQuantity {
@@ -16,6 +18,6 @@ public class CouponQuantity {
     @Column(name = "total_quantity")
     private Integer totalQuantity;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "issued_quantity")
+    private Integer issuedQuantity;
 }

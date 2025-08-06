@@ -10,5 +10,6 @@ public interface CouponSchemaDescription {
     String discountType = "할인 타입";
     String startedAt = "사용 시작일";
     String endAt = "사용 마감일";
+    String isSuccess = "성공여부";
 
 }

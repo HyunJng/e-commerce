@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.coupon.domain;
+package kr.hhplus.be.server.coupon.domain.entity;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;

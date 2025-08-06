@@ -1,10 +1,8 @@
 package kr.hhplus.be.server.coupon.presentation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kr.hhplus.be.server.coupon.presentation.docs.CouponSchemaDescription;
 import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
-
-import java.time.LocalDate;
+import kr.hhplus.be.server.coupon.presentation.docs.CouponSchemaDescription;
 
 public class CouponIssueApi {
 
@@ -18,24 +16,10 @@ public class CouponIssueApi {
     }
 
     public record Response(
-            @Schema(description = CouponSchemaDescription.issuedId) Long id,
-            @Schema(description = CouponSchemaDescription.couponId) Long couponId,
-            @Schema(description = CouponSchemaDescription.couponName) String couponName,
-            @Schema(description = CouponSchemaDescription.discountAmount) Long discountAmount,
-            @Schema(description = CouponSchemaDescription.discountType) String discountType,
-            @Schema(description = CouponSchemaDescription.startedAt) LocalDate startedAt,
-            @Schema(description = CouponSchemaDescription.endAt) LocalDate endAt
+            @Schema(description = CouponSchemaDescription.isSuccess) boolean isSuccess
     ) {
         public static Response from(IssuedCouponUseCase.Output output) {
-            return new Response(
-                    output.id(),
-                    output.couponId(),
-                    output.couponName(),
-                    output.discountAmount(),
-                    output.discountType(),
-                    output.startedAt(),
-                    output.endAt()
-            );
+            return new Response(output.isSuccess());
         }
     }
 }

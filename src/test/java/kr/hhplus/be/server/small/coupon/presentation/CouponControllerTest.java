@@ -2,9 +2,9 @@ package kr.hhplus.be.server.small.coupon.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.common.exception.GeneralExceptionAdvice;
+import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
 import kr.hhplus.be.server.coupon.presentation.controller.CouponController;
 import kr.hhplus.be.server.coupon.presentation.dto.CouponIssueApi;
-import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,25 +41,14 @@ class CouponControllerTest {
         IssuedCouponUseCase.Input input = new IssuedCouponUseCase.Input(couponId, userId);
 
         BDDMockito.given(issuedCouponUseCase.execute(input))
-                .willReturn(new IssuedCouponUseCase.Output(
-                        1L,
-                        couponId,
-                        "테스트 쿠폰",
-                        1000L,
-                        "FIXED",
-                        null, null
-                ));
+                .willReturn(new IssuedCouponUseCase.Output(true));
 
         // when & then
         mockMvc.perform(post("/api/v1/coupons/issue")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.couponId").value(couponId))
-                .andExpect(jsonPath("$.couponName").value("테스트 쿠폰"))
-                .andExpect(jsonPath("$.discountAmount").value(1000L))
-                .andExpect(jsonPath("$.discountType").value("FIXED"));
+                .andExpect(jsonPath("$.isSuccess").value(true));
     }
 
 }

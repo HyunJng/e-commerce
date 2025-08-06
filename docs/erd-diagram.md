@@ -69,7 +69,7 @@ erDiagram
         BIGINT id PK
         BIGINT coupon_id FK "쿠폰식별자"
         INT total_quantity "총 수량"
-        INT quantity "현재 수량"
+        INT issued_quantity "발급 수량"
         DATETIME create_at "생성일시"
         DATETIME update_at "수정일시"    }
 
