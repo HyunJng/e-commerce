@@ -3,7 +3,7 @@ package kr.hhplus.be.server.small.wallet.application.service;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
-import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
+import kr.hhplus.be.server.wallet.domain.repository.WalletJpaRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

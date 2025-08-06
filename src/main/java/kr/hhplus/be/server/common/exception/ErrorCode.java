@@ -8,6 +8,7 @@ public enum ErrorCode {
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "E001", "유효하지 않은 요청(%1)"),
     NOT_FOUND_RESOURCE(HttpStatus.BAD_REQUEST, "E404", "존재하지 않는 %1"),
     INVALID_POLICY(HttpStatus.BAD_REQUEST, "E405", "정책 위반(%1)"),
+    RACE_CONDITION_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "E501", "잠시후 다시 요청해주세요"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E999", "미지정 오류(관리자 연락 필요)");
 
     private final HttpStatus status;

@@ -3,7 +3,7 @@ package kr.hhplus.be.server.small.wallet.domain;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
-import kr.hhplus.be.server.wallet.domain.Wallet;
+import kr.hhplus.be.server.wallet.domain.domain.Wallet;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

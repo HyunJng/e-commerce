@@ -9,7 +9,7 @@ import kr.hhplus.be.server.order.domain.OrderJpaRepository;
 import kr.hhplus.be.server.product.application.service.ProductQueryService;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
-import kr.hhplus.be.server.wallet.domain.Wallet;
+import kr.hhplus.be.server.wallet.domain.domain.Wallet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

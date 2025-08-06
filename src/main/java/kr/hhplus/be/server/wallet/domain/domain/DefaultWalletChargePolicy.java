@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.wallet.domain;
+package kr.hhplus.be.server.wallet.domain.domain;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;

@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.small.wallet.application.usecase;
 
 import kr.hhplus.be.server.wallet.application.usecase.GetWalletBalanceUseCase;
-import kr.hhplus.be.server.wallet.domain.Wallet;
-import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
+import kr.hhplus.be.server.wallet.domain.domain.Wallet;
+import kr.hhplus.be.server.wallet.domain.repository.WalletJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

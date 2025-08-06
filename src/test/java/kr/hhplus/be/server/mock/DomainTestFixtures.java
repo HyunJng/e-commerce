@@ -2,7 +2,7 @@ package kr.hhplus.be.server.mock;
 
 import kr.hhplus.be.server.coupon.domain.entity.Coupon;
 import kr.hhplus.be.server.product.domain.Product;
-import kr.hhplus.be.server.wallet.domain.Wallet;
+import kr.hhplus.be.server.wallet.domain.domain.Wallet;
 
 public class DomainTestFixtures {
 

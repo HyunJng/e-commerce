@@ -2,10 +2,11 @@ package kr.hhplus.be.server.small.wallet.application.usecase;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.wallet.domain.Wallet;
-import kr.hhplus.be.server.wallet.domain.WalletChargePolicy;
-import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
+import kr.hhplus.be.server.wallet.domain.domain.Wallet;
+import kr.hhplus.be.server.wallet.domain.domain.WalletChargePolicy;
 import kr.hhplus.be.server.wallet.application.usecase.ChargeWalletBalanceUseCase;
+import kr.hhplus.be.server.wallet.domain.repository.WalletJpaRepository;
+import kr.hhplus.be.server.wallet.domain.repository.WalletLockLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,6 +27,8 @@ class ChargeWalletBalanceUseCaseTest {
     @InjectMocks
     private ChargeWalletBalanceUseCase chargeWalletBalanceUseCase;
 
+    @Mock
+    private WalletLockLoader walletLockLoader;
     @Mock
     private WalletJpaRepository walletJpaRepository;
     @Mock
@@ -49,7 +52,7 @@ class ChargeWalletBalanceUseCaseTest {
                 amount
         );
 
-        given(walletJpaRepository.findByUserId(userId)).willReturn(
+        given(walletLockLoader.get(userId)).willReturn(
                 Optional.of(wallet)
         );
         given(walletJpaRepository.save(any(Wallet.class))).willAnswer(
@@ -75,7 +78,7 @@ class ChargeWalletBalanceUseCaseTest {
                 1000L
         );
 
-        given(walletJpaRepository.findByUserId(userId)).willReturn(
+        given(walletLockLoader.get(userId)).willReturn(
                 Optional.empty()
         );
 
@@ -98,7 +101,7 @@ class ChargeWalletBalanceUseCaseTest {
                 amount
         );
 
-        given(walletJpaRepository.findByUserId(userId)).willReturn(
+        given(walletLockLoader.get(userId)).willReturn(
                 Optional.of(wallet)
         );
         given(walletJpaRepository.save(any(Wallet.class))).willAnswer(

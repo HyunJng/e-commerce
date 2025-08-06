@@ -20,8 +20,8 @@ erDiagram
     USER_POINT_HISTORY {
         BIGINT id PK
         BIGINT user_id FK "유저 식별자"
-        BIGINT wallet_id FK "지갑 식별자"
-        BIGINT amount "금액"
+        BIGINT amount "거래 금액"
+        BIGINT balance "잔액"
         STRING type "CHARGE, USE"
         DATETIME create_at "생성일시"
         DATETIME update_at "수정일시"    }

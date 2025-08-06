@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.wallet.domain;
+package kr.hhplus.be.server.wallet.domain.domain;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;

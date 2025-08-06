@@ -2,8 +2,8 @@ package kr.hhplus.be.server.small.wallet.domain;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.wallet.domain.DefaultWalletChargePolicy;
-import kr.hhplus.be.server.wallet.domain.WalletChargePolicy;
+import kr.hhplus.be.server.wallet.domain.domain.DefaultWalletChargePolicy;
+import kr.hhplus.be.server.wallet.domain.domain.WalletChargePolicy;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

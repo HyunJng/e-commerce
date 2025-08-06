@@ -2,8 +2,8 @@ package kr.hhplus.be.server.wallet.application.service;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.wallet.domain.Wallet;
-import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
+import kr.hhplus.be.server.wallet.domain.domain.Wallet;
+import kr.hhplus.be.server.wallet.domain.repository.WalletJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
