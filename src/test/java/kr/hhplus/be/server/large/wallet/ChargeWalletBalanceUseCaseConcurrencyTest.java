@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.large.wallet;
 
-import kr.hhplus.be.server.medium.AbstractIntegrationTest;
+import kr.hhplus.be.server.large.AbstractConCurrencyTest;
 import kr.hhplus.be.server.wallet.application.usecase.ChargeWalletBalanceUseCase;
 import kr.hhplus.be.server.wallet.domain.domain.Wallet;
 import kr.hhplus.be.server.wallet.domain.repository.WalletJpaRepository;
@@ -9,17 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SqlGroup(value = {
         @Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/wallet-concurrency-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 })
-class ChargeWalletBalanceUseCaseConcurrencyTest extends AbstractIntegrationTest {
+class ChargeWalletBalanceUseCaseConcurrencyTest extends AbstractConCurrencyTest {
 
     @Autowired
     private ChargeWalletBalanceUseCase chargeWalletBalanceUseCase;
@@ -29,31 +25,13 @@ class ChargeWalletBalanceUseCaseConcurrencyTest extends AbstractIntegrationTest 
     @Test
     void 같은유저의_충전요청이_동시에_들어오면_순차적으로_요청이_처리된다() throws Exception {
         // given
-        int threadCount = 2;
         Long userId = 1L;
 
-        ExecutorService executor = Executors.newFixedThreadPool(2);
-        CountDownLatch startLatch = new CountDownLatch(1);
-        CountDownLatch countDownLatch = new CountDownLatch(threadCount);
-
         // when
-        for (int i = 0; i < threadCount; i++) {
-            executor.submit(() -> {
-                try {
-                    startLatch.await();
-
-                    ChargeWalletBalanceUseCase.Input input = new ChargeWalletBalanceUseCase.Input(userId, 1000L);
-                    chargeWalletBalanceUseCase.execute(input);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                } finally {
-                    countDownLatch.countDown();
-                }
-            });
-        }
-
-        startLatch.countDown();
-        countDownLatch.await();
+        AbstractConCurrencyTest.runConcurrentTest(2, i -> {
+            ChargeWalletBalanceUseCase.Input input = new ChargeWalletBalanceUseCase.Input(userId, 1000L);
+            chargeWalletBalanceUseCase.execute(input);
+        });
 
         // then
         Wallet wallet = walletJpaRepository.findByUserId(userId).orElse(null);
