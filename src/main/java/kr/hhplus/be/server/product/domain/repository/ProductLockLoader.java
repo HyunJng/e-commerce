@@ -23,7 +23,7 @@ public class ProductLockLoader {
         try {
             return productLockJpaRepository.findAllByIdsForUpdate(productIds);
         } catch (PessimisticLockException | LockAcquisitionException | CannotAcquireLockException e) {
-            log.error("LOCK EXCEPTION: {}", this.getClass().getName(), e);
+            log.error("LOCK EXCEPTION: {} INPUT: {}", this.getClass().getName(), productIds, e);
             throw new CommonException(ErrorCode.RACE_CONDITION_EXCEPTION, e);
         }
     }

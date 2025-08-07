@@ -23,7 +23,7 @@ public class WalletLockLoader {
         try {
             return walletLockJpaRepository.findByUserIdForUpdate(userId);
         } catch (PessimisticLockException | LockAcquisitionException | CannotAcquireLockException e) {
-            log.error("LOCK EXCEPTION: {}", this.getClass().getName(), e);
+            log.error("LOCK EXCEPTION: {} INPUT: {}", this.getClass().getName(), userId, e);
             throw new CommonException(ErrorCode.RACE_CONDITION_EXCEPTION, e);
         }
     }
