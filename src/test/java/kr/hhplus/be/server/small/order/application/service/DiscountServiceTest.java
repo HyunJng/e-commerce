@@ -3,12 +3,12 @@ package kr.hhplus.be.server.small.order.application.service;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
-import kr.hhplus.be.server.coupon.domain.repository.CouponJpaRepository;
 import kr.hhplus.be.server.coupon.domain.entity.IssuedCoupon;
-import kr.hhplus.be.server.coupon.domain.repository.IssuedCouponJpaRepository;
+import kr.hhplus.be.server.coupon.domain.repository.CouponJpaRepository;
+import kr.hhplus.be.server.coupon.domain.repository.IssuedCouponLockLoader;
 import kr.hhplus.be.server.order.application.service.DiscountService;
-import kr.hhplus.be.server.order.domain.DiscountInfo;
-import kr.hhplus.be.server.order.domain.OrderItem;
+import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
+import kr.hhplus.be.server.order.domain.entity.OrderItem;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class DiscountServiceTest {
     @Mock
     private CouponJpaRepository couponJpaRepository;
     @Mock
-    private IssuedCouponJpaRepository issuedCouponJpaRepository;
+    private IssuedCouponLockLoader issuedCouponLockLoader;
     @Mock
     private DateHolder dateHolder;
 
@@ -46,7 +46,7 @@ class DiscountServiceTest {
     void 쿠폰이_존재하면_검증을_시도한다() {
         // given
         IssuedCoupon issuedCoupon = Mockito.mock(IssuedCoupon.class);
-        given(issuedCouponJpaRepository.findByUserIdAndCouponId(1L, 1L)).willReturn(Optional.of(issuedCoupon));
+        given(issuedCouponLockLoader.findByUserIdAndCouponId(1L, 1L)).willReturn(Optional.of(issuedCoupon));
 
         // when
         discountService.validateOrThrow(1L, 1L);
@@ -58,7 +58,7 @@ class DiscountServiceTest {
     @Test
     void 쿠폰이_존재하지_않으면_오류를_반환한다() {
         // given
-        given(issuedCouponJpaRepository.findByUserIdAndCouponId(anyLong(), anyLong())).willReturn(Optional.empty());
+        given(issuedCouponLockLoader.findByUserIdAndCouponId(anyLong(), anyLong())).willReturn(Optional.empty());
 
         // when & then
         Assertions.assertThatThrownBy(() -> discountService.validateOrThrow(1L, 1L))
@@ -75,7 +75,7 @@ class DiscountServiceTest {
 
         given(orderItem.totalAmount()).willReturn(10000L);
         given(couponJpaRepository.findById(couponId)).willReturn(Optional.of(기본쿠폰()));
-        given(issuedCouponJpaRepository.findByUserIdAndCouponId(useId, couponId)).willReturn(Optional.ofNullable(issuedCoupon));
+        given(issuedCouponLockLoader.findByUserIdAndCouponId(useId, couponId)).willReturn(Optional.ofNullable(issuedCoupon));
 
         // when
         DiscountInfo discountInfo = discountService.calculate(1L, 1L, List.of(orderItem));

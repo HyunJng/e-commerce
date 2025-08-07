@@ -2,7 +2,7 @@ package kr.hhplus.be.server.small.product.domain;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.product.domain.Product;
+import kr.hhplus.be.server.product.domain.entity.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

@@ -2,8 +2,8 @@ package kr.hhplus.be.server.medium.product;
 
 import kr.hhplus.be.server.common.cache.spring.SpringCacheName;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
-import kr.hhplus.be.server.product.domain.Product;
-import kr.hhplus.be.server.product.domain.ProductJpaRepository;
+import kr.hhplus.be.server.product.domain.entity.Product;
+import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;

@@ -4,11 +4,11 @@ import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.coupon.domain.entity.Coupon;
-import kr.hhplus.be.server.coupon.domain.repository.CouponJpaRepository;
 import kr.hhplus.be.server.coupon.domain.entity.IssuedCoupon;
-import kr.hhplus.be.server.coupon.domain.repository.IssuedCouponJpaRepository;
-import kr.hhplus.be.server.order.domain.DiscountInfo;
-import kr.hhplus.be.server.order.domain.OrderItem;
+import kr.hhplus.be.server.coupon.domain.repository.CouponJpaRepository;
+import kr.hhplus.be.server.coupon.domain.repository.IssuedCouponLockLoader;
+import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
+import kr.hhplus.be.server.order.domain.entity.OrderItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +19,13 @@ import java.util.List;
 public class DiscountService {
 
     private final CouponJpaRepository couponJpaRepository;
-    private final IssuedCouponJpaRepository issuedCouponJpaRepository;
+    private final IssuedCouponLockLoader issuedCouponLockLoader;
     private final DateHolder dateHolder;
 
     public void validateOrThrow(Long couponId, Long userId) {
         if (couponId == null) return;
 
-        IssuedCoupon issuedCoupon = issuedCouponJpaRepository.findByUserIdAndCouponId(userId, couponId)
+        IssuedCoupon issuedCoupon = issuedCouponLockLoader.findByUserIdAndCouponId(userId, couponId)
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "쿠폰"));
         issuedCoupon.validate(dateHolder);
     }
@@ -38,7 +38,7 @@ public class DiscountService {
         Coupon coupon = couponJpaRepository.findById(couponId)
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "쿠폰"));
 
-        IssuedCoupon issuedCoupon = issuedCouponJpaRepository.findByUserIdAndCouponId(userId, couponId)
+        IssuedCoupon issuedCoupon = issuedCouponLockLoader.findByUserIdAndCouponId(userId, couponId)
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "발급 쿠폰"));
 
         Long totalAmount = items.stream().mapToLong(OrderItem::totalAmount).sum();

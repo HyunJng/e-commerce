@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.product.application.port;
 
-import kr.hhplus.be.server.product.domain.Product;
+import kr.hhplus.be.server.product.domain.entity.Product;
 
 import java.util.List;
 

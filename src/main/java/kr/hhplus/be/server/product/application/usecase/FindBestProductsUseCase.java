@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.product.application.usecase;
 
 import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
-import kr.hhplus.be.server.product.domain.Product;
+import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.product.application.port.BestProductCacheWriter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

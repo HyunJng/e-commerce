@@ -40,7 +40,7 @@ public class ChargeWalletBalanceUseCase {
     public Output execute(Input input) {
         Long userId = input.userId;
 
-        Wallet wallet = walletLockLoader.get(userId)
+        Wallet wallet = walletLockLoader.findByUserId(userId)
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "지갑"));
 
         wallet.charge(input.amount, walletChargePolicy);

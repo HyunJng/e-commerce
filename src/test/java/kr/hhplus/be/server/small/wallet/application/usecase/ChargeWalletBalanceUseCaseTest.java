@@ -52,7 +52,7 @@ class ChargeWalletBalanceUseCaseTest {
                 amount
         );
 
-        given(walletLockLoader.get(userId)).willReturn(
+        given(walletLockLoader.findByUserId(userId)).willReturn(
                 Optional.of(wallet)
         );
         given(walletJpaRepository.save(any(Wallet.class))).willAnswer(
@@ -78,7 +78,7 @@ class ChargeWalletBalanceUseCaseTest {
                 1000L
         );
 
-        given(walletLockLoader.get(userId)).willReturn(
+        given(walletLockLoader.findByUserId(userId)).willReturn(
                 Optional.empty()
         );
 
@@ -101,7 +101,7 @@ class ChargeWalletBalanceUseCaseTest {
                 amount
         );
 
-        given(walletLockLoader.get(userId)).willReturn(
+        given(walletLockLoader.findByUserId(userId)).willReturn(
                 Optional.of(wallet)
         );
         given(walletJpaRepository.save(any(Wallet.class))).willAnswer(

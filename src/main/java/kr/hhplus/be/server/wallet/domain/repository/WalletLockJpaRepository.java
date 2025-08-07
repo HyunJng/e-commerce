@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface WalletJpaLockRepository extends JpaRepository<Wallet, Long> {
+public interface WalletLockJpaRepository extends JpaRepository<Wallet, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""

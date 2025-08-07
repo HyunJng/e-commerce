@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.product.infrastructure;
 
 import kr.hhplus.be.server.common.cache.spring.SpringCacheName;
-import kr.hhplus.be.server.product.domain.Product;
+import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.product.application.service.ProductQueryService;
 import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
 import kr.hhplus.be.server.product.application.port.BestProductCacheWriter;

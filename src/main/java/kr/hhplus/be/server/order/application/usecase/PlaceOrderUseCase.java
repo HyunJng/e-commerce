@@ -5,12 +5,12 @@ import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.order.application.service.DiscountService;
-import kr.hhplus.be.server.order.domain.DiscountInfo;
-import kr.hhplus.be.server.order.domain.Order;
-import kr.hhplus.be.server.order.domain.OrderItem;
-import kr.hhplus.be.server.order.domain.OrderJpaRepository;
-import kr.hhplus.be.server.product.application.service.ProductQueryService;
-import kr.hhplus.be.server.product.domain.Product;
+import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
+import kr.hhplus.be.server.order.domain.entity.Order;
+import kr.hhplus.be.server.order.domain.entity.OrderItem;
+import kr.hhplus.be.server.order.domain.repository.OrderJpaRepository;
+import kr.hhplus.be.server.product.application.service.ProductLockingQueryService;
+import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -62,7 +62,7 @@ public class PlaceOrderUseCase {
     }
 
     private final OrderJpaRepository orderJpaRepository;
-    private final ProductQueryService productQueryService;
+    private final ProductLockingQueryService productLockingQueryService;
     private final DiscountService discountService;
     private final WalletCommandService walletCommandService;
     private final DateHolder dateHolder;
@@ -70,7 +70,7 @@ public class PlaceOrderUseCase {
     @Transactional
     public Output execute(Input input) {
         // 상품 정보 조회
-        Map<Long, Product> products = productQueryService.findProducts(input.getOrderProductIds());
+        Map<Long, Product> products = productLockingQueryService.findProducts(input.getOrderProductIds());
 
         List<OrderItem> orderItems = new ArrayList<>();
         for (Input.OrderProduct orderProduct : input.orderProduct) {

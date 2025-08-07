@@ -2,8 +2,8 @@ package kr.hhplus.be.server.product.application.usecase;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.product.domain.Product;
-import kr.hhplus.be.server.product.domain.ProductJpaRepository;
+import kr.hhplus.be.server.product.domain.entity.Product;
+import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

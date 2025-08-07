@@ -1,8 +1,8 @@
-package kr.hhplus.be.server.wallet.domain.repository;
+package kr.hhplus.be.server.coupon.domain.repository;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.wallet.domain.domain.Wallet;
+import kr.hhplus.be.server.coupon.domain.entity.IssuedCoupon;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.PessimisticLockException;
@@ -15,13 +15,13 @@ import java.util.Optional;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class WalletLockLoader {
+public class IssuedCouponLockLoader {
 
-    private final WalletLockJpaRepository walletLockJpaRepository;
+    private final IssuedCouponLockJpaRepository issuedCouponLockJpaRepository;
 
-    public Optional<Wallet> findByUserId(Long userId) {
+    public Optional<IssuedCoupon> findByUserIdAndCouponId(Long userId, Long couponId) {
         try {
-            return walletLockJpaRepository.findByUserIdForUpdate(userId);
+            return issuedCouponLockJpaRepository.findByUserIdAndCouponIdForUpdate(userId, couponId);
         } catch (PessimisticLockException | LockAcquisitionException | CannotAcquireLockException e) {
             log.error("LOCK EXCEPTION: {}", this.getClass().getName(), e);
             throw new CommonException(ErrorCode.RACE_CONDITION_EXCEPTION, e);

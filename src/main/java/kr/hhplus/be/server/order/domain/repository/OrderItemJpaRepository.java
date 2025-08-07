@@ -1,5 +1,6 @@
-package kr.hhplus.be.server.order.domain;
+package kr.hhplus.be.server.order.domain.repository;
 
+import kr.hhplus.be.server.order.domain.entity.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

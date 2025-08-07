@@ -3,11 +3,11 @@ package kr.hhplus.be.server.small.order.application.usecase;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.order.application.service.DiscountService;
 import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
-import kr.hhplus.be.server.order.domain.DiscountInfo;
-import kr.hhplus.be.server.order.domain.Order;
-import kr.hhplus.be.server.order.domain.OrderJpaRepository;
-import kr.hhplus.be.server.product.application.service.ProductQueryService;
-import kr.hhplus.be.server.product.domain.Product;
+import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
+import kr.hhplus.be.server.order.domain.entity.Order;
+import kr.hhplus.be.server.order.domain.repository.OrderJpaRepository;
+import kr.hhplus.be.server.product.application.service.ProductLockingQueryService;
+import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
 import kr.hhplus.be.server.wallet.domain.domain.Wallet;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ class PlaceOrderUseCaseTest {
     @Mock
     private OrderJpaRepository orderJpaRepository;
     @Mock
-    private ProductQueryService productQueryService;
+    private ProductLockingQueryService productQueryService;
     @Mock
     private DiscountService discountService;
     @Mock

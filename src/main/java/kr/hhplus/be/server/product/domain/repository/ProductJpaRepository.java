@@ -1,5 +1,7 @@
-package kr.hhplus.be.server.product.domain;
+package kr.hhplus.be.server.product.domain.repository;
 
+import kr.hhplus.be.server.product.domain.entity.BestProduct;
+import kr.hhplus.be.server.product.domain.entity.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +12,7 @@ import java.util.List;
 public interface ProductJpaRepository extends JpaRepository<Product, Long> {
 
     @Query("""
-            SELECT new kr.hhplus.be.server.product.domain.BestProduct(b, count(b))
+            SELECT new kr.hhplus.be.server.product.domain.entity.BestProduct(b, count(b))
             FROM OrderItem a
             JOIN Product b ON a.productId = b.id
             WHERE a.regDate BETWEEN :startDate AND :endDate
