@@ -21,6 +21,7 @@ public class ProductLockLoader {
 
     public List<Product> findAllByIds(List<Long> productIds) {
         try {
+            productIds = productIds.stream().sorted().toList();
             return productLockJpaRepository.findAllByIdsForUpdate(productIds);
         } catch (PessimisticLockException | LockAcquisitionException | CannotAcquireLockException e) {
             log.error("LOCK EXCEPTION: {} INPUT: {}", this.getClass().getName(), productIds, e);
