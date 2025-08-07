@@ -8,11 +8,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -46,5 +50,31 @@ public abstract class AbstractConCurrencyTest {
         startLatch.countDown();
         countDownLatch.await();
         return successCount.get();
+    }
+
+    public static List<Boolean> runConcurrentTest(int threadCount, Function<Integer, Boolean> task) throws InterruptedException {
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        CountDownLatch startLatch = new CountDownLatch(1);
+        CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+
+        List<Boolean> results = Collections.synchronizedList(new ArrayList<>());
+
+        for (int i = 0; i < threadCount; i++) {
+            int finalI = i;
+            executor.submit(() -> {
+                try {
+                    startLatch.await();
+                    results.add(task.apply(finalI));
+                } catch (Exception e) {
+                    results.add(false);
+                } finally {
+                    countDownLatch.countDown();
+                }
+            });
+        }
+
+        startLatch.countDown();
+        countDownLatch.await();
+        return results;
     }
 }
