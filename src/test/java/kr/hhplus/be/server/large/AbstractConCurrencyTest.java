@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 @SpringBootTest
@@ -19,11 +20,12 @@ import java.util.function.Consumer;
 @Import({TestBeanConfiguration.class, TestcontainersConfiguration.class, TestLogConfiguration.class})
 public abstract class AbstractConCurrencyTest {
 
-    public static void runConcurrentTest(int threadCount, Consumer<Integer> consumer) throws InterruptedException {
+    public static int runConcurrentTest(int threadCount, Consumer<Integer> consumer) throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         CountDownLatch startLatch = new CountDownLatch(1);
         CountDownLatch countDownLatch = new CountDownLatch(threadCount);
 
+        AtomicInteger successCount = new AtomicInteger();
         for (int i = 0; i < threadCount; i++) {
             int finalI = i;
             executor.submit(() -> {
@@ -31,7 +33,8 @@ public abstract class AbstractConCurrencyTest {
                     startLatch.await();
 
                     consumer.accept(finalI);
-                } catch (InterruptedException e) {
+                    successCount.getAndIncrement();
+                } catch (Exception e) {
                     Thread.currentThread().interrupt();
                 } finally {
                     countDownLatch.countDown();
@@ -42,5 +45,6 @@ public abstract class AbstractConCurrencyTest {
 
         startLatch.countDown();
         countDownLatch.await();
+        return successCount.get();
     }
 }

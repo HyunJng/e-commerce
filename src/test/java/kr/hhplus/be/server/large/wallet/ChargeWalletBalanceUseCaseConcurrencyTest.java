@@ -23,7 +23,7 @@ class ChargeWalletBalanceUseCaseConcurrencyTest extends AbstractConCurrencyTest 
     private WalletJpaRepository walletJpaRepository;
 
     @Test
-    void 같은유저의_충전요청이_동시에_들어오면_순차적으로_요청이_처리된다() throws Exception {
+    void 같은_유저의_충전요청이_동시에_들어오면_순차적으로_요청이_처리된다() throws Exception {
         // given
         Long userId = 1L;
 
