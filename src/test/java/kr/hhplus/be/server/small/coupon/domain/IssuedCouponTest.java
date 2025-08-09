@@ -2,14 +2,15 @@ package kr.hhplus.be.server.small.coupon.domain;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.coupon.domain.Coupon;
-import kr.hhplus.be.server.coupon.domain.IssuedCoupon;
+import kr.hhplus.be.server.coupon.domain.entity.Coupon;
+import kr.hhplus.be.server.coupon.domain.entity.IssuedCoupon;
 import kr.hhplus.be.server.mock.MockDateHolderImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Month;
 
+import static kr.hhplus.be.server.mock.DomainTestFixtures.기본쿠폰;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IssuedCouponTest {
@@ -18,15 +19,7 @@ class IssuedCouponTest {
     void 쿠폰정보를_기반으로_현재일자를_기준으로_발급_일자를_계산한다() throws Exception {
         // given
         Long userId = 1L;
-        Coupon coupon = new Coupon(
-                1L,
-                "회원가입쿠폰",
-                10L,
-                Coupon.DiscountType.PERCENT,
-                7,
-                10,
-                null
-        );
+        Coupon coupon = 기본쿠폰();
 
         MockDateHolderImpl mockDateHolder = new MockDateHolderImpl(2025, Month.JULY, 24, 2, 0);
 
@@ -44,15 +37,7 @@ class IssuedCouponTest {
     void 쿠폰이_활성_상태이고_사용일자_사이라면_오류를_반환하지_않는다() throws Exception {
         // given
         Long userId = 1L;
-        Coupon coupon = new Coupon(
-                1L,
-                "회원가입쿠폰",
-                10L,
-                Coupon.DiscountType.PERCENT,
-                7,
-                10,
-                null
-        );
+        Coupon coupon = 기본쿠폰();
         MockDateHolderImpl mockDateHolder = new MockDateHolderImpl(2025, Month.JULY, 24, 2, 0);
 
         IssuedCoupon issuedCoupon = new IssuedCoupon(coupon, userId, mockDateHolder);
@@ -66,15 +51,7 @@ class IssuedCouponTest {
     void 사용일자가_지난_쿠폰이라면_오류를_반환한다() throws Exception {
         // given
         Long userId = 1L;
-        Coupon coupon = new Coupon(
-                1L,
-                "회원가입쿠폰",
-                10L,
-                Coupon.DiscountType.PERCENT,
-                7,
-                10,
-                null
-        );
+        Coupon coupon = 기본쿠폰();
         MockDateHolderImpl lastDateHolder = new MockDateHolderImpl(2025, Month.JUNE, 24, 2, 0);
         MockDateHolderImpl todayDateHolder = new MockDateHolderImpl(2025, Month.JULY, 24, 2, 0);
 

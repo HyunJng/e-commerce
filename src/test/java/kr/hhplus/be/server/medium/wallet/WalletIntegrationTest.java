@@ -2,9 +2,9 @@ package kr.hhplus.be.server.medium.wallet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
-import kr.hhplus.be.server.wallet.controller.dto.WalletChargeApi;
-import kr.hhplus.be.server.wallet.domain.Wallet;
-import kr.hhplus.be.server.wallet.domain.WalletJpaRepository;
+import kr.hhplus.be.server.wallet.domain.repository.WalletJpaRepository;
+import kr.hhplus.be.server.wallet.presentation.dto.WalletChargeApi;
+import kr.hhplus.be.server.wallet.domain.domain.Wallet;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -64,7 +64,7 @@ public class WalletIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         // then
-        Wallet afterWallet = walletJpaRepository.findById(userId).orElse(null);
+        Wallet afterWallet = walletJpaRepository.findByUserId(userId).orElse(null);
 
         assertThat(afterWallet).isNotNull();
         assertThat(afterWallet.getBalance()).isEqualTo(beforeWallet.getBalance() + request.amount());
