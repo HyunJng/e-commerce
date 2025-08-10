@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.small.order.application.usecase;
 
 import kr.hhplus.be.server.common.time.DateHolder;
-import kr.hhplus.be.server.order.application.service.DiscountService;
+import kr.hhplus.be.server.order.application.service.CouponPricingService;
 import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.Order;
@@ -35,7 +35,7 @@ class PlaceOrderUseCaseTest {
     @Mock
     private ProductLockingQueryService productQueryService;
     @Mock
-    private DiscountService discountService;
+    private CouponPricingService couponPricingService;
     @Mock
     private WalletCommandService walletCommandService;
     @Mock
@@ -58,7 +58,7 @@ class PlaceOrderUseCaseTest {
         PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(wallet.getUserId(), null, orderProducts);
 
         given(productQueryService.findProducts(anyList())).willReturn(Map.of(1L, product));
-        given(discountService.calculate(isNull(), eq(wallet.getUserId()), anyList())).willReturn(DiscountInfo.none());
+        given(couponPricingService.applyCouponPricing(isNull(), eq(wallet.getUserId()), anyList())).willReturn(DiscountInfo.none());
         given(orderJpaRepository.save(any(Order.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         // when

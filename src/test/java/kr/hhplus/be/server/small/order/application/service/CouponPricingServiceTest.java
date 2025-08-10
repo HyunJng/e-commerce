@@ -6,7 +6,7 @@ import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.coupon.domain.entity.IssuedCoupon;
 import kr.hhplus.be.server.coupon.domain.repository.CouponJpaRepository;
 import kr.hhplus.be.server.coupon.domain.repository.IssuedCouponLockLoader;
-import kr.hhplus.be.server.order.application.service.DiscountService;
+import kr.hhplus.be.server.order.application.service.CouponPricingService;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.OrderItem;
 import org.assertj.core.api.Assertions;
@@ -26,10 +26,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-class DiscountServiceTest {
+class CouponPricingServiceTest {
 
     @InjectMocks
-    private DiscountService discountService;
+    private CouponPricingService couponPricingService;
     @Mock
     private CouponJpaRepository couponJpaRepository;
     @Mock
@@ -45,11 +45,16 @@ class DiscountServiceTest {
     @Test
     void 쿠폰이_존재하면_검증을_시도한다() {
         // given
+        Long couponId = 1L, useId = 1L;
+        OrderItem orderItem = Mockito.mock(OrderItem.class);
         IssuedCoupon issuedCoupon = Mockito.mock(IssuedCoupon.class);
-        given(issuedCouponLockLoader.findByUserIdAndCouponId(1L, 1L)).willReturn(Optional.of(issuedCoupon));
+
+        given(orderItem.totalAmount()).willReturn(10000L);
+        given(couponJpaRepository.findById(couponId)).willReturn(Optional.of(기본쿠폰()));
+        given(issuedCouponLockLoader.findByUserIdAndCouponId(useId, couponId)).willReturn(Optional.ofNullable(issuedCoupon));
 
         // when
-        discountService.validateOrThrow(1L, 1L);
+        couponPricingService.applyCouponPricing(1L, 1L, List.of(orderItem));
 
         // then
         verify(issuedCoupon).validate(dateHolder);
@@ -58,12 +63,18 @@ class DiscountServiceTest {
     @Test
     void 쿠폰이_존재하지_않으면_오류를_반환한다() {
         // given
+        Long couponId = 1L, useId = 1L;
+        OrderItem orderItem = Mockito.mock(OrderItem.class);
+        IssuedCoupon issuedCoupon = Mockito.mock(IssuedCoupon.class);
+
+        given(orderItem.totalAmount()).willReturn(10000L);
+        given(couponJpaRepository.findById(couponId)).willReturn(Optional.of(기본쿠폰()));
         given(issuedCouponLockLoader.findByUserIdAndCouponId(anyLong(), anyLong())).willReturn(Optional.empty());
 
         // when & then
-        Assertions.assertThatThrownBy(() -> discountService.validateOrThrow(1L, 1L))
+        Assertions.assertThatThrownBy(() -> couponPricingService.applyCouponPricing(1L, 1L, List.of(orderItem)))
                 .isInstanceOf(CommonException.class)
-                .hasMessage(ErrorCode.NOT_FOUND_RESOURCE.getMessage("쿠폰"));
+                .hasMessage(ErrorCode.NOT_FOUND_RESOURCE.getMessage("발급 쿠폰"));
     }
 
     @Test
@@ -78,7 +89,7 @@ class DiscountServiceTest {
         given(issuedCouponLockLoader.findByUserIdAndCouponId(useId, couponId)).willReturn(Optional.ofNullable(issuedCoupon));
 
         // when
-        DiscountInfo discountInfo = discountService.calculate(1L, 1L, List.of(orderItem));
+        DiscountInfo discountInfo = couponPricingService.applyCouponPricing(1L, 1L, List.of(orderItem));
 
         // then
         verify(issuedCoupon).use();

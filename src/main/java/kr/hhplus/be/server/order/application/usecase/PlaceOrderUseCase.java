@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
-import kr.hhplus.be.server.order.application.service.DiscountService;
+import kr.hhplus.be.server.order.application.service.CouponPricingService;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.Order;
 import kr.hhplus.be.server.order.domain.entity.OrderItem;
@@ -63,7 +63,7 @@ public class PlaceOrderUseCase {
 
     private final OrderJpaRepository orderJpaRepository;
     private final ProductLockingQueryService productLockingQueryService;
-    private final DiscountService discountService;
+    private final CouponPricingService couponPricingService;
     private final WalletCommandService walletCommandService;
     private final DateHolder dateHolder;
 
@@ -82,8 +82,7 @@ public class PlaceOrderUseCase {
         }
 
         // 할인 정보 조회
-        discountService.validateOrThrow(input.couponId, input.userId);
-        DiscountInfo discountInfo = discountService.calculate(input.couponId, input.userId, orderItems);
+        DiscountInfo discountInfo = couponPricingService.applyCouponPricing(input.couponId, input.userId, orderItems);
 
         // 주문 생성
         Order order = Order.create(input.userId, orderItems, discountInfo.discountAmount(), discountInfo.issuedCouponId());
