@@ -1,18 +1,17 @@
 package kr.hhplus.be.server.order.domain.entity;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.jpa.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.domain.AbstractAggregateRoot;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
 @Table(name = "orders")
-public class Order extends AbstractAggregateRoot<Order> {
+public class Order extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +31,6 @@ public class Order extends AbstractAggregateRoot<Order> {
 
     @Column(name = "paid_amount")
     private Long paidAmount;
-
-    @Column(name = "create_at")
-    private LocalDateTime createAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();

@@ -3,6 +3,7 @@ package kr.hhplus.be.server.coupon.domain.entity;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
+import kr.hhplus.be.server.common.jpa.BaseTimeEntity;
 import kr.hhplus.be.server.common.time.DateHolder;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Entity
 @Table(name = "issued_coupons")
-public class IssuedCoupon {
+public class IssuedCoupon extends BaseTimeEntity {
     public enum Status {ACTIVE, USED}
 
     @Id

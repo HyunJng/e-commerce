@@ -3,14 +3,13 @@ package kr.hhplus.be.server.coupon.domain.entity;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
+import kr.hhplus.be.server.common.jpa.BaseTimeEntity;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(name = "coupons")
-public class Coupon {
+public class Coupon extends BaseTimeEntity {
     public enum DiscountType {PERCENT, FIXED_AMOUNT}
 
     @Id
@@ -30,16 +29,12 @@ public class Coupon {
     @Column(name = "dates")
     private Integer dates;
 
-    @Column(name = "create_at", insertable = false, updatable = false)
-    private LocalDateTime createAt;
-
-    public Coupon(Long id, String name, Long discountAmount, DiscountType discountType, Integer dates, LocalDateTime createAt) {
+    public Coupon(Long id, String name, Long discountAmount, DiscountType discountType, Integer dates) {
         this.id = id;
         this.name = name;
         this.discountAmount = discountAmount;
         this.discountType = discountType;
         this.dates = dates;
-        this.createAt = createAt;
     }
 
     public Coupon() {}
