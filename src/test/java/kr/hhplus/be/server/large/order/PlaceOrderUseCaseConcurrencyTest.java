@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.large.order;
 
-import kr.hhplus.be.server.large.AbstractConCurrencyTest;
+import kr.hhplus.be.server.large.AbstractConcurrencyTest;
 import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
 import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         @Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/order-concurrency-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 })
-public class PlaceOrderUseCaseConcurrencyTest extends AbstractConCurrencyTest {
+public class PlaceOrderUseCaseConcurrencyTest extends AbstractConcurrencyTest {
 
     @Autowired
     private PlaceOrderUseCase placeOrderUseCase;

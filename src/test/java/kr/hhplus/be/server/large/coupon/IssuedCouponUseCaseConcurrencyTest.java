@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.large.coupon;
 
 import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
-import kr.hhplus.be.server.large.AbstractConCurrencyTest;
+import kr.hhplus.be.server.large.AbstractConcurrencyTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         @Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/coupon-concurrency-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 })
-class IssuedCouponUseCaseConcurrencyTest extends AbstractConCurrencyTest {
+class IssuedCouponUseCaseConcurrencyTest extends AbstractConcurrencyTest {
 
     @Autowired
     private IssuedCouponUseCase issuedCouponUseCase;
@@ -26,7 +26,7 @@ class IssuedCouponUseCaseConcurrencyTest extends AbstractConCurrencyTest {
         Long couponId = 1L;
 
         // when
-        List<Boolean> results = AbstractConCurrencyTest.runConcurrentTest(150, i -> {
+        List<Boolean> results = AbstractConcurrencyTest.runConcurrentTest(150, i -> {
             final Long userId = (long) i + 1;
             IssuedCouponUseCase.Input input = new IssuedCouponUseCase.Input(couponId, userId);
             IssuedCouponUseCase.Output output = issuedCouponUseCase.execute(input);
