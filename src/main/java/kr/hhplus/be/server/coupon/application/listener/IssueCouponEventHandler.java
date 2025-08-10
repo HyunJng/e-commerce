@@ -16,7 +16,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public class IssuedCouponEventHandler {
+public class IssueCouponEventHandler {
 
     private final CouponJpaRepository couponJpaRepository;
     private final IssuedCouponJpaRepository issuedCouponJpaRepository;

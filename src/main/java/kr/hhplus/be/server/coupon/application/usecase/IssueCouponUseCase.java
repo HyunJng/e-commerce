@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class IssuedCouponUseCase {
+public class IssueCouponUseCase {
 
     public record Input(Long couponId, Long userId) {
     }
@@ -25,7 +25,7 @@ public class IssuedCouponUseCase {
     @Transactional
     public Output execute(Input input) {
         // 유저정보의 유효성은 인증/인가 과정에서 처리되었을 것이라 가정하였음
-        boolean isSuccess = (couponQuantityJpaRepository.issuedCoupon(input.couponId)) != 0;
+        boolean isSuccess = (couponQuantityJpaRepository.increaseIssuedCouponQuantity(input.couponId)) != 0;
         if (isSuccess) {
             applicationEventPublisher.publishEvent(new IssuedCouponEvent(input.couponId, input.userId));
         }

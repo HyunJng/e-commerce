@@ -2,7 +2,7 @@ package kr.hhplus.be.server.coupon.presentation.controller;
 
 import kr.hhplus.be.server.coupon.presentation.docs.CouponApiSpec;
 import kr.hhplus.be.server.coupon.presentation.dto.CouponIssueApi;
-import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
+import kr.hhplus.be.server.coupon.application.usecase.IssueCouponUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/coupons")
 public class CouponController implements CouponApiSpec {
 
-    private final IssuedCouponUseCase issuedCouponUseCase;
+    private final IssueCouponUseCase issueCouponUseCase;
 
     @PostMapping("/issue")
     public ResponseEntity<CouponIssueApi.Response> issued(@RequestBody CouponIssueApi.Request request) {
-        IssuedCouponUseCase.Output output = issuedCouponUseCase.execute(request.to());
+        IssueCouponUseCase.Output output = issueCouponUseCase.execute(request.to());
 
         return ResponseEntity.ok(CouponIssueApi.Response.from(output));
     }
