@@ -4,7 +4,6 @@ import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.mock.MockDateHolderImpl;
 import kr.hhplus.be.server.product.application.service.ProductQueryService;
 import kr.hhplus.be.server.product.domain.entity.BestProduct;
-import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
-import static kr.hhplus.be.server.mock.DomainTestFixtures.포맷상품;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
@@ -45,15 +43,15 @@ class ProductQueryServiceTest {
 
         given(productJpaRepository.findBestProductsBetweenDays(today.minusDays(3), today, pageable))
                 .willReturn(List.of(
-                        new BestProduct(포맷상품(1L), 5L),
-                        new BestProduct(포맷상품(2L), 4L),
-                        new BestProduct(포맷상품(3L), 3L),
-                        new BestProduct(포맷상품(4L), 2L),
-                        new BestProduct(포맷상품(5L), 1L)
+                        new BestProduct(1L, "상품1", 1000L, 10, 5L),
+                        new BestProduct(2L, "상품2", 2000L, 10, 4L),
+                        new BestProduct(3L, "상품3", 3000L, 10, 3L),
+                        new BestProduct(4L, "상품4", 4000L, 10, 2L),
+                        new BestProduct(5L, "상품5", 5000L, 10, 1L)
                 ));
 
         // when
-        List<Product> bestProducts = productQueryService.findBestProducts();
+        List<BestProduct> bestProducts = productQueryService.findBestProducts();
 
         // then
         assertThat(bestProducts.size()).isEqualTo(5);
