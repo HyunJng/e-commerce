@@ -37,3 +37,7 @@ spring:
 
 springdoc:
   use-fqn: true
+
+app:
+  scheduling:
+    enabled: true
