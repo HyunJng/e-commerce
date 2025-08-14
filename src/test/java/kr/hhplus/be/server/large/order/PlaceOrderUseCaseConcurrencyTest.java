@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.large.order;
 
 import kr.hhplus.be.server.large.AbstractConcurrencyTest;
+import kr.hhplus.be.server.large.common.lock.LockTxProbeConfig;
 import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
 import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
@@ -8,6 +9,7 @@ import kr.hhplus.be.server.wallet.domain.domain.Wallet;
 import kr.hhplus.be.server.wallet.domain.repository.WalletJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
@@ -19,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         @Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/order-concurrency-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 })
+@Import(value = {LockTxProbeConfig.class})
 public class PlaceOrderUseCaseConcurrencyTest extends AbstractConcurrencyTest {
 
     @Autowired
