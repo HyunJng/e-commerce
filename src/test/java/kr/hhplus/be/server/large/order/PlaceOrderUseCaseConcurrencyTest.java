@@ -38,7 +38,7 @@ public class PlaceOrderUseCaseConcurrencyTest extends AbstractConcurrencyTest {
         long productId = 1L;
 
         // when
-        int successCount = runConcurrentTest(2, i -> {
+        int successCount = runConcurrentTest(8, 2, i -> {
             Long userId = (long) (i + 1);
             PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(
                     userId,
@@ -60,7 +60,7 @@ public class PlaceOrderUseCaseConcurrencyTest extends AbstractConcurrencyTest {
         long productId = 2L;
 
         // when
-        int successCount = runConcurrentTest(2, i -> {
+        int successCount = runConcurrentTest(8, 2, i -> {
             Long userId = (long) (i + 1);
             PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(
                     userId,
@@ -79,7 +79,7 @@ public class PlaceOrderUseCaseConcurrencyTest extends AbstractConcurrencyTest {
         long userId = 1L, productId = 2L;
 
         // when
-        int successCount = runConcurrentTest(2, i -> {
+        int successCount = runConcurrentTest(8, 2, i -> {
             PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(
                     userId,
                     null,
@@ -101,7 +101,7 @@ public class PlaceOrderUseCaseConcurrencyTest extends AbstractConcurrencyTest {
         long userId = 1L, productId = 2L, couponId = 1L;
 
         // when
-        int successCount = runConcurrentTest(2, i -> {
+        int successCount = runConcurrentTest(8, 2, i -> {
             PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(
                     userId,
                     couponId,

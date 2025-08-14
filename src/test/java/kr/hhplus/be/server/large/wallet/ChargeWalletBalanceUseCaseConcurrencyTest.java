@@ -28,7 +28,7 @@ class ChargeWalletBalanceUseCaseConcurrencyTest extends AbstractConcurrencyTest 
         Long userId = 1L;
 
         // when
-        AbstractConcurrencyTest.runConcurrentTest(2, i -> {
+        AbstractConcurrencyTest.runConcurrentTest(8, 2, i -> {
             ChargeWalletBalanceUseCase.Input input = new ChargeWalletBalanceUseCase.Input(userId, 1000L);
             chargeWalletBalanceUseCase.execute(input);
         });

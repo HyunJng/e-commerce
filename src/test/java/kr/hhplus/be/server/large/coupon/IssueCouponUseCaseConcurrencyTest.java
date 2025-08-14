@@ -26,7 +26,7 @@ class IssueCouponUseCaseConcurrencyTest extends AbstractConcurrencyTest {
         Long couponId = 1L;
 
         // when
-        List<Boolean> results = AbstractConcurrencyTest.runConcurrentTest(150, i -> {
+        List<Boolean> results = AbstractConcurrencyTest.runConcurrentTest(8, 150, i -> {
             final Long userId = (long) i + 1;
             IssueCouponUseCase.Input input = new IssueCouponUseCase.Input(couponId, userId);
             IssueCouponUseCase.Output output = issueCouponUseCase.execute(input);

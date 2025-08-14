@@ -22,13 +22,13 @@ import java.util.function.Function;
 @Import({TestBeanConfiguration.class, TestcontainersConfiguration.class, TestLogConfiguration.class})
 public abstract class AbstractConcurrencyTest {
 
-    public static int runConcurrentTest(int threadCount, Consumer<Integer> consumer) throws InterruptedException {
+    public static int runConcurrentTest(int threadCount, int testCount, Consumer<Integer> consumer) throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         CountDownLatch startLatch = new CountDownLatch(1);
-        CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+        CountDownLatch countDownLatch = new CountDownLatch(testCount);
 
         AtomicInteger successCount = new AtomicInteger();
-        for (int i = 0; i < threadCount; i++) {
+        for (int i = 0; i < testCount; i++) {
             int finalI = i;
             executor.submit(() -> {
                 try {
@@ -42,7 +42,6 @@ public abstract class AbstractConcurrencyTest {
                     countDownLatch.countDown();
                 }
             });
-
         }
 
         startLatch.countDown();
@@ -50,14 +49,14 @@ public abstract class AbstractConcurrencyTest {
         return successCount.get();
     }
 
-    public static <T> List<T> runConcurrentTest(int threadCount, Function<Integer, T> task) throws InterruptedException {
+    public static <T> List<T> runConcurrentTest(int threadCount, int testCount, Function<Integer, T> task) throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         CountDownLatch startLatch = new CountDownLatch(1);
-        CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+        CountDownLatch countDownLatch = new CountDownLatch(testCount);
 
         List<T> results = Collections.synchronizedList(new ArrayList<>());
 
-        for (int i = 0; i < threadCount; i++) {
+        for (int i = 0; i < testCount; i++) {
             int finalI = i;
             executor.submit(() -> {
                 try {
