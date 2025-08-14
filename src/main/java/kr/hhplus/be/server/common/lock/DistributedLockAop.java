@@ -1,7 +1,5 @@
 package kr.hhplus.be.server.common.lock;
 
-import kr.hhplus.be.server.common.exception.CommonException;
-import kr.hhplus.be.server.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -25,7 +23,7 @@ public class DistributedLockAop {
 
     @Around("@annotation(distributedLock)")
     public Object lock(ProceedingJoinPoint joinPoint,
-                       DistributedLock distributedLock) {
+                       DistributedLock distributedLock) throws Throwable {
         LockKeyResolver resolver = applicationContext.getBean(distributedLock.resolver());
         List<String> partialKeys = resolver.resolve(joinPoint);
 
@@ -33,14 +31,6 @@ public class DistributedLockAop {
         long wait = distributedLock.waitTime();
         long lease = distributedLock.leaseTime();
 
-        return lockManager.lock(wait, lease, lockKeys, () -> {
-            try {
-                return joinPoint.proceed();
-            } catch (CommonException e) {
-                throw e;
-            } catch (Throwable e) {
-                throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
-            }
-        });
+        return lockManager.lock(wait, lease, lockKeys, joinPoint::proceed);
     }
 }

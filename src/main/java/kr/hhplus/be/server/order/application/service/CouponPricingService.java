@@ -10,6 +10,7 @@ import kr.hhplus.be.server.coupon.domain.repository.IssuedCouponLockLoader;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.OrderItem;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,11 @@ public class CouponPricingService {
     private final IssuedCouponLockLoader issuedCouponLockLoader;
     private final DateHolder dateHolder;
 
-    public DiscountInfo applyCouponPricing(Long couponId, Long userId, List<OrderItem> items) {
+    public DiscountInfo applyCouponPricing(Long couponId,
+                                           Long userId,
+                                           List<OrderItem> items)
+            throws OptimisticEntityLockException
+    {
         if (couponId == null) {
             return DiscountInfo.none();
         }

@@ -33,6 +33,10 @@ public class IssuedCoupon extends BaseTimeEntity {
     @Column(name = "status")
     private Status status;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     public IssuedCoupon(Coupon coupon, Long userId, DateHolder dateHolder) {
         this.userId = userId;
         this.couponId = coupon.getId();

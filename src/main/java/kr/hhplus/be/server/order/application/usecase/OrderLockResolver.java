@@ -18,10 +18,6 @@ public class OrderLockResolver implements LockKeyResolver {
             if (arg instanceof PlaceOrderUseCase.Input input) {
                 // 상품
                 input.getOrderProductIds().stream().sorted().forEach(productId -> keys.add("productId:" + productId));
-                // 쿠폰
-                if (input.couponId() != null) {
-                    keys.add("couponId:" + input.couponId() + ":userId:" + input.userId());
-                }
                 // 포인트
                 keys.add("walletId:userId:" + input.userId());
             }

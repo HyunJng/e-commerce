@@ -14,6 +14,7 @@ import kr.hhplus.be.server.product.application.service.ProductLockingQueryServic
 import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -70,7 +71,9 @@ public class PlaceOrderUseCase {
 
     @Transactional
     @DistributedLock(resolver = OrderLockResolver.class, waitTime = 10L, leaseTime = 5L)
-    public Output execute(Input input) {
+    public Output execute(Input input)
+            throws OptimisticEntityLockException
+    {
         // 상품 정보 조회
         Map<Long, Product> products = productLockingQueryService.findProducts(input.getOrderProductIds());
 

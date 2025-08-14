@@ -54,6 +54,7 @@ CREATE TABLE issued_coupons
     end_date   DATE        NOT NULL,
     status     VARCHAR(50) NOT NULL,
     order_id   BIGINT DEFAULT NULL,
+    version    BIGINT NOT NULL DEFAULT 0,
     create_at  DATETIME,
     update_at  DATETIME,
     UNIQUE (user_id, coupon_id)

@@ -2,6 +2,7 @@ package kr.hhplus.be.server.common.redis;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
+import kr.hhplus.be.server.common.lock.CustomThrowingSupplier;
 import kr.hhplus.be.server.common.lock.LockManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 @Slf4j
 @Component
@@ -21,10 +21,11 @@ public class RedissonLockManager implements LockManager {
 
     private final RedissonClient redissonClient;
 
-    public Object lock(long waitTime,
+    public <T> T lock(long waitTime,
                        long leaseTime,
                        List<String> lockKeys,
-                       Supplier<Object> operation) {
+                      CustomThrowingSupplier<T> operation
+    ) throws Throwable {
         List<RLock> acquired = new ArrayList<>(lockKeys.size());
         try {
             for (String lockKey : lockKeys) {

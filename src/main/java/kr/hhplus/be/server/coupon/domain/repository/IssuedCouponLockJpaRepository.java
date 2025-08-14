@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public interface IssuedCouponLockJpaRepository extends JpaRepository<IssuedCoupon, Long> {
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.OPTIMISTIC)
     @Query("""
                SELECT a
                FROM IssuedCoupon a
                WHERE a.userId = :userId AND a.couponId = :couponId
             """)
-    Optional<IssuedCoupon> findByUserIdAndCouponIdForUpdate(Long userId, Long couponId);
+    Optional<IssuedCoupon> findByUserIdAndCouponIdWithVersion(Long userId, Long couponId);
 }
