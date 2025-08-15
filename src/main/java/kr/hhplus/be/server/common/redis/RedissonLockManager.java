@@ -10,7 +10,8 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +27,7 @@ public class RedissonLockManager implements LockManager {
                        List<String> lockKeys,
                       CustomThrowingSupplier<T> operation
     ) throws Throwable {
-        List<RLock> acquired = new ArrayList<>(lockKeys.size());
+        Deque<RLock> acquired = new ArrayDeque<>();
         try {
             for (String lockKey : lockKeys) {
                 RLock rLock = redissonClient.getLock(lockKey);
@@ -44,8 +45,9 @@ public class RedissonLockManager implements LockManager {
         }
     }
 
-    private void unlockReverse(List<RLock> acquired) {
-        for (RLock rLock : acquired) {
+    private void unlockReverse(Deque<RLock> acquired) {
+        while (!acquired.isEmpty()) {
+            RLock rLock = acquired.pop();
             try {
                 if (rLock.isHeldByCurrentThread()) {
                     rLock.unlock();
