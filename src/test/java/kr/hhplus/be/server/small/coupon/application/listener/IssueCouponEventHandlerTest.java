@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.small.coupon.application.listener;
 
 import kr.hhplus.be.server.common.time.DateHolder;
-import kr.hhplus.be.server.coupon.application.listener.IssuedCouponEventHandler;
+import kr.hhplus.be.server.coupon.application.listener.IssueCouponEventHandler;
 import kr.hhplus.be.server.coupon.domain.entity.Coupon;
 import kr.hhplus.be.server.coupon.domain.entity.IssuedCoupon;
 import kr.hhplus.be.server.coupon.domain.event.IssuedCouponEvent;
@@ -23,9 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-class IssuedCouponEventHandlerTest {
+class IssueCouponEventHandlerTest {
 
-    private IssuedCouponEventHandler issuedCouponEventHandler;
+    private IssueCouponEventHandler issueCouponEventHandler;
     @Mock
     private IssuedCouponJpaRepository issuedCouponJpaRepository;
     @Mock
@@ -38,7 +38,7 @@ class IssuedCouponEventHandlerTest {
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
-        issuedCouponEventHandler = new IssuedCouponEventHandler(
+        issueCouponEventHandler = new IssueCouponEventHandler(
                 couponJpaRepository,
                 issuedCouponJpaRepository,
                 dateHolder
@@ -56,7 +56,7 @@ class IssuedCouponEventHandlerTest {
         given(couponJpaRepository.findById(couponId)).willReturn(Optional.of(coupon));
 
         // when
-        issuedCouponEventHandler.handle(issuedCouponEvent);
+        issueCouponEventHandler.handle(issuedCouponEvent);
 
         // then
         verify(issuedCouponJpaRepository).save(issuedCouponArgumentCaptor.capture());

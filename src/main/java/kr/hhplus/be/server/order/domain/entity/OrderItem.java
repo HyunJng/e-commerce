@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.order.domain.entity;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.jpa.BaseTimeEntity;
 import kr.hhplus.be.server.common.time.DateHolder;
 import lombok.Getter;
 
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Entity
 @Table(name = "order_items")
-public class OrderItem {
+public class OrderItem extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

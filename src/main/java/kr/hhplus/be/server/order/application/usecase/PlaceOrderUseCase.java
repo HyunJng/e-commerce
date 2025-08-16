@@ -3,8 +3,9 @@ package kr.hhplus.be.server.order.application.usecase;
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
+import kr.hhplus.be.server.common.lock.DistributedLock;
 import kr.hhplus.be.server.common.time.DateHolder;
-import kr.hhplus.be.server.order.application.service.DiscountService;
+import kr.hhplus.be.server.order.application.service.CouponPricingService;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.Order;
 import kr.hhplus.be.server.order.domain.entity.OrderItem;
@@ -13,6 +14,7 @@ import kr.hhplus.be.server.product.application.service.ProductLockingQueryServic
 import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -63,12 +65,15 @@ public class PlaceOrderUseCase {
 
     private final OrderJpaRepository orderJpaRepository;
     private final ProductLockingQueryService productLockingQueryService;
-    private final DiscountService discountService;
+    private final CouponPricingService couponPricingService;
     private final WalletCommandService walletCommandService;
     private final DateHolder dateHolder;
 
     @Transactional
-    public Output execute(Input input) {
+    @DistributedLock(resolver = OrderLockResolver.class, waitTime = 10L, leaseTime = 5L)
+    public Output execute(Input input)
+            throws OptimisticEntityLockException
+    {
         // 상품 정보 조회
         Map<Long, Product> products = productLockingQueryService.findProducts(input.getOrderProductIds());
 
@@ -82,8 +87,7 @@ public class PlaceOrderUseCase {
         }
 
         // 할인 정보 조회
-        discountService.validateOrThrow(input.couponId, input.userId);
-        DiscountInfo discountInfo = discountService.calculate(input.couponId, input.userId, orderItems);
+        DiscountInfo discountInfo = couponPricingService.applyCouponPricing(input.couponId, input.userId, orderItems);
 
         // 주문 생성
         Order order = Order.create(input.userId, orderItems, discountInfo.discountAmount(), discountInfo.issuedCouponId());

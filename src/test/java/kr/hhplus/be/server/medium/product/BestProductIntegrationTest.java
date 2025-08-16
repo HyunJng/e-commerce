@@ -4,7 +4,7 @@ import kr.hhplus.be.server.medium.AbstractIntegrationTest;
 import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
 import kr.hhplus.be.server.product.application.port.BestProductCacheWriter;
 import kr.hhplus.be.server.product.application.service.ProductQueryService;
-import kr.hhplus.be.server.product.domain.entity.Product;
+import kr.hhplus.be.server.product.domain.entity.BestProduct;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
@@ -44,15 +44,15 @@ public class BestProductIntegrationTest extends AbstractIntegrationTest {
     @Test
     void 인기상품이_정상적으로_조회된다() throws Exception {
         // when
-        List<Product> bestProducts = productQueryService.findBestProducts();
+        List<BestProduct> bestProducts = productQueryService.findBestProducts();
 
         // then
         assertThat(bestProducts).hasSize(5);
-        assertThat(bestProducts.get(0).getId()).isEqualTo(1L);
-        assertThat(bestProducts.get(1).getId()).isEqualTo(2L);
-        assertThat(bestProducts.get(2).getId()).isIn(3L, 4L, 5L);
-        assertThat(bestProducts.get(3).getId()).isIn(3L, 4L, 5L);
-        assertThat(bestProducts.get(4).getId()).isIn(3L, 4L, 5L);
+        assertThat(bestProducts.get(0).id()).isEqualTo(1L);
+        assertThat(bestProducts.get(1).id()).isEqualTo(2L);
+        assertThat(bestProducts.get(2).id()).isIn(3L, 4L, 5L);
+        assertThat(bestProducts.get(3).id()).isIn(3L, 4L, 5L);
+        assertThat(bestProducts.get(4).id()).isIn(3L, 4L, 5L);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class BestProductIntegrationTest extends AbstractIntegrationTest {
         bestProductCacheWriter.update();
 
         // then
-        List<Product> cachedBestProducts = bestProductCacheReader.get();
+        List<BestProduct> cachedBestProducts = bestProductCacheReader.get();
         assertThat(cachedBestProducts).hasSize(5);
     }
 }

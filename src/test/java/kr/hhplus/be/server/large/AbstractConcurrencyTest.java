@@ -3,7 +3,6 @@ package kr.hhplus.be.server.large;
 import kr.hhplus.be.server.config.TestBeanConfiguration;
 import kr.hhplus.be.server.config.TestLogConfiguration;
 import kr.hhplus.be.server.config.TestcontainersConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,18 +18,17 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Import({TestBeanConfiguration.class, TestcontainersConfiguration.class, TestLogConfiguration.class})
-public abstract class AbstractConCurrencyTest {
+public abstract class AbstractConcurrencyTest {
 
-    public static int runConcurrentTest(int threadCount, Consumer<Integer> consumer) throws InterruptedException {
+    public static int runConcurrentTest(int threadCount, int testCount, Consumer<Integer> consumer) throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         CountDownLatch startLatch = new CountDownLatch(1);
-        CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+        CountDownLatch countDownLatch = new CountDownLatch(testCount);
 
         AtomicInteger successCount = new AtomicInteger();
-        for (int i = 0; i < threadCount; i++) {
+        for (int i = 0; i < testCount; i++) {
             int finalI = i;
             executor.submit(() -> {
                 try {
@@ -44,7 +42,6 @@ public abstract class AbstractConCurrencyTest {
                     countDownLatch.countDown();
                 }
             });
-
         }
 
         startLatch.countDown();
@@ -52,21 +49,21 @@ public abstract class AbstractConCurrencyTest {
         return successCount.get();
     }
 
-    public static List<Boolean> runConcurrentTest(int threadCount, Function<Integer, Boolean> task) throws InterruptedException {
+    public static <T> List<T> runConcurrentTest(int threadCount, int testCount, Function<Integer, T> task) throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         CountDownLatch startLatch = new CountDownLatch(1);
-        CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+        CountDownLatch countDownLatch = new CountDownLatch(testCount);
 
-        List<Boolean> results = Collections.synchronizedList(new ArrayList<>());
+        List<T> results = Collections.synchronizedList(new ArrayList<>());
 
-        for (int i = 0; i < threadCount; i++) {
+        for (int i = 0; i < testCount; i++) {
             int finalI = i;
             executor.submit(() -> {
                 try {
                     startLatch.await();
                     results.add(task.apply(finalI));
                 } catch (Exception e) {
-                    results.add(false);
+                    Thread.currentThread().interrupt();
                 } finally {
                     countDownLatch.countDown();
                 }

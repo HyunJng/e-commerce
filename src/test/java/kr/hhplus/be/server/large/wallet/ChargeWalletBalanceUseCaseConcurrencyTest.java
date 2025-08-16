@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.large.wallet;
 
-import kr.hhplus.be.server.large.AbstractConCurrencyTest;
+import kr.hhplus.be.server.large.AbstractConcurrencyTest;
 import kr.hhplus.be.server.wallet.application.usecase.ChargeWalletBalanceUseCase;
 import kr.hhplus.be.server.wallet.domain.domain.Wallet;
 import kr.hhplus.be.server.wallet.domain.repository.WalletJpaRepository;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         @Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/wallet-concurrency-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 })
-class ChargeWalletBalanceUseCaseConcurrencyTest extends AbstractConCurrencyTest {
+class ChargeWalletBalanceUseCaseConcurrencyTest extends AbstractConcurrencyTest {
 
     @Autowired
     private ChargeWalletBalanceUseCase chargeWalletBalanceUseCase;
@@ -28,7 +28,7 @@ class ChargeWalletBalanceUseCaseConcurrencyTest extends AbstractConCurrencyTest 
         Long userId = 1L;
 
         // when
-        AbstractConCurrencyTest.runConcurrentTest(2, i -> {
+        AbstractConcurrencyTest.runConcurrentTest(8, 2, i -> {
             ChargeWalletBalanceUseCase.Input input = new ChargeWalletBalanceUseCase.Input(userId, 1000L);
             chargeWalletBalanceUseCase.execute(input);
         });

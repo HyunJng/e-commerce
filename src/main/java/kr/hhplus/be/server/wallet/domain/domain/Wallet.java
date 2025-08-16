@@ -3,15 +3,14 @@ package kr.hhplus.be.server.wallet.domain.domain;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
+import kr.hhplus.be.server.common.jpa.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(name = "wallets")
-public class Wallet {
+public class Wallet extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +21,6 @@ public class Wallet {
 
     @Column(name = "balance")
     private Long balance;
-
-    @Column(name = "create_at", insertable = false, updatable = false)
-    private LocalDateTime createAt;
-
-    @Column(name = "update_at", insertable = false, updatable = false)
-    private LocalDateTime updateAt;
 
     @Builder
     public Wallet(Long userId, Long balance) {

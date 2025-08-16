@@ -12,17 +12,16 @@ public class DomainTestFixtures {
                 "회원가입쿠폰",
                 10L,
                 Coupon.DiscountType.PERCENT,
-                7,
-                null
+                7
         );
     }
 
     public static Product 기본상품() {
-        return new Product(1L, "상품1", 1000L, 10, null, null);
+        return new Product(1L, "상품1", 1000L, 10);
     }
 
     public static Product 포맷상품(Long id) {
-        return new Product(id, "상품" + id, id * 1000, (int) (10 * id), null, null);
+        return new Product(id, "상품" + id, id * 1000, (int) (10 * id));
     }
 
     public static Wallet 기본지갑() {

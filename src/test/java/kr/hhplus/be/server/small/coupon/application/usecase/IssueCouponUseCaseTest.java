@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.small.coupon.application.usecase;
 
-import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
+import kr.hhplus.be.server.coupon.application.usecase.IssueCouponUseCase;
 import kr.hhplus.be.server.coupon.domain.event.IssuedCouponEvent;
 import kr.hhplus.be.server.coupon.domain.repository.CouponQuantityJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +17,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-class IssuedCouponUseCaseTest {
+class IssueCouponUseCaseTest {
 
-    private IssuedCouponUseCase issuedCouponUseCase;
+    private IssueCouponUseCase issueCouponUseCase;
 
     @Mock
     private CouponQuantityJpaRepository couponQuantityJpaRepository;
@@ -31,7 +31,7 @@ class IssuedCouponUseCaseTest {
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
-        issuedCouponUseCase = new IssuedCouponUseCase(
+        issueCouponUseCase = new IssueCouponUseCase(
                 couponQuantityJpaRepository,
                 applicationEventPublisher
         );
@@ -42,12 +42,12 @@ class IssuedCouponUseCaseTest {
         // given
         Long couponId = 1L;
         Long userId = 1L;
-        IssuedCouponUseCase.Input input = new IssuedCouponUseCase.Input(couponId, userId);
+        IssueCouponUseCase.Input input = new IssueCouponUseCase.Input(couponId, userId);
 
-        given(couponQuantityJpaRepository.issuedCoupon(couponId)).willReturn(1);
+        given(couponQuantityJpaRepository.increaseIssuedCouponQuantity(couponId)).willReturn(1);
 
         // when
-        IssuedCouponUseCase.Output output = issuedCouponUseCase.execute(input);
+        IssueCouponUseCase.Output output = issueCouponUseCase.execute(input);
 
         // then
         assertThat(output.isSuccess()).isEqualTo(true);
@@ -63,12 +63,12 @@ class IssuedCouponUseCaseTest {
         // given
         Long couponId = 999L;
         Long userId = 1L;
-        IssuedCouponUseCase.Input input = new IssuedCouponUseCase.Input(couponId, userId);
+        IssueCouponUseCase.Input input = new IssueCouponUseCase.Input(couponId, userId);
 
-        given(couponQuantityJpaRepository.issuedCoupon(couponId)).willReturn(0);
+        given(couponQuantityJpaRepository.increaseIssuedCouponQuantity(couponId)).willReturn(0);
 
         // when
-        IssuedCouponUseCase.Output output = issuedCouponUseCase.execute(input);
+        IssueCouponUseCase.Output output = issueCouponUseCase.execute(input);
 
         // then
         assertThat(output.isSuccess()).isEqualTo(false);

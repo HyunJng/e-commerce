@@ -3,14 +3,13 @@ package kr.hhplus.be.server.product.domain.entity;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
+import kr.hhplus.be.server.common.jpa.BaseTimeEntity;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,21 +23,13 @@ public class Product {
     @Column(name = "stock_quantity")
     private Integer quantity;
 
-    @Column(name = "create_at", insertable = false, updatable = false)
-    private LocalDateTime createAt;
-
-    @Column(name = "update_at", insertable = false, updatable = false)
-    private LocalDateTime updateAt;
-
     public Product() {}
 
-    public Product(Long id, String name, Long price, Integer quantity, LocalDateTime createAt, LocalDateTime updateAt) {
+    public Product(Long id, String name, Long price, Integer quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
     }
 
     public Long calculateAmount(Integer quantity) {

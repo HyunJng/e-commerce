@@ -2,7 +2,7 @@ package kr.hhplus.be.server.small.coupon.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.common.exception.GeneralExceptionAdvice;
-import kr.hhplus.be.server.coupon.application.usecase.IssuedCouponUseCase;
+import kr.hhplus.be.server.coupon.application.usecase.IssueCouponUseCase;
 import kr.hhplus.be.server.coupon.presentation.controller.CouponController;
 import kr.hhplus.be.server.coupon.presentation.dto.CouponIssueApi;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class CouponControllerTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
-    private IssuedCouponUseCase issuedCouponUseCase;
+    private IssueCouponUseCase issueCouponUseCase;
 
     @Test
     void 쿠폰_발급에_성공하면_200응답과_발급된_쿠폰정보를_반환한다() throws Exception {
@@ -38,10 +38,10 @@ class CouponControllerTest {
         CouponIssueApi.Request request = new CouponIssueApi.Request(userId, couponId);
         String content = objectMapper.writeValueAsString(request);
 
-        IssuedCouponUseCase.Input input = new IssuedCouponUseCase.Input(couponId, userId);
+        IssueCouponUseCase.Input input = new IssueCouponUseCase.Input(couponId, userId);
 
-        BDDMockito.given(issuedCouponUseCase.execute(input))
-                .willReturn(new IssuedCouponUseCase.Output(true));
+        BDDMockito.given(issueCouponUseCase.execute(input))
+                .willReturn(new IssueCouponUseCase.Output(true));
 
         // when & then
         mockMvc.perform(post("/api/v1/coupons/issue")

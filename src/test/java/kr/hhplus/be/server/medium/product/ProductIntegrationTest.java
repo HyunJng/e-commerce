@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.medium.product;
 
-import kr.hhplus.be.server.common.cache.spring.SpringCacheName;
+import kr.hhplus.be.server.common.cache.CacheName;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
 import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
@@ -47,7 +47,7 @@ public class ProductIntegrationTest extends AbstractIntegrationTest {
     @Test
     void 캐시에_인기상품이_존재하지_않아도_fallback로직이_실행되어_성공적으로_조회된다() throws Exception {
         // given
-        cacheManager.getCache(SpringCacheName.BEST_PRODUCTS).clear();
+        cacheManager.getCache(CacheName.BEST_PRODUCTS).clear();
 
         // when & then
         mockMvc.perform(get("/api/v1/products/best"))

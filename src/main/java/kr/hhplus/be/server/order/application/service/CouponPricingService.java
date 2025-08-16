@@ -10,27 +10,24 @@ import kr.hhplus.be.server.coupon.domain.repository.IssuedCouponLockLoader;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.OrderItem;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class DiscountService {
+public class CouponPricingService {
 
     private final CouponJpaRepository couponJpaRepository;
     private final IssuedCouponLockLoader issuedCouponLockLoader;
     private final DateHolder dateHolder;
 
-    public void validateOrThrow(Long couponId, Long userId) {
-        if (couponId == null) return;
-
-        IssuedCoupon issuedCoupon = issuedCouponLockLoader.findByUserIdAndCouponId(userId, couponId)
-                .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "쿠폰"));
-        issuedCoupon.validate(dateHolder);
-    }
-
-    public DiscountInfo calculate(Long couponId, Long userId, List<OrderItem> items) {
+    public DiscountInfo applyCouponPricing(Long couponId,
+                                           Long userId,
+                                           List<OrderItem> items)
+            throws OptimisticEntityLockException
+    {
         if (couponId == null) {
             return DiscountInfo.none();
         }
@@ -41,10 +38,12 @@ public class DiscountService {
         IssuedCoupon issuedCoupon = issuedCouponLockLoader.findByUserIdAndCouponId(userId, couponId)
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "발급 쿠폰"));
 
+        issuedCoupon.validate(dateHolder);
+        issuedCoupon.use();
+
         Long totalAmount = items.stream().mapToLong(OrderItem::totalAmount).sum();
         Long discountAmount = coupon.calculateDiscountAmount(totalAmount);
 
-        issuedCoupon.use();
         return new DiscountInfo(discountAmount, issuedCoupon.getId());
     }
 }

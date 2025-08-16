@@ -1,18 +1,14 @@
 package kr.hhplus.be.server.user.domain;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.jpa.BaseTimeEntity;
 
-import java.time.LocalDateTime;
-
-@Table(name = "users")
 @Entity
-public class User {
+@Table(name = "users")
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "create_at")
-    private LocalDateTime createAt;
 
 }
