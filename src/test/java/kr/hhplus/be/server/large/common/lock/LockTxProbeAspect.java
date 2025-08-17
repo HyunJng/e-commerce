@@ -2,8 +2,8 @@ package kr.hhplus.be.server.large.common.lock;
 
 import kr.hhplus.be.server.common.lock.DistributedLock;
 import kr.hhplus.be.server.common.lock.DistributedLockAop;
-import kr.hhplus.be.server.common.lock.LockKeyResolver;
 import kr.hhplus.be.server.common.lock.resolver.LockKeyResolver;
+import kr.hhplus.be.server.common.vo.AopOrder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -28,7 +28,7 @@ public class LockTxProbeAspect implements Ordered {
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE + 2;
+        return AopOrder.LOGGING.getOrder();
     }
 
     @Around("@annotation(distributedLock)")

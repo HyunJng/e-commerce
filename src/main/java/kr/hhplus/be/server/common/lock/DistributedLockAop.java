@@ -1,13 +1,13 @@
 package kr.hhplus.be.server.common.lock;
 
 import kr.hhplus.be.server.common.lock.resolver.LockKeyResolver;
+import kr.hhplus.be.server.common.vo.AopOrder;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,12 +15,16 @@ import java.util.List;
 @Aspect
 @Component
 @RequiredArgsConstructor
-@Order(Ordered.HIGHEST_PRECEDENCE + 1)
-public class DistributedLockAop {
+public class DistributedLockAop implements Ordered {
     public static final String LOCK_PREFIX = "lock:";
 
     private final LockManager lockManager;
     private final ApplicationContext applicationContext;
+
+    @Override
+    public int getOrder() {
+        return AopOrder.LOCKING.getOrder();
+    }
 
     @Around("@annotation(distributedLock)")
     public Object lock(ProceedingJoinPoint joinPoint,
