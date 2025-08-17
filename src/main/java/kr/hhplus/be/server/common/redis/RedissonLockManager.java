@@ -2,7 +2,7 @@ package kr.hhplus.be.server.common.redis;
 
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.common.lock.CustomThrowingSupplier;
+import kr.hhplus.be.server.common.functional.CustomThrowingSupplier;
 import kr.hhplus.be.server.common.lock.LockManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

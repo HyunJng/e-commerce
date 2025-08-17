@@ -1,6 +1,6 @@
-package kr.hhplus.be.server.order.application.usecase;
+package kr.hhplus.be.server.common.lock.resolver;
 
-import kr.hhplus.be.server.common.lock.LockKeyResolver;
+import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class OrderLockResolver implements LockKeyResolver {
+public class ProductAndWalletLockKeyResolver implements LockKeyResolver {
 
     @Override
     public List<String> resolve(ProceedingJoinPoint joinPoint) {

@@ -1,6 +1,6 @@
-package kr.hhplus.be.server.common.cache.config;
+package kr.hhplus.be.server.common.config;
 
-import kr.hhplus.be.server.common.cache.CacheName;
+import kr.hhplus.be.server.common.vo.CacheName;
 import org.redisson.api.RedissonClient;
 import org.redisson.spring.cache.CacheConfig;
 import org.redisson.spring.cache.RedissonSpringCacheManager;

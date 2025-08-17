@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.common.cache;
+package kr.hhplus.be.server.common.vo;
 
 public final class CacheName {
     private CacheName() {}

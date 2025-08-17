@@ -1,6 +1,6 @@
-package kr.hhplus.be.server.common.cache.config;
+package kr.hhplus.be.server.common.config;
 
-import kr.hhplus.be.server.common.cache.CacheName;
+import kr.hhplus.be.server.common.vo.CacheName;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 

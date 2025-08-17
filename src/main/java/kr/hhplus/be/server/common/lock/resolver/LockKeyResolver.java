@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.common.lock;
+package kr.hhplus.be.server.common.lock.resolver;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 

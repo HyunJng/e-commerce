@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.common.lock;
 
+import kr.hhplus.be.server.common.lock.resolver.LockKeyResolver;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

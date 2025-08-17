@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.medium.product;
 
-import kr.hhplus.be.server.common.cache.CacheName;
+import kr.hhplus.be.server.common.vo.CacheName;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
 import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;

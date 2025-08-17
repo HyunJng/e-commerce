@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.product.infrastructure;
 
-import kr.hhplus.be.server.common.cache.CacheName;
+import kr.hhplus.be.server.common.vo.CacheName;
 import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
 import kr.hhplus.be.server.product.application.port.BestProductCacheWriter;
 import kr.hhplus.be.server.product.application.service.ProductQueryService;

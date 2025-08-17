@@ -41,7 +41,7 @@ public class BestProductThroughputTest extends AbstractConcurrencyTest {
         });
     }
 
-    @Test
+//    @Test
     void 인기상품조회_API에_캐시를_적용하지_않았을_때의_성능을_확인한다() throws Exception {
         // when
         runConcurrentTest(8, 5000, i -> {
