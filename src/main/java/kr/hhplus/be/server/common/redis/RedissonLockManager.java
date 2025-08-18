@@ -10,8 +10,6 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -23,40 +21,36 @@ public class RedissonLockManager implements LockManager {
     private final RedissonClient redissonClient;
 
     public <T> T lock(long waitTime,
-                       long leaseTime,
-                       List<String> lockKeys,
+                      long leaseTime,
+                      List<String> lockKeys,
                       CustomThrowingSupplier<T> operation
     ) throws Throwable {
-        Deque<RLock> acquired = new ArrayDeque<>();
+        RLock rLock = getRLock(lockKeys);
+        boolean available = false;
         try {
-            for (String lockKey : lockKeys) {
-                RLock rLock = redissonClient.getLock(lockKey);
-                boolean available = rLock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS);
-                if (!available) {
-                    throw new CommonException(ErrorCode.FAIL_LOCK_ACQUIRED_TIME);
-                }
-                acquired.add(rLock);
+            available = rLock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS);
+            if (!available) {
+                throw new CommonException(ErrorCode.FAIL_LOCK_ACQUIRED_TIME);
             }
+
             return operation.get();
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new CommonException(ErrorCode.FAIL_LOCK_ACQUIRED_TIME);
         } finally {
-            unlockReverse(acquired);
-        }
-    }
-
-    private void unlockReverse(Deque<RLock> acquired) {
-        while (!acquired.isEmpty()) {
-            RLock rLock = acquired.pop();
-            try {
-                if (rLock.isHeldByCurrentThread()) {
-                    rLock.unlock();
-                }
-            } catch (IllegalMonitorStateException ignore) {
-            } catch (Exception e) {
-                log.error("FAIL UNLOCK {}", rLock.getName(), e);
+            if (available && rLock.isHeldByCurrentThread()) {
+                rLock.unlock();
             }
         }
     }
 
+    private RLock getRLock(List<String> lockKeys) {
+        if (lockKeys == null || lockKeys.isEmpty()) throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+
+        if (lockKeys.size() == 1) {
+            return redissonClient.getLock(lockKeys.get(0));
+        }
+        RLock[] rLocks = lockKeys.stream().map(redissonClient::getLock).toArray(RLock[]::new);
+        return redissonClient.getMultiLock(rLocks);
+    }
 }
