@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SaveBestProductsInCacheScheduler {
 
-    private static final long SCHEDULED_RATE = 5L * 60 * 1000; // 5분
+    private static final long SCHEDULED_RATE = 7L * 60 * 1000; // 7분
 
     private final BestProductCacheWriter bestProductCacheWriter;
 

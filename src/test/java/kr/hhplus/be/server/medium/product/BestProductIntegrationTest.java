@@ -1,18 +1,22 @@
 package kr.hhplus.be.server.medium.product;
 
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
-import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
-import kr.hhplus.be.server.product.application.port.BestProductCacheWriter;
 import kr.hhplus.be.server.product.application.service.ProductQueryService;
 import kr.hhplus.be.server.product.domain.entity.BestProduct;
+import kr.hhplus.be.server.product.infrastructure.BestProductCacheAdapter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /*
     인기 상품 조회 테스트를 위한 데이터 정리.
@@ -35,11 +39,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BestProductIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
-    private BestProductCacheWriter bestProductCacheWriter;
-    @Autowired
-    private BestProductCacheReader bestProductCacheReader;
-    @Autowired
+    private BestProductCacheAdapter bestProductCacheAdapter;
+    @MockitoSpyBean
     private ProductQueryService productQueryService;
+
+    @BeforeEach
+    void init() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void 인기상품이_정상적으로_조회된다() throws Exception {
@@ -56,12 +63,12 @@ public class BestProductIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void 조회된_인기상품이_캐시에_저장된다() throws Exception {
+    void 조회_시_캐시에_데이터가_없으면_쿼리를_통해_데이터를_가져오고_캐시에_넣는다() throws Exception {
         // when
-        bestProductCacheWriter.update();
+        bestProductCacheAdapter.get();
+        bestProductCacheAdapter.get();
 
         // then
-        List<BestProduct> cachedBestProducts = bestProductCacheReader.get();
-        assertThat(cachedBestProducts).hasSize(5);
+        verify(productQueryService, times(1)).findBestProducts();
     }
 }

@@ -25,8 +25,8 @@ public class BestProductCacheAdapter implements BestProductCacheReader, BestProd
     }
 
     @Override
-    @Cacheable(value = CacheName.BEST_PRODUCTS)
+    @Cacheable(value = CacheName.BEST_PRODUCTS, unless = "#result == null || #result.isEmpty()")
     public List<BestProduct> get() {
-        return List.of();
+        return productQueryService.findBestProducts();
     }
 }
