@@ -4,7 +4,7 @@ import kr.hhplus.be.server.product.domain.entity.BestProduct;
 
 import java.util.List;
 
-public interface BestProductCacheReader {
+public interface BestProductRankingCacheWriter {
 
-    List<BestProduct> get();
+    List<BestProduct> update();
 }

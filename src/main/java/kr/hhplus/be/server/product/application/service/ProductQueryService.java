@@ -5,13 +5,14 @@ import kr.hhplus.be.server.product.domain.entity.BestProduct;
 import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
-@Service
+@Deprecated
+@Component
 @RequiredArgsConstructor
 public class ProductQueryService {
 

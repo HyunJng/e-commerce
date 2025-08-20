@@ -11,12 +11,14 @@ import kr.hhplus.be.server.order.application.service.CouponPricingService;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.Order;
 import kr.hhplus.be.server.order.domain.entity.OrderItem;
+import kr.hhplus.be.server.order.domain.event.PlacedOrderEvent;
 import kr.hhplus.be.server.order.domain.repository.OrderJpaRepository;
 import kr.hhplus.be.server.product.application.service.ProductLockingQueryService;
 import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -64,6 +66,7 @@ public class PlaceOrderUseCase {
     private final CouponPricingService couponPricingService;
     private final WalletCommandService walletCommandService;
     private final DateHolder dateHolder;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
     @DistributedLock(resolver = ProductAndWalletLockKeyResolver.class, waitTime = 10L, leaseTime = 5L)
@@ -93,6 +96,9 @@ public class PlaceOrderUseCase {
 
         // 주문 저장
         Order savedOrder = orderJpaRepository.save(order);
+
+        // 주문 완료 이벤트 발행
+        applicationEventPublisher.publishEvent(new PlacedOrderEvent(input.orderProduct));
 
         return Output.from(savedOrder);
     }

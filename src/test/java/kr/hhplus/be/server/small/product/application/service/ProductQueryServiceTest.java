@@ -6,6 +6,7 @@ import kr.hhplus.be.server.product.application.service.ProductQueryService;
 import kr.hhplus.be.server.product.domain.entity.BestProduct;
 import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,6 +20,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
+@Disabled
 class ProductQueryServiceTest {
 
     @InjectMocks

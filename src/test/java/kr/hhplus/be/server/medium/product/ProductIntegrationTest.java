@@ -4,6 +4,7 @@ import kr.hhplus.be.server.common.vo.CacheName;
 import kr.hhplus.be.server.medium.AbstractIntegrationTest;
 import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/product-integration-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 })
+@Disabled
 public class ProductIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired

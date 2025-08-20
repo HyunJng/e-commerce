@@ -41,3 +41,8 @@ springdoc:
 app:
   scheduling:
     enabled: true
+  best-products:
+    aggregate-past-candidate: 50
+    aggregate-current-candidate: 10
+    aggregate-days: 3
+    top-count: 5

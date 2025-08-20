@@ -1,20 +1,19 @@
 package kr.hhplus.be.server.product.infrastructure;
 
 import kr.hhplus.be.server.common.vo.CacheName;
-import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
-import kr.hhplus.be.server.product.application.port.BestProductCacheWriter;
+import kr.hhplus.be.server.product.application.port.BestProductRankingCacheWriter;
+import kr.hhplus.be.server.product.application.port.BestProductRankingReader;
 import kr.hhplus.be.server.product.application.service.ProductQueryService;
 import kr.hhplus.be.server.product.domain.entity.BestProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Deprecated
 @RequiredArgsConstructor
-public class BestProductCacheAdapter implements BestProductCacheReader, BestProductCacheWriter {
+public class BestProductRankingCacheAdapter implements BestProductRankingReader, BestProductRankingCacheWriter {
 
     private final ProductQueryService productQueryService;
 

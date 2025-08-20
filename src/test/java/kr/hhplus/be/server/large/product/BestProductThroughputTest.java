@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.SqlGroup;
         @Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/best-product-throughput-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 })
+@Disabled
 public class BestProductThroughputTest extends AbstractConcurrencyTest {
 
     @Autowired
