@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.large.order;
 
+import kr.hhplus.be.server.coupon.domain.entity.OrderProduct;
 import kr.hhplus.be.server.large.AbstractConcurrencyTest;
 import kr.hhplus.be.server.large.common.lock.LockTxProbeConfig;
 import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
@@ -43,7 +44,7 @@ public class PlaceOrderUseCaseConcurrencyTest extends AbstractConcurrencyTest {
             PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(
                     userId,
                     null,
-                    List.of(new PlaceOrderUseCase.Input.OrderProduct(productId, 1)));
+                    List.of(new OrderProduct(productId, 1)));
             placeOrderUseCase.execute(input);
         });
 
@@ -65,7 +66,7 @@ public class PlaceOrderUseCaseConcurrencyTest extends AbstractConcurrencyTest {
             PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(
                     userId,
                     null,
-                    List.of(new PlaceOrderUseCase.Input.OrderProduct(productId, 1)));
+                    List.of(new OrderProduct(productId, 1)));
             placeOrderUseCase.execute(input);
         });
 
@@ -83,7 +84,7 @@ public class PlaceOrderUseCaseConcurrencyTest extends AbstractConcurrencyTest {
             PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(
                     userId,
                     null,
-                    List.of(new PlaceOrderUseCase.Input.OrderProduct(productId, 1)));
+                    List.of(new OrderProduct(productId, 1)));
             placeOrderUseCase.execute(input);
         });
 
@@ -105,7 +106,7 @@ public class PlaceOrderUseCaseConcurrencyTest extends AbstractConcurrencyTest {
             PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(
                     userId,
                     couponId,
-                    List.of(new PlaceOrderUseCase.Input.OrderProduct((long) (i + 1), 1)));
+                    List.of(new OrderProduct((long) (i + 1), 1)));
             placeOrderUseCase.execute(input);
         });
 

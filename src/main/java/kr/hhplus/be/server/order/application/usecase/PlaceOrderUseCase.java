@@ -6,6 +6,7 @@ import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.lock.DistributedLock;
 import kr.hhplus.be.server.common.lock.resolver.ProductAndWalletLockKeyResolver;
 import kr.hhplus.be.server.common.time.DateHolder;
+import kr.hhplus.be.server.coupon.domain.entity.OrderProduct;
 import kr.hhplus.be.server.order.application.service.CouponPricingService;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.Order;
@@ -33,14 +34,8 @@ public class PlaceOrderUseCase {
             Long couponId,
             List<OrderProduct> orderProduct
     ) {
-        public record OrderProduct(
-                Long productId,
-                Integer quantity
-        ) {
-        }
-
         public List<Long> getOrderProductIds() {
-            return orderProduct.stream().map(Input.OrderProduct::productId).toList();
+            return orderProduct.stream().map(OrderProduct::productId).toList();
         }
     }
 
@@ -79,12 +74,12 @@ public class PlaceOrderUseCase {
         Map<Long, Product> products = productLockingQueryService.findProducts(input.getOrderProductIds());
 
         List<OrderItem> orderItems = new ArrayList<>();
-        for (Input.OrderProduct orderProduct : input.orderProduct) {
-            Product product = Optional.ofNullable(products.get(orderProduct.productId))
+        for (OrderProduct orderProduct : input.orderProduct) {
+            Product product = Optional.ofNullable(products.get(orderProduct.productId()))
                     .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "상품"));
             // 상품 수량 감소
             product.decreaseQuantity(orderProduct.quantity());
-            orderItems.add(OrderItem.of(product.getId(), orderProduct.quantity, product.getPrice(), dateHolder));
+            orderItems.add(OrderItem.of(product.getId(), orderProduct.quantity(), product.getPrice(), dateHolder));
         }
 
         // 할인 정보 조회

@@ -27,7 +27,7 @@ public class OrderApi {
                     userId,
                     couponId,
                     orderProduct.stream()
-                            .map(product -> new PlaceOrderUseCase.Input.OrderProduct(product.productId, product.quantity))
+                            .map(product -> new kr.hhplus.be.server.coupon.domain.entity.OrderProduct(product.productId, product.quantity))
                             .toList()
             );
         }
