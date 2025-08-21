@@ -39,6 +39,7 @@ CREATE TABLE coupons
     discount_amount BIGINT       NOT NULL,
     discount_type   VARCHAR(50)  NOT NULL,
     dates           INTEGER      NOT NULL,
+    state           VARCHAR(50)  NOT NULL,
     create_at       DATETIME,
     update_at       DATETIME
 );

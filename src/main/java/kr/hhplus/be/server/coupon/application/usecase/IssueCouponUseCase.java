@@ -1,11 +1,12 @@
 package kr.hhplus.be.server.coupon.application.usecase;
 
-import kr.hhplus.be.server.coupon.domain.event.IssuedCouponEvent;
-import kr.hhplus.be.server.coupon.domain.repository.CouponQuantityJpaRepository;
+import kr.hhplus.be.server.common.time.DateHolder;
+import kr.hhplus.be.server.coupon.application.port.CouponQuantityRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.temporal.ChronoField;
 
 @Service
 @RequiredArgsConstructor
@@ -19,16 +20,19 @@ public class IssueCouponUseCase {
     ) {
     }
 
-    private final CouponQuantityJpaRepository couponQuantityJpaRepository;
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private final CouponQuantityRepository couponQuantityRepository;
+    private final DateHolder dateHolder;
 
     @Transactional
     public Output execute(Input input) {
-        // 유저정보의 유효성은 인증/인가 과정에서 처리되었을 것이라 가정하였음
-        boolean isSuccess = (couponQuantityJpaRepository.increaseIssuedCouponQuantity(input.couponId)) != 0;
-        if (isSuccess) {
-            applicationEventPublisher.publishEvent(new IssuedCouponEvent(input.couponId, input.userId));
+        // 발급 유저인지 확인
+        if (couponQuantityRepository.isAlreadyIssued(input.couponId, input.userId)) {
+            return new Output(false);
         }
+        // 대기열 등록
+        long now = dateHolder.now().getLong(ChronoField.MILLI_OF_SECOND);
+        boolean isSuccess = couponQuantityRepository.enqueue(input.couponId, input.userId, now);
+
         return new Output(isSuccess);
     }
 }

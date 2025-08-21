@@ -65,6 +65,7 @@ erDiagram
         BIGINT discount_amount "할인금액"
         STRING discount_type "PERCENT, AMOUNT"
         BIGINT dates "발급후 사용 가능 일자"
+        STRING state "ACTIVE, INACTIVE"
         DATETIME create_at "생성일시"
         DATETIME update_at "수정일시"
     }

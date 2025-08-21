@@ -11,6 +11,7 @@ import lombok.Getter;
 @Table(name = "coupons")
 public class Coupon extends BaseTimeEntity {
     public enum DiscountType {PERCENT, FIXED_AMOUNT}
+    public enum State {ACTIVE, INACTIVE}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,14 +27,19 @@ public class Coupon extends BaseTimeEntity {
     @Column(name = "discount_type")
     private DiscountType discountType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "State")
+    private State state;
+
     @Column(name = "dates")
     private Integer dates;
 
-    public Coupon(Long id, String name, Long discountAmount, DiscountType discountType, Integer dates) {
+    public Coupon(Long id, String name, Long discountAmount, DiscountType discountType, State state, Integer dates) {
         this.id = id;
         this.name = name;
         this.discountAmount = discountAmount;
         this.discountType = discountType;
+        this.state = state;
         this.dates = dates;
     }
 
