@@ -34,7 +34,7 @@ public class RedisBestProductRankingReader implements BestProductRankingReader {
 
         // 후보 추출
         Set<String> aggIds = stringRedisTemplate.opsForZSet().reverseRange(aggregateKey, 0L, properties.getAggregatePastCandidate() - 1L);
-        Set<String> currIds = stringRedisTemplate.opsForZSet().reverseRange(currentKey, 0L, properties.getAggregatePastCandidate() - 1L);
+        Set<String> currIds = stringRedisTemplate.opsForZSet().reverseRange(currentKey, 0L, properties.getAggregateCurrentCandidate() - 1L);
 
         if ((aggIds == null || aggIds.isEmpty()) && (currIds == null || currIds.isEmpty())) {
             return List.of();
