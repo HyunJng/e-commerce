@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Deprecated
 public class FindBestProductUseCaseForNotCache {
 
     @Autowired

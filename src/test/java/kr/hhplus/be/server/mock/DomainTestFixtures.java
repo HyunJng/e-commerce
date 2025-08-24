@@ -12,6 +12,7 @@ public class DomainTestFixtures {
                 "회원가입쿠폰",
                 10L,
                 Coupon.DiscountType.PERCENT,
+                Coupon.State.ACTIVE,
                 7
         );
     }

@@ -2,7 +2,8 @@ package kr.hhplus.be.server.large.common.lock;
 
 import kr.hhplus.be.server.common.lock.DistributedLock;
 import kr.hhplus.be.server.common.lock.DistributedLockAop;
-import kr.hhplus.be.server.common.lock.LockKeyResolver;
+import kr.hhplus.be.server.common.lock.resolver.LockKeyResolver;
+import kr.hhplus.be.server.common.vo.AopOrder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,28 +28,32 @@ public class LockTxProbeAspect implements Ordered {
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE + 2;
+        return AopOrder.LOGGING.getOrder();
     }
 
     @Around("@annotation(distributedLock)")
     public Object probe(ProceedingJoinPoint joinPoint, DistributedLock distributedLock) throws Throwable {
         LockKeyResolver resolver = applicationContext.getBean(distributedLock.resolver());
-        List<String> keys = resolver.resolve(joinPoint);
+        List<String> keys = resolver.resolve(joinPoint).stream().map(key -> DistributedLockAop.LOCK_PREFIX + key).toList();
 
-        String key = DistributedLockAop.LOCK_PREFIX + keys.get(0);
-
+        // before
+        for (String key : keys) {
+            boolean transactionBeforeLock = redisson.getLock(key).isLocked();
+            assertThat(transactionBeforeLock).as("락 획득 상태").isTrue();
+        }
         boolean txActiveBefore = TransactionSynchronizationManager.isActualTransactionActive();
-        boolean transactionBeforeLock = redisson.getLock(key).isLocked();
-
-        assertThat(transactionBeforeLock).as("락 획득 상태").isTrue();
         assertThat(txActiveBefore).as("트랜잭션 시작 전 상태").isFalse();
 
+        // run
         Object result = joinPoint.proceed();
 
+        // after
         boolean txActiveAfter = TransactionSynchronizationManager.isActualTransactionActive();
-        boolean transactionAfterLock = redisson.getLock(key).isLocked();
         assertThat(txActiveAfter).as("트랜잭션 완료 상태").isFalse();
-        assertThat(transactionAfterLock).as("락 해제 전 상태").isTrue();
+        for (String key : keys) {
+            boolean transactionAfterLock = redisson.getLock(key).isLocked();
+            assertThat(transactionAfterLock).as("락 해제 전 상태").isTrue();
+        }
 
         return result;
     }

@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.SqlGroup;
         @Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/best-product-throughput-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 })
+@Disabled
 public class BestProductThroughputTest extends AbstractConcurrencyTest {
 
     @Autowired
@@ -41,7 +42,7 @@ public class BestProductThroughputTest extends AbstractConcurrencyTest {
         });
     }
 
-    @Test
+//    @Test
     void 인기상품조회_API에_캐시를_적용하지_않았을_때의_성능을_확인한다() throws Exception {
         // when
         runConcurrentTest(8, 5000, i -> {

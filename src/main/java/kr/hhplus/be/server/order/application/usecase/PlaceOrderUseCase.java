@@ -4,17 +4,21 @@ import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.lock.DistributedLock;
+import kr.hhplus.be.server.common.lock.resolver.ProductAndWalletLockKeyResolver;
 import kr.hhplus.be.server.common.time.DateHolder;
+import kr.hhplus.be.server.coupon.domain.entity.OrderProduct;
 import kr.hhplus.be.server.order.application.service.CouponPricingService;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.Order;
 import kr.hhplus.be.server.order.domain.entity.OrderItem;
+import kr.hhplus.be.server.order.domain.event.PlacedOrderEvent;
 import kr.hhplus.be.server.order.domain.repository.OrderJpaRepository;
 import kr.hhplus.be.server.product.application.service.ProductLockingQueryService;
 import kr.hhplus.be.server.product.domain.entity.Product;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,14 +36,8 @@ public class PlaceOrderUseCase {
             Long couponId,
             List<OrderProduct> orderProduct
     ) {
-        public record OrderProduct(
-                Long productId,
-                Integer quantity
-        ) {
-        }
-
         public List<Long> getOrderProductIds() {
-            return orderProduct.stream().map(Input.OrderProduct::productId).toList();
+            return orderProduct.stream().map(OrderProduct::productId).toList();
         }
     }
 
@@ -68,9 +66,10 @@ public class PlaceOrderUseCase {
     private final CouponPricingService couponPricingService;
     private final WalletCommandService walletCommandService;
     private final DateHolder dateHolder;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
-    @DistributedLock(resolver = OrderLockResolver.class, waitTime = 10L, leaseTime = 5L)
+    @DistributedLock(resolver = ProductAndWalletLockKeyResolver.class, waitTime = 10L, leaseTime = 5L)
     public Output execute(Input input)
             throws OptimisticEntityLockException
     {
@@ -78,12 +77,12 @@ public class PlaceOrderUseCase {
         Map<Long, Product> products = productLockingQueryService.findProducts(input.getOrderProductIds());
 
         List<OrderItem> orderItems = new ArrayList<>();
-        for (Input.OrderProduct orderProduct : input.orderProduct) {
-            Product product = Optional.ofNullable(products.get(orderProduct.productId))
+        for (OrderProduct orderProduct : input.orderProduct) {
+            Product product = Optional.ofNullable(products.get(orderProduct.productId()))
                     .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "상품"));
             // 상품 수량 감소
             product.decreaseQuantity(orderProduct.quantity());
-            orderItems.add(OrderItem.of(product.getId(), orderProduct.quantity, product.getPrice(), dateHolder));
+            orderItems.add(OrderItem.of(product.getId(), orderProduct.quantity(), product.getPrice(), dateHolder));
         }
 
         // 할인 정보 조회
@@ -97,6 +96,9 @@ public class PlaceOrderUseCase {
 
         // 주문 저장
         Order savedOrder = orderJpaRepository.save(order);
+
+        // 주문 완료 이벤트 발행
+        applicationEventPublisher.publishEvent(new PlacedOrderEvent(input.orderProduct));
 
         return Output.from(savedOrder);
     }

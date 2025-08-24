@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.small.order.application.usecase;
 
 import kr.hhplus.be.server.common.time.DateHolder;
+import kr.hhplus.be.server.coupon.domain.entity.OrderProduct;
 import kr.hhplus.be.server.order.application.service.CouponPricingService;
 import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Map;
@@ -40,7 +42,8 @@ class PlaceOrderUseCaseTest {
     private WalletCommandService walletCommandService;
     @Mock
     private DateHolder dateHolder;
-
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @BeforeEach
     void init() {
@@ -54,7 +57,7 @@ class PlaceOrderUseCaseTest {
         Wallet wallet = 기본지갑();
         Integer quantity = 2;
 
-        List<PlaceOrderUseCase.Input.OrderProduct> orderProducts = List.of(new PlaceOrderUseCase.Input.OrderProduct(product.getId(), quantity));
+        List<OrderProduct> orderProducts = List.of(new OrderProduct(product.getId(), quantity));
         PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(wallet.getUserId(), null, orderProducts);
 
         given(productQueryService.findProducts(anyList())).willReturn(Map.of(1L, product));

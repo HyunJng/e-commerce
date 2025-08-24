@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.small.product.application.usecase;
 
-import kr.hhplus.be.server.product.application.port.BestProductCacheReader;
+import kr.hhplus.be.server.product.application.port.BestProductRankingReader;
 import kr.hhplus.be.server.product.application.usecase.FindBestProductsUseCase;
 import kr.hhplus.be.server.product.domain.entity.BestProduct;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,7 @@ class FindBestProductsUseCaseTest {
     private FindBestProductsUseCase findBestProductsUsecase;
 
     @Mock
-    private BestProductCacheReader bestProductCacheReader;
+    private BestProductRankingReader bestProductRankingReader;
 
     @BeforeEach
     void init() {
@@ -30,7 +30,7 @@ class FindBestProductsUseCaseTest {
     @Test
     void 가장_인기있는_상품목록을_응답한다() throws Exception {
         // given
-        given(bestProductCacheReader.get())
+        given(bestProductRankingReader.get())
                 .willReturn(List.of(
                         new BestProduct(1L, "상품1", 1000L, 10, 5L),
                         new BestProduct(2L, "상품2", 2000L, 10, 4L),
