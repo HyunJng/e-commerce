@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.small.order.application.usecase;
 
+import kr.hhplus.be.server.common.event.EventPublisher;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.coupon.domain.entity.OrderProduct;
 import kr.hhplus.be.server.order.application.service.CouponPricingService;
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Map;
@@ -43,7 +43,7 @@ class PlaceOrderUseCaseTest {
     @Mock
     private DateHolder dateHolder;
     @Mock
-    private ApplicationEventPublisher applicationEventPublisher;
+    private EventPublisher eventPublisher;
 
     @BeforeEach
     void init() {
