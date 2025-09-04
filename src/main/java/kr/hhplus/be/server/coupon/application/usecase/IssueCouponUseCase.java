@@ -25,11 +25,9 @@ public class IssueCouponUseCase {
 
     @Transactional
     public Output execute(Input input) {
-        // 발급 유저인지 확인
         if (couponQuantityRepository.isAlreadyIssued(input.couponId, input.userId)) {
             return new Output(false);
         }
-        // 대기열 등록
         long now = dateHolder.now().getLong(ChronoField.MILLI_OF_SECOND);
         boolean isSuccess = couponQuantityRepository.enqueue(input.couponId, input.userId, now);
 
