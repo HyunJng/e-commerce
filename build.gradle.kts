@@ -55,7 +55,7 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testImplementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
-	testImplementation("org.awaitility:awaitility:4.3.0")
+	testImplementation("org.awaitility:awaitility")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
