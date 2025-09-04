@@ -4,7 +4,6 @@ import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
 import kr.hhplus.be.server.wallet.domain.repository.WalletLockLoader;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 class WalletCommandServiceTest {
@@ -35,7 +35,7 @@ class WalletCommandServiceTest {
         given(walletJpaRepository.findByUserId(userId)).willReturn(Optional.empty());
 
         // when & then
-        Assertions.assertThatThrownBy(() -> walletCommandService.use(userId, 1000L))
+        assertThatThrownBy(() -> walletCommandService.use(userId, 1000L))
                 .isInstanceOf(CommonException.class)
                 .hasMessage(ErrorCode.NOT_FOUND_RESOURCE.getMessage("지갑"));
     }

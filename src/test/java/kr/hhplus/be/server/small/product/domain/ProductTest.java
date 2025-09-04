@@ -3,11 +3,12 @@ package kr.hhplus.be.server.small.product.domain;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.product.domain.entity.Product;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static kr.hhplus.be.server.mock.DomainTestFixtures.기본상품;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProductTest {
 
@@ -18,7 +19,7 @@ class ProductTest {
         Product product = 기본상품();
 
         // when & then
-        Assertions.assertThatCode(() -> product.decreaseQuantity(quentity))
+        assertThatCode(() -> product.decreaseQuantity(quentity))
                 .doesNotThrowAnyException();
     }
 
@@ -29,7 +30,7 @@ class ProductTest {
         Product product = 기본상품();
 
         // when & then
-        Assertions.assertThatThrownBy(() -> product.decreaseQuantity(quentity))
+        assertThatThrownBy(() -> product.decreaseQuantity(quentity))
                 .isInstanceOf(CommonException.class)
                 .hasMessageContaining(ErrorCode.NOT_FOUND_RESOURCE.getMessage("상품 재고"));
     }

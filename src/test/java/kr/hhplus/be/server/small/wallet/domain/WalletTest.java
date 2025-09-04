@@ -4,13 +4,13 @@ import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.wallet.domain.domain.Wallet;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
 import static kr.hhplus.be.server.mock.DomainTestFixtures.기본지갑;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class WalletTest {
 
@@ -35,7 +35,7 @@ class WalletTest {
         DateHolder dateHolder = Mockito.mock(DateHolder.class);
 
         // when & then
-        Assertions.assertThatThrownBy(() -> wallet.pay(paidAmount))
+        assertThatThrownBy(() -> wallet.pay(paidAmount))
                 .isInstanceOf(CommonException.class)
                 .hasMessage(ErrorCode.INVALID_REQUEST.getMessage("잔액 부족"));
     }

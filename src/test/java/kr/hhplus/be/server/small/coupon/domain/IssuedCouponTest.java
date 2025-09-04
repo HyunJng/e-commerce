@@ -5,13 +5,12 @@ import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.coupon.domain.entity.Coupon;
 import kr.hhplus.be.server.coupon.domain.entity.IssuedCoupon;
 import kr.hhplus.be.server.mock.MockDateHolderImpl;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Month;
 
 import static kr.hhplus.be.server.mock.DomainTestFixtures.기본쿠폰;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 class IssuedCouponTest {
 
@@ -43,7 +42,7 @@ class IssuedCouponTest {
         IssuedCoupon issuedCoupon = new IssuedCoupon(coupon, userId, mockDateHolder);
 
         // when & then
-        Assertions.assertThatCode(() -> issuedCoupon.validate(mockDateHolder))
+        assertThatCode(() -> issuedCoupon.validate(mockDateHolder))
                 .doesNotThrowAnyException();
     }
 
@@ -59,7 +58,7 @@ class IssuedCouponTest {
         IssuedCoupon issuedCoupon = new IssuedCoupon(coupon, userId, lastDateHolder);
 
         // then
-        Assertions.assertThatThrownBy(() -> issuedCoupon.validate(todayDateHolder))
+        assertThatThrownBy(() -> issuedCoupon.validate(todayDateHolder))
                 .isInstanceOf(CommonException.class)
                 .hasMessageContaining(ErrorCode.INVALID_REQUEST.getMessage("유효하지 않은 쿠폰"));
     }
