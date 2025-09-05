@@ -2,9 +2,8 @@ package kr.hhplus.be.server.common.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Component;
 
-@Component
+@Deprecated
 @RequiredArgsConstructor
 public class SpringEventPublisher implements EventPublisher{
 
