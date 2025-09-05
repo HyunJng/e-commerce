@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "kafka.topics")
 public class KafkaTopicsProperties {
     private TopicProperties orderCreated;
+    private TopicProperties couponIssued;
 
     @Data
     public static class TopicProperties {

@@ -14,4 +14,9 @@ public class KafkaEventPublisher implements EventPublisher {
     public void publish(String topic, Object event) {
         kafkaTemplate.send(topic, event);
     }
+
+    @Override
+    public void publish(String topic, String key, Object event) {
+        kafkaTemplate.send(topic, key, event);
+    }
 }

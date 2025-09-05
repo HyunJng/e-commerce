@@ -14,4 +14,12 @@ public class KafkaPartitionConfig {
                 .replicas(prop.getOrderCreated().getReplicas())
                 .build();
     }
+
+    @Bean
+    public NewTopic couponIssueDlt(KafkaTopicsProperties prop) {
+        return TopicBuilder.name(prop.getCouponIssued().getName())
+                .partitions(prop.getCouponIssued().getPartitions())
+                .replicas(prop.getCouponIssued().getReplicas())
+                .build();
+    }
 }

@@ -29,11 +29,26 @@ spring:
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
       properties:
         spring.json.trusted.packages: "*"
+      group-id: hhplus-local-group
+    listener:
+      auto-startup: true
+
 server:
   port: 8081
 
+kafka:
+  topics:
+    order-created:
+      name: order.created
+      partitions: 3
+      replicas: 1
+    coupon-issued:
+      name: coupon-issued
+      partitions: 6
+      replicas: 1
 ---
 spring.config.activate.on-profile: local, test
 
@@ -59,10 +74,3 @@ app:
     aggregate-current-candidate: 10
     aggregate-days: 3
     top-count: 5
-kafka:
-  topics:
-    order-created:
-      name: order.created
-      partitions: 3
-      group-ids:
-        data-platform: order-created-data-platform

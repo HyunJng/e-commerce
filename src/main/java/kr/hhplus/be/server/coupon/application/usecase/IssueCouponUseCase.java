@@ -1,12 +1,11 @@
 package kr.hhplus.be.server.coupon.application.usecase;
 
-import kr.hhplus.be.server.common.time.DateHolder;
+import kr.hhplus.be.server.common.event.EventPublisher;
 import kr.hhplus.be.server.coupon.application.port.CouponQuantityRepository;
+import kr.hhplus.be.server.coupon.domain.event.IssuedCouponEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.temporal.ChronoField;
 
 @Service
 @RequiredArgsConstructor
@@ -21,16 +20,19 @@ public class IssueCouponUseCase {
     }
 
     private final CouponQuantityRepository couponQuantityRepository;
-    private final DateHolder dateHolder;
+    private final EventPublisher eventPublisher;
 
     @Transactional
     public Output execute(Input input) {
         if (couponQuantityRepository.isAlreadyIssued(input.couponId, input.userId)) {
             return new Output(false);
         }
-        long now = dateHolder.now().getLong(ChronoField.MILLI_OF_SECOND);
-        boolean isSuccess = couponQuantityRepository.enqueue(input.couponId, input.userId, now);
 
-        return new Output(isSuccess);
+        eventPublisher.publish(
+                "coupon-issued",
+                input.couponId.toString(),
+                new IssuedCouponEvent(input.couponId, input.userId)
+        );
+        return new Output(true);
     }
 }
