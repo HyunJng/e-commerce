@@ -28,7 +28,7 @@ public class Coupon extends BaseTimeEntity {
     private DiscountType discountType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "State")
+    @Column(name = "state")
     private State state;
 
     @Column(name = "dates")
