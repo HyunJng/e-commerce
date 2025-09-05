@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class KafkaStatisticDataPlatformConsumer implements StatisticDataPlatformSender {
 
     @KafkaListener(topics = "${kafka.topics.order-created.name}",
-            groupId = "${kafka.topics.order-created.group-ids.data-platform}",
+            groupId = "order-created-data-platform",
             concurrency = "${kafka.topics.order-created.partitions}")
     public void send(PlacedOrderEvent event) {
         log.info("[DATA PLATFORM] consume info = {}", event);
