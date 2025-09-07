@@ -7,6 +7,9 @@ public class IssuedCouponEvent {
     private Long couponId;
     private Long userId;
 
+    public IssuedCouponEvent() {
+    }
+
     public IssuedCouponEvent(Long couponId, Long userId) {
         this.couponId = couponId;
         this.userId = userId;

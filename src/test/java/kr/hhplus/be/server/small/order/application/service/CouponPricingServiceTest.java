@@ -9,7 +9,6 @@ import kr.hhplus.be.server.coupon.domain.repository.IssuedCouponLockLoader;
 import kr.hhplus.be.server.order.application.service.CouponPricingService;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.OrderItem;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,6 +21,7 @@ import java.util.Optional;
 
 import static kr.hhplus.be.server.mock.DomainTestFixtures.기본쿠폰;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -72,7 +72,7 @@ class CouponPricingServiceTest {
         given(issuedCouponLockLoader.findByUserIdAndCouponId(anyLong(), anyLong())).willReturn(Optional.empty());
 
         // when & then
-        Assertions.assertThatThrownBy(() -> couponPricingService.applyCouponPricing(1L, 1L, List.of(orderItem)))
+        assertThatThrownBy(() -> couponPricingService.applyCouponPricing(1L, 1L, List.of(orderItem)))
                 .isInstanceOf(CommonException.class)
                 .hasMessage(ErrorCode.NOT_FOUND_RESOURCE.getMessage("발급 쿠폰"));
     }

@@ -13,7 +13,19 @@ spring:
     init:
       mode: always
       platform: mysql
-
+  kafka:
+    consumer:
+      group-id: hhplus-local-group-${random.uuid}
 app:
   scheduling:
     enabled: false
+kafka:
+  topics:
+    order-created:
+      name: order.created
+      partitions: 1
+      replicas: 1
+    coupon-issued:
+      name: coupon-issued
+      partitions: 1
+      replicas: 1

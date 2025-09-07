@@ -49,13 +49,18 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.redisson:redisson-spring-boot-starter:3.41.0")
 
+	// Kafka
+	implementation("org.springframework.kafka:spring-kafka")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
+	testImplementation("org.testcontainers:kafka")
+	testImplementation("org.springframework.kafka:spring-kafka-test")
 	testImplementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
-	testImplementation("org.awaitility:awaitility:4.3.0")
+	testImplementation("org.awaitility:awaitility")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

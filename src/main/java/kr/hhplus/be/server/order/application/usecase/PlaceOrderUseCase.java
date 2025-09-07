@@ -73,31 +73,24 @@ public class PlaceOrderUseCase {
     public Output execute(Input input)
             throws OptimisticEntityLockException
     {
-        // 상품 정보 조회
         Map<Long, Product> products = productLockingQueryService.findProducts(input.getOrderProductIds());
 
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderProduct orderProduct : input.orderProduct) {
             Product product = Optional.ofNullable(products.get(orderProduct.productId()))
                     .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "상품"));
-            // 상품 수량 감소
             product.decreaseQuantity(orderProduct.quantity());
             orderItems.add(OrderItem.of(product.getId(), orderProduct.quantity(), product.getPrice(), dateHolder));
         }
 
-        // 할인 정보 조회
         DiscountInfo discountInfo = couponPricingService.applyCouponPricing(input.couponId, input.userId, orderItems);
 
-        // 주문 생성
         Order order = Order.create(input.userId, orderItems, discountInfo.discountAmount(), discountInfo.issuedCouponId());
 
-        // 지갑에서 결제 금액 차감
         walletCommandService.use(input.userId, order.getPaidAmount());
 
-        // 주문 저장
         Order savedOrder = orderJpaRepository.save(order);
 
-        // 주문 완료 이벤트 발행
         eventPublisher.publish("order.created", new PlacedOrderEvent(input.orderProduct));
 
         return Output.from(savedOrder);

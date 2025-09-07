@@ -4,12 +4,11 @@ import kr.hhplus.be.server.order.application.listener.StatisticDataPlatformSende
 import kr.hhplus.be.server.order.domain.event.PlacedOrderEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
-@Component
+@Deprecated
 public class SpringStatisticDataPlatformSender implements StatisticDataPlatformSender {
 
     @Async

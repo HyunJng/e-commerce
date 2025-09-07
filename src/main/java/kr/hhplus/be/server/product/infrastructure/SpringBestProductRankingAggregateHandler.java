@@ -18,7 +18,7 @@ public class SpringBestProductRankingAggregateHandler implements BestProductRank
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handle(PlacedOrderEvent event) {
-        event.orderProducts().forEach(orderItem -> {
+        event.getOrderProducts().forEach(orderItem -> {
             Long productId = orderItem.productId();
             Integer quantity = orderItem.quantity();
             bestProductRankingAggregateWriter.incrementBestProductRanking(productId, quantity);
