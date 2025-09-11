@@ -1,0 +1,111 @@
+{
+  "id": null,
+  "uid": "k6-quick",
+  "title": "k6 Overview (Local)",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "type": "graph",
+      "title": "http_req_duration (p95)",
+      "datasource": {
+        "type": "influxdb",
+        "uid": null,
+        "name": "InfluxDB-k6"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "lines": true,
+      "targets": [
+        {
+          "refId": "A",
+          "query": "SELECT percentile(\"value\", 95) FROM \"http_req_duration\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "measurement": "http_req_duration",
+          "resultFormat": "time_series"
+        }
+      ],
+      "legend": {
+        "show": true
+      }
+    },
+    {
+      "type": "graph",
+      "title": "Reqs/s",
+      "datasource": {
+        "type": "influxdb",
+        "uid": null,
+        "name": "InfluxDB-k6"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "lines": true,
+      "targets": [
+        {
+          "refId": "A",
+          "query": "SELECT sum(\"count\") FROM \"http_reqs\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "measurement": "http_reqs",
+          "resultFormat": "time_series"
+        }
+      ],
+      "legend": {
+        "show": true
+      }
+    },
+    {
+      "type": "graph",
+      "title": "Error rate",
+      "datasource": {
+        "type": "influxdb",
+        "uid": null,
+        "name": "InfluxDB-k6"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "lines": true,
+      "targets": [
+        {
+          "refId": "A",
+          "query": "SELECT mean(\"value\") FROM \"http_req_failed\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "measurement": "http_req_failed",
+          "resultFormat": "time_series"
+        }
+      ],
+      "legend": {
+        "show": true
+      }
+    }
+  ],
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  }
+}
