@@ -9,4 +9,4 @@ datasources:
     user:
     isDefault: true
     jsonData:
-      httpMode: POST
+      httpMode: GET
