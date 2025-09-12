@@ -4,8 +4,6 @@ import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.event.EventPublisher;
 import kr.hhplus.be.server.common.exception.CommonException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.common.lock.DistributedLock;
-import kr.hhplus.be.server.common.lock.resolver.ProductAndWalletLockKeyResolver;
 import kr.hhplus.be.server.common.time.DateHolder;
 import kr.hhplus.be.server.coupon.domain.entity.OrderProduct;
 import kr.hhplus.be.server.order.application.service.CouponPricingService;
@@ -70,7 +68,6 @@ public class PlaceOrderUseCase {
     private final EventPublisher eventPublisher;
 
     @Transactional
-    @DistributedLock(resolver = ProductAndWalletLockKeyResolver.class, waitTime = 1L, leaseTime = 10L)
     public Output execute(Input input)
             throws OptimisticEntityLockException
     {
