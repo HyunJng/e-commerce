@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "E001", "유효하지 않은 요청(%1)"),
     NOT_FOUND_RESOURCE(HttpStatus.BAD_REQUEST, "E404", "존재하지 않는 %1"),
+    NOT_ENOUGH_PRODUCT_QUANTITY(HttpStatus.BAD_REQUEST, "E405", "%1 상품 재고 부족"),
     INVALID_POLICY(HttpStatus.BAD_REQUEST, "E405", "정책 위반(%1)"),
     FAIL_LOCK_CONFLICT(HttpStatus.CONFLICT, "E406", "데이터 충돌 발생"),
     FAIL_LOCK_ACQUIRED_TIME(HttpStatus.INTERNAL_SERVER_ERROR, "E502", "락 획득 시간 초과"),

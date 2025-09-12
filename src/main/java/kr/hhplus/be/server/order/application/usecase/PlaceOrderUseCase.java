@@ -14,8 +14,8 @@ import kr.hhplus.be.server.order.domain.entity.Order;
 import kr.hhplus.be.server.order.domain.entity.OrderItem;
 import kr.hhplus.be.server.order.domain.event.PlacedOrderEvent;
 import kr.hhplus.be.server.order.domain.repository.OrderJpaRepository;
-import kr.hhplus.be.server.product.application.service.ProductLockingQueryService;
 import kr.hhplus.be.server.product.domain.entity.Product;
+import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,24 +63,28 @@ public class PlaceOrderUseCase {
     }
 
     private final OrderJpaRepository orderJpaRepository;
-    private final ProductLockingQueryService productLockingQueryService;
+    private final ProductJpaRepository productJpaRepository;
     private final CouponPricingService couponPricingService;
     private final WalletCommandService walletCommandService;
     private final DateHolder dateHolder;
     private final EventPublisher eventPublisher;
 
     @Transactional
-    @DistributedLock(resolver = ProductAndWalletLockKeyResolver.class, waitTime = 10L, leaseTime = 5L)
+    @DistributedLock(resolver = ProductAndWalletLockKeyResolver.class, waitTime = 1L, leaseTime = 10L)
     public Output execute(Input input)
             throws OptimisticEntityLockException
     {
-        Map<Long, Product> products = productLockingQueryService.findProducts(input.getOrderProductIds());
+        Map<Long, Product> products = productJpaRepository.findAllById(input.getOrderProductIds()).stream()
+                .collect(Collectors.toMap(Product::getId, product -> product));
 
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderProduct orderProduct : input.orderProduct) {
             Product product = Optional.ofNullable(products.get(orderProduct.productId()))
                     .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RESOURCE, "상품"));
-            product.decreaseQuantity(orderProduct.quantity());
+            boolean isSuccess = productJpaRepository.decreaseProductQuantity(product.getId(), orderProduct.quantity()) == 1;
+            if (!isSuccess) {
+                throw new CommonException(ErrorCode.NOT_ENOUGH_PRODUCT_QUANTITY, product.getName());
+            }
             orderItems.add(OrderItem.of(product.getId(), orderProduct.quantity(), product.getPrice(), dateHolder));
         }
 
