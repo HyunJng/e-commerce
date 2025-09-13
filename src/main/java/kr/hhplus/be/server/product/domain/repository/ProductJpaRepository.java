@@ -4,6 +4,7 @@ import kr.hhplus.be.server.product.domain.entity.BestProduct;
 import kr.hhplus.be.server.product.domain.entity.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
@@ -22,4 +23,13 @@ public interface ProductJpaRepository extends JpaRepository<Product, Long> {
             LocalDate startDate,
             LocalDate endDate,
             Pageable pageable);
+
+    @Modifying
+    @Query("""
+            UPDATE Product a 
+            SET a.quantity = a.quantity - :quantity 
+            WHERE a.id=:id 
+            AND a.quantity >= :quantity
+            """)
+    int decreaseProductQuantity(Long id, Integer quantity);
 }

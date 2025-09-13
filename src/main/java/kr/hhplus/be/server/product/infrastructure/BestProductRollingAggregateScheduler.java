@@ -55,6 +55,11 @@ public class BestProductRollingAggregateScheduler {
         }
 
         // aggKey에 tempKey 덮어쓰기
-        stringRedisTemplate.rename(tempKey, aggKey);
+        Boolean hasTemp = stringRedisTemplate.hasKey(tempKey);
+        if (Boolean.TRUE.equals(hasTemp)) {
+            stringRedisTemplate.rename(tempKey, aggKey);
+        } else {
+            stringRedisTemplate.delete(aggKey);
+        }
     }
 }

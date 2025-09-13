@@ -8,8 +8,8 @@ import kr.hhplus.be.server.order.application.usecase.PlaceOrderUseCase;
 import kr.hhplus.be.server.order.domain.entity.DiscountInfo;
 import kr.hhplus.be.server.order.domain.entity.Order;
 import kr.hhplus.be.server.order.domain.repository.OrderJpaRepository;
-import kr.hhplus.be.server.product.application.service.ProductLockingQueryService;
 import kr.hhplus.be.server.product.domain.entity.Product;
+import kr.hhplus.be.server.product.domain.repository.ProductJpaRepository;
 import kr.hhplus.be.server.wallet.application.service.WalletCommandService;
 import kr.hhplus.be.server.wallet.domain.domain.Wallet;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
-import java.util.Map;
 
 import static kr.hhplus.be.server.mock.DomainTestFixtures.기본상품;
 import static kr.hhplus.be.server.mock.DomainTestFixtures.기본지갑;
@@ -35,7 +34,7 @@ class PlaceOrderUseCaseTest {
     @Mock
     private OrderJpaRepository orderJpaRepository;
     @Mock
-    private ProductLockingQueryService productQueryService;
+    private ProductJpaRepository productQueryService;
     @Mock
     private CouponPricingService couponPricingService;
     @Mock
@@ -60,9 +59,10 @@ class PlaceOrderUseCaseTest {
         List<OrderProduct> orderProducts = List.of(new OrderProduct(product.getId(), quantity));
         PlaceOrderUseCase.Input input = new PlaceOrderUseCase.Input(wallet.getUserId(), null, orderProducts);
 
-        given(productQueryService.findProducts(anyList())).willReturn(Map.of(1L, product));
+        given(productQueryService.findAllById(anyList())).willReturn(List.of(product));
         given(couponPricingService.applyCouponPricing(isNull(), eq(wallet.getUserId()), anyList())).willReturn(DiscountInfo.none());
         given(orderJpaRepository.save(any(Order.class))).willAnswer(invocation -> invocation.getArgument(0));
+        given(productQueryService.decreaseProductQuantity(product.getId(), quantity)).willReturn(1);
 
         // when
         PlaceOrderUseCase.Output output = placeOrderUseCase.execute(input);

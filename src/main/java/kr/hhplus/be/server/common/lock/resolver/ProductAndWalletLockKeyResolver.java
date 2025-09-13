@@ -16,9 +16,6 @@ public class ProductAndWalletLockKeyResolver implements LockKeyResolver {
 
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof PlaceOrderUseCase.Input input) {
-                // 상품
-                input.getOrderProductIds().stream().sorted().forEach(productId -> keys.add("product:" + productId));
-                // 포인트
                 keys.add("wallet:user:" + input.userId());
             }
         }

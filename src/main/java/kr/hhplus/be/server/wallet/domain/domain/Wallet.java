@@ -42,6 +42,5 @@ public class Wallet extends BaseTimeEntity {
         if (this.balance < paidAmount) {
             throw new CommonException(ErrorCode.INVALID_REQUEST, "잔액 부족");
         }
-        this.balance -= paidAmount;
     }
 }
